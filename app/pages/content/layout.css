@@ -1,0 +1,16 @@
+
+.left {
+    float: left;
+    width: 200px;
+    height: 100vh;
+    background: rgb(230, 149, 225);
+}
+
+.content {
+    /* overflow: hidden; */
+}
+
+.content-main {
+    height: 100vh;
+    overflow: hidden;
+}
