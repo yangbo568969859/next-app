@@ -1,15 +1,9 @@
 interface Params {
-    params: {
-        param: string;
-    }
+  params: {
+    param: string;
+  };
 }
 
-export default function PageParam (
-    { params } : Params
-) {
-    return (
-        <div>
-            [...params] 参数 {JSON.stringify(params)}
-        </div>
-    )
+export default function PageParam({ params }: Params) {
+  return <div>[...params] 参数 {JSON.stringify(params)}</div>;
 }

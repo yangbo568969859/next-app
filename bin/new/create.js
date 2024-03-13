@@ -1,35 +1,34 @@
 const fs = require('fs-extra');
 const path = require('path');
 const Mustache = require('mustache');
+const log = require('../utils/log');
 
 const createModuleFiles = (moduleName, moduleType, moduleDesc) => {
-  console.log(moduleName);
-  console.log(moduleType);
   const outputName =
     moduleName[0].toLowerCase() + moduleName.slice(1, moduleName.length);
   const templates = [
     {
       template: 'moduleComponentTsx.tpl',
-      output: `app/components/${moduleName}.tsx`,
+      output: `app/components/${moduleName}/${moduleName}.tsx`,
     },
     {
       template: 'moduleComponentStyle.tpl',
-      output: `app/components/${moduleName}.module.css`,
+      output: `app/components/${moduleName}/${moduleName}.module.css`,
     },
   ];
   try {
     let tpl, output;
     templates.forEach((temp) => {
       tpl = fs.readFileSync(
-        path.resolve(__dirname, `../templates/component/${temp.template}`),
+        path.resolve(__dirname, `./templates/component/${temp.template}`),
         'utf8'
       );
-      output = Mustache.render(tpl, { moduleName, outputName });
-      fs.outputFileSync(path.resolve(__dirname, temp.output), output);
+      output = Mustache.render(tpl, { moduleName, outputName, moduleDesc });
+      fs.outputFileSync(path.resolve(process.cwd(), temp.output), output);
     });
-    console.log('模块文件创建完成');
+    log.success('模块文件创建完成');
   } catch (error) {
-    console.error(error);
+    log.error(error);
   }
 };
 
