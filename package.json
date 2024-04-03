@@ -11,7 +11,8 @@
     "createCompoent": "",
     "lint": "next lint",
     "prettier": "prettier --write .",
-    "prepare": "husky install"
+    "prepare": "husky install",
+    "commit": "git-cz"
   },
   "dependencies": {
     "next": "14.1.3",
