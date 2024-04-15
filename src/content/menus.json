@@ -1,0 +1,58 @@
+[
+  {
+    "name": "menus.json",
+    "path": "D:\\study\\react\\next-app\\src\\content",
+    "slug": "content/menus.json",
+    "slugNoExt": "content/menus",
+    "nameNoExt": "menus"
+  },
+  {
+    "name": "index.mdx",
+    "path": "D:\\study\\react\\next-app\\src\\content\\node\\express",
+    "slug": "content/node/express/index.mdx",
+    "slugNoExt": "content/node/express/index",
+    "nameNoExt": "index"
+  },
+  {
+    "name": "index.mdx",
+    "path": "D:\\study\\react\\next-app\\src\\content\\node",
+    "slug": "content/node/index.mdx",
+    "slugNoExt": "content/node/index",
+    "nameNoExt": "index"
+  },
+  {
+    "name": "index.mdx",
+    "path": "D:\\study\\react\\next-app\\src\\content\\react",
+    "slug": "content/react/index.mdx",
+    "slugNoExt": "content/react/index",
+    "nameNoExt": "index"
+  },
+  {
+    "name": "next.mdx",
+    "path": "D:\\study\\react\\next-app\\src\\content\\react",
+    "slug": "content/react/next.mdx",
+    "slugNoExt": "content/react/next",
+    "nameNoExt": "next"
+  },
+  {
+    "name": "3Dmath.md",
+    "path": "D:\\study\\react\\next-app\\src\\content\\unity",
+    "slug": "content/unity/3Dmath.md",
+    "slugNoExt": "content/unity/3Dmath",
+    "nameNoExt": "3Dmath"
+  },
+  {
+    "name": "animation.md",
+    "path": "D:\\study\\react\\next-app\\src\\content\\unity",
+    "slug": "content/unity/animation.md",
+    "slugNoExt": "content/unity/animation",
+    "nameNoExt": "animation"
+  },
+  {
+    "name": "index.mdx",
+    "path": "D:\\study\\react\\next-app\\src\\content\\vue",
+    "slug": "content/vue/index.mdx",
+    "slugNoExt": "content/vue/index",
+    "nameNoExt": "index"
+  }
+]
