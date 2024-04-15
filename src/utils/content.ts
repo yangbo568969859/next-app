@@ -107,12 +107,12 @@ export const getContentBySlug = async (pathName: string) => {
   };
 };
 
-export const getContent = async (slug: string) => {
-  const posts = await getAllContentsMeta();
-  if (!slug) throw new Error('not found');
-  const post = posts.find((post) => post.meta.slug === slug);
-  if (!post) {
-    throw new Error('not found');
-  }
-  return post;
-};
+// export const getContent = async (slug: string) => {
+//   const posts = await getAllContentsMeta();
+//   if (!slug) throw new Error('not found');
+//   const post = posts.find((post) => post.meta.slug === slug);
+//   if (!post) {
+//     throw new Error('not found');
+//   }
+//   return post;
+// };
