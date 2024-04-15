@@ -3,30 +3,28 @@ import WithSiteFooter from '@/src/components/withSiteFooter'
 import { WithSiteContent } from '@/src/components/withSiteContent'
 import WithSiteSideBar from '@/src/components/withSiteSideBar'
 
-import { getContentMenus } from '@/src/utils/content'
+import { getContentMenus, getContentTreeMenus } from '@/src/utils/content'
 
 export default async function Home() {
   const navResources = await getContentMenus()
-  const navItems = navResources.map((n, index) => {
+  const navTreeResources = await getContentTreeMenus()
+  const navItems = navTreeResources.map((n, index) => {
     return {
-      title: n.name,
+      title: n.title,
       icon: 'https://cos.codefe.top/images/ray-so-icon.png',
       id: index,
-      links: [
-        {},
-        {},
-        {},
-        {},
-      ]
+      links: n.children,
+      url: n.link,
+      isDir: n.isDir,
     }
   })
   return (
     <div className='container relative'>
       <div className='flex'>
-        <div className='fixed z-20 hidden min-h-screen w-[16rem] transition-all duration-300 ease-in-out sm:block'>
+        {/* <div className='fixed z-20 hidden min-h-screen w-[16rem] transition-all duration-300 ease-in-out sm:block'>
           <WithSiteSideBar navItems={navItems}></WithSiteSideBar>
-        </div>
-        <div className='sm:pl-[16rem] w-full'>
+        </div> */}
+        <div className='sm:pl-[0rem] w-full'>
           <WithSiteHeader></WithSiteHeader>
           <WithSiteContent navResources={navItems}></WithSiteContent>
           <WithSiteFooter></WithSiteFooter>

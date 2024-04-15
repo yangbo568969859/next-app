@@ -4,15 +4,19 @@ import Link from "next/link"
 import Image from "next/image";
 
 interface Category {
-  title: string;
-  icon: string;
   id: number;
+  title: string;
+  url: string,
+  icon: string;
+  description: string;
   name: string;
+  isDir: boolean;
+  path: string;
 }
 
 interface SidebarProps {
   className?: string
-  navItems: Pick<Category, "title" | "icon" | "id">[]
+  navItems: any[]
 }
 
 function WithSiteSideBar({ className, navItems }: SidebarProps) {
