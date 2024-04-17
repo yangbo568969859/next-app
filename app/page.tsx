@@ -1,21 +1,24 @@
 import WithSiteHeader from '@/src/components/withSiteHeader'
 import WithSiteFooter from '@/src/components/withSiteFooter'
 import { WithSiteContent } from '@/src/components/withSiteContent'
-import WithSiteSideBar from '@/src/components/withSiteSideBar'
 
-import { getContentMenus, getContentTreeMenus } from '@/src/utils/content'
+import { getContentTreeItems } from '@/src/utils/navigation'
 
 export default async function Home() {
-  const navResources = await getContentMenus()
-  const navTreeResources = await getContentTreeMenus()
-  const navItems = navTreeResources.map((n, index) => {
+  // const navResources = await getContentMenus()
+  const navTreeResources = await getContentTreeItems('')
+  const navItems = navTreeResources.map((n: any, index: number) => {
     return {
       title: n.title,
-      icon: 'https://cos.codefe.top/images/ray-so-icon.png',
-      id: index,
-      links: n.children,
+      icon: n.icon,
+      id: n.id,
+      links: n.children?.filter((n: any) => {
+        console.log('title', n.title)
+        return !['images', 'image', 'img'].includes(n.title.toLowerCase())
+      }),
       url: n.link,
       isDir: n.isDir,
+      link: n.link,
     }
   })
   return (

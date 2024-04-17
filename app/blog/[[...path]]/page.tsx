@@ -2,7 +2,8 @@ import { FC } from 'react';
 import WithSiteHeader from '@/src/components/withSiteHeader'
 import WithSiteFooter from '@/src/components/withSiteFooter'
 import { WithSiteContent } from '@/src/components/withSiteContent'
-import { getContentTreeItems } from '@/src/utils/content'
+import { getContentTreeItems } from '@/src/utils/navigation'
+import { notFound } from 'next/navigation';
 
 interface Params {
   params: {
@@ -13,27 +14,38 @@ interface Params {
 }
 
 const getBlogPage: FC<Params> = async ({ params }: Params) => {
-  const { path = [], param } = params;
-  console.log('getBlogPage')
+  const { path = [] } = params;
   const navTreeResources = await getContentTreeItems(path.join('/'))
-  // @ts-ignore
-  const navItems = navTreeResources.children.map((n, index) => {
-    return {
-      title: n.title,
-      icon: 'https://cos.codefe.top/images/ray-so-icon.png',
-      id: index,
-      links: n.children || [],
-      url: n.link,
-      isDir: n.isDir,
+  if (!navTreeResources) {
+    return notFound()
+  }
+  const list = [navTreeResources]
+  list.forEach((value: any) => {
+    if (value && value.children) {
+      value.links = value.children.map((n: any) => {
+        return {
+          title: n.title,
+          icon: n.icon,
+          id: n.id,
+          links: n.children?.filter((n: any) => {
+            console.log('title', n.title)
+            return !['images', 'image', 'img'].includes(n.title.toLowerCase())
+          }),
+          url: n.link,
+          isDir: n.isDir,
+          link: n.link,
+        }
+      }).filter((n: any) => {
+        return !['images', 'image', 'img'].includes(n.title.toLowerCase())
+      })
     }
   })
-  console.log(navItems)
   return (
     <div className='container relative'>
       <div className='flex'>
         <div className='sm:pl-[0rem] w-full'>
           <WithSiteHeader></WithSiteHeader>
-          <WithSiteContent navResources={navItems}></WithSiteContent>
+          <WithSiteContent navResources={list}></WithSiteContent>
           <WithSiteFooter></WithSiteFooter>
         </div>
       </div>

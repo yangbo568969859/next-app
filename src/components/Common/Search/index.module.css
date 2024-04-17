@@ -1,0 +1,85 @@
+.searchContainer {
+  @apply fixed flex z-50 mx-0 inset-0 items-center justify-center 
+  bg-neutral-900
+    bg-opacity-90
+    dark:bg-neutral-900
+    dark:bg-opacity-90;
+}
+
+.searchModelPanel {
+  @apply fixed
+  h-screen
+  w-full
+  bg-neutral-100
+  dark:bg-neutral-950
+  md:h-[450px]
+  md:max-w-3xl
+  md:rounded-xl
+  md:shadow-lg;
+
+}
+
+
+/* 搜索栏 */
+.searchBoxInputContainer {
+  @apply relative
+  px-2
+  md:px-4;
+}
+
+.searchBoxInput {
+  @apply w-full
+    rounded-b-none
+    border-b
+    border-neutral-300
+    bg-transparent
+    py-2
+    pl-8
+    pr-4
+    focus:outline-none
+    dark:border-neutral-900
+    dark:text-neutral-300
+    dark:placeholder-neutral-300;
+}
+/* tab栏 */
+.fulltextSearchSections {
+  @apply mb-1
+  mt-2
+  flex
+  gap-2
+  overflow-x-auto
+  p-2
+  text-xs
+  font-semibold
+  text-neutral-700
+  dark:text-neutral-600
+  md:px-4;
+}
+/* 内容栏 */
+.fulltextResultsContainer {
+  @apply h-80
+    overflow-auto
+    md:px-4;
+}
+/* 底部footer */
+.fulltextSearchFooter {
+  @apply
+  flex
+  w-full
+  justify-end
+  rounded-b-xl
+  border-t
+  border-neutral-300
+  bg-neutral-100
+  p-4
+  dark:border-neutral-900
+  dark:bg-neutral-950;
+}
+.poweredBy {
+  @apply flex text-xs text-neutral-950 dark:text-neutral-200;
+}
+
+.poweredByLogo {
+  @apply ml-2
+    w-16;
+}
