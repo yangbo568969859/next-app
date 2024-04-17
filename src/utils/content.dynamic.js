@@ -40,6 +40,7 @@ const getContentRouter = async () => {
 
   const _getMarkdownFile = async (pathname = '') => {
     const normalizedPathname = normalize(pathname).replace('.', '');
+    console.log('normalizedPathname', normalizedPathname)
     if (pathnameToFilename.has(normalizedPathname)) {
       const filename = pathnameToFilename.get(normalizedPathname);
       
@@ -81,7 +82,6 @@ const getContentRouter = async () => {
     // return compileMDX(sourceAsVirtualFile, fileExtension);
     
     const { data } = matter(source);
-    console.log(data)
     return { MDXContent: source, meta: data };
   }
   const getMDXContent = cache(async(source, filename) => {
@@ -90,9 +90,7 @@ const getContentRouter = async () => {
 
   const reactRuntime = { Fragment, jsx, jsxs };
   const compileMDX = async (source, fileExtension) => {
-    console.log(source)
     const { data } = matter(source);
-    console.log(data)
 
     const { default: MDXContent } = await evaluate(source, {
       format: fileExtension,

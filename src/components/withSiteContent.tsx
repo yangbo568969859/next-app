@@ -7,7 +7,6 @@ function WithSiteContentItems(props: any) {
   const { link } = props;
   // link.icon = 'https://cos.codefe.top/images/ray-so-icon.png'
   link.url = link.link
-  console.log(link.url)
   return (
     <Link
       href={link.isDir ? `/blog/${link.url}` : `/${link.url}` }
