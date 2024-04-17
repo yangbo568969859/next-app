@@ -10,11 +10,11 @@
     "build": "next build",
     "start": "next start",
     "create": "node bin/new",
-    "initNavigation": "node bin/initNavigation prettier --write ./navigation.json",
+    "initNavigation": "node bin/initNavigation && prettier --write ./navigation.json",
     "createPage": "",
     "createCompoent": "",
     "lint": "next lint",
-    "prettier": "prettier --write .",
+    "prettier": "prettier --write",
     "prepare": "husky install",
     "commit": "git-cz"
   },

@@ -1,15 +1,12 @@
 import Link from "next/link"
 import Image from "next/image"
-import ReactIcon from '@/src/icons/Logos/file_type_reactjs.svg'
 
 
 function WithSiteContentItems(props: any) {
   const { link } = props;
-  // link.icon = 'https://cos.codefe.top/images/ray-so-icon.png'
-  link.url = link.link
   return (
     <Link
-      href={link.isDir ? `/blog/${link.url}` : `/${link.url}` }
+      href={link.isDir ? `/blog${link.link}` : `/content${link.link}` }
     >
       <div className="relative mb-6 flex min-h-[122px] min-w-0 cursor-pointer flex-col break-words rounded-lg border border-gray-200 p-4 shadow-md transition-all hover:-translate-y-1 hover:scale-105 hover:bg-border hover:shadow-lg  xl:mb-0">
         <div className="flex items-center">
@@ -50,8 +47,8 @@ function WithSiteContent(props: any) {
                 </div>
                 <div className="grid grid-cols-1 gap-3 md:grid-cols-2 md:gap-6 lg:grid-cols-3">
                   {
-                    category.links ? category.links.map((link: any, index: number) => (
-                      <WithSiteContentItems link={link} key={`${link.id}-${index}`} />
+                    category.children && category.children.length ? category.children.map((link: any) => (
+                      <WithSiteContentItems link={link} key={`${link.id}`} />
                     )) : <div></div>
                   }
                 </div>

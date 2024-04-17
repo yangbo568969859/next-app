@@ -16,7 +16,7 @@ const findIdInNestedArray = (nestedArray: any, id: string): any => {
   return null
 }
 
-const getContentTreeItems = async (key: string) => {
+const getContentTreeItems = async (key: string = '') => {
   if (key === '' || key === null || key === undefined) {
     return siteNavigation
   }

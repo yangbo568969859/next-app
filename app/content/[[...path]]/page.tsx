@@ -19,8 +19,6 @@ interface Params {
 
 const getPage: FC<Params> = async ({ params }: Params) => {
   const { path = [] } = params;
-  // @ts-ignore
-  // const { content: MDXContent } = await getContentBySlug(path.join('/'));
   const { source, filename } = await dynamicRouter.getMarkdownFile(
     path.join('/')
   )

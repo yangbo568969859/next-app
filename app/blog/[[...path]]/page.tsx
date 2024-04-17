@@ -15,7 +15,7 @@ interface Params {
 
 const getBlogPage: FC<Params> = async ({ params }: Params) => {
   const { path = [] } = params;
-  const navTreeResources = await getContentTreeItems(path.join('/'))
+  const navTreeResources = await getContentTreeItems(decodeURI(`/${path.join('/')}`))
   if (!navTreeResources) {
     return notFound()
   }
@@ -27,16 +27,10 @@ const getBlogPage: FC<Params> = async ({ params }: Params) => {
           title: n.title,
           icon: n.icon,
           id: n.id,
-          links: n.children?.filter((n: any) => {
-            console.log('title', n.title)
-            return !['images', 'image', 'img'].includes(n.title.toLowerCase())
-          }),
-          url: n.link,
+          links: n.children,
           isDir: n.isDir,
           link: n.link,
         }
-      }).filter((n: any) => {
-        return !['images', 'image', 'img'].includes(n.title.toLowerCase())
       })
     }
   })

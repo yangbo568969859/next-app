@@ -1,4 +1,3 @@
-const { glob } = require('glob');
 const path = require('path');
 const fs = require('fs-extra');
 const { v4: uuidv4 } = require('uuid');
@@ -7,16 +6,22 @@ const supportedIcons = require('./supportedIcons');
 
 let menusTree = []
 const getNavigationMenu = () => {
-  // const navigationPath = path.join(process.cwd() + '/src/content')
+  findFileTree(path.join(process.cwd(), 'src/content'), '', menusTree)
+  if (menusTree.length > 0) {
+    formatNavigationMenu(menusTree)
+  }
+}
 
-  // const getMarkdownFiles = async (root, cwd, ignore = []) => {
-  //   const strings = await glob('**/*.{md,mdx}', { root, cwd, ignore })
-  //   console.log(strings)
-  // }
-
-  findFileTree(path.join(process.cwd(), 'src/content'), 'content', menusTree)
-
-  // getMarkdownFiles(process.cwd(), 'src/content')
+const formatNavigationMenu = (menusTree) => {
+  for (let i = 0; i < menusTree.length; i++) {
+    if (['images', 'image', 'img'].includes(menusTree[i].title.toLowerCase())) {
+      menusTree.splice(i, 1)
+      continue;
+    }
+    if (menusTree[i].children && menusTree[i].children.length > 0) {
+      formatNavigationMenu(menusTree[i].children)
+    }
+  }
 }
 
 const getMetaBySlug = (pathName) => {
@@ -38,30 +43,20 @@ function findIcon(filekey) {
   return result
 }
 
-const excludeFileNames = ['image', 'images', 'img']
-const excludeExtNames = ['jpg', 'png', 'jpeg', 'gif', 'svg', 'ico']
 function findFileTree(dir, slug, parent) {
   parent = parent || [];
   const dirs = fs.readdirSync(dir, { withFileTypes: true });
   dirs.forEach((value, index) => {
-    console.log(value)
-    // if (excludeFileNames.includes(value.name.toLowerCase())) {
-    //   return;
-    // }
-    const isImageDir = excludeFileNames.includes(value.name.toLowerCase())
     if (value.isDirectory()) {
       let slugPush = slug + '/' + value.name;
       parent.push({
         id: uuidv4(),
         title: value.name,
         icon: "/icons/Logos/default_folder.svg",
-        ext: "",
         description: '',
         link: slugPush,
-        path: value.path,
         isDir: true,
-        children: [],
-        meta: null,
+        children: []
       });
       findFileTree(
         path.join(value.path, value.name),
@@ -70,7 +65,6 @@ function findFileTree(dir, slug, parent) {
       );
     } else if (value.isFile()) {
       let name = value.name.slice(0, value.name.lastIndexOf('.'));
-      let ext = value.name.slice(value.name.lastIndexOf('.'));
       const { meta } = getMetaBySlug(path.join(value.path, value.name));
       
       let icon
@@ -82,9 +76,7 @@ function findFileTree(dir, slug, parent) {
         title: value.name,
         icon: icon || '',
         description: meta.spoiler,
-        ext: ext,
         link: slug + '/' + name,
-        path: value.path,
         isDir: false,
         meta: meta,
       });
