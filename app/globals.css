@@ -79,3 +79,9 @@
     font-feature-settings: "rlig" 1, "calt" 1;
   }
 }
+
+
+.DocSearch--active {
+  overflow: hidden;
+  padding-right: 13px;
+}

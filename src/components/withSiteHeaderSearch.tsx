@@ -1,5 +1,5 @@
 'use client';
-import { FC, useState } from 'react';
+import { FC, useEffect, useState } from 'react';
 import { useKeyboardCommands, useDetectOS } from '@/src/hooks/react-client';
 import { WithSearchBox } from '@/src/components/Common/Search/withSearchBox';
 import { Icons } from '@/src/components/UIBase/Icons';
@@ -20,6 +20,17 @@ const WithSiteHeaderSearch: FC = () => {
       default:
     }
   });
+
+  useEffect(() => {
+    console.log(isOpen)
+    if (isOpen) {
+      if (!document.body.classList.contains('DocSearch--active')) {
+        document.body.classList.add('DocSearch--active')
+      }
+    } else {
+      document.body.classList.remove('DocSearch--active')
+    }
+  }, [isOpen])
 
   const { os } = useDetectOS();
   const osCommandKey = os === 'MAC' ? '⌘' : 'Ctrl';

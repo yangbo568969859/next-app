@@ -36,11 +36,12 @@ const getMetaBySlug = (pathName) => {
 function findIcon(filekey) {
   let result
   for (let i = 0; i < supportedIcons.length; i++) {
-    if (supportedIcons[i].extensions.includes(filekey)) {
+    if (supportedIcons[i].extensions.includes(filekey.toLowerCase())) {
       result = `/icons/Logos/file_type_${supportedIcons[i].icon}.svg`
       break;
     }
   }
+  console.log(result)
   return result
 }
 
@@ -51,10 +52,11 @@ function findFileTree(dir, slug, parent) {
     if (value.isDirectory()) {
       let slugPush = slug + '/' + value.name;
       const dirInfoData = dirInfo[value.name.toLowerCase()]
+      let icon = findIcon(value.name);
       parent.push({
         id: uuidv4(),
         title: dirInfoData ? dirInfoData.title : value.name,
-        icon: "/icons/Logos/default_folder.svg",
+        icon: icon || "/icons/Logos/default_folder.svg",
         description: dirInfoData ? dirInfoData.description : '',
         link: slugPush,
         isDir: true,
