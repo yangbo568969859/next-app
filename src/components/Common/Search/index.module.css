@@ -1,9 +1,12 @@
 .searchContainer {
-  @apply fixed flex z-50 mx-0 inset-0 items-center justify-center 
-  bg-neutral-900
-    bg-opacity-90
-    dark:bg-neutral-900
-    dark:bg-opacity-90;
+  @apply fixed flex z-50 mx-0 inset-0 items-center justify-center;
+}
+
+.searchFilterModel {
+  @apply fixed inset-0 
+  bg-slate-900/25
+  dark:bg-neutral-800
+  dark:bg-opacity-80  backdrop-blur transition-opacity opacity-100;
 }
 
 .searchModelPanel {

@@ -8,7 +8,7 @@ function WithSiteContentItems(props: any) {
     <Link
       href={link.isDir ? `/blog${link.link}` : `/content${link.link}` }
     >
-      <div className="relative mb-6 flex min-h-[122px] min-w-0 cursor-pointer flex-col break-words rounded-lg border border-gray-200 p-4 shadow-md transition-all hover:-translate-y-1 hover:scale-105 hover:bg-border hover:shadow-lg  xl:mb-0">
+      <div className="relative mb-6 flex min-h-[122px] min-w-0 cursor-pointer flex-col break-words rounded-lg border border-gray-200 p-4 shadow-md transition-all hover:-translate-y-1 hover:scale-105 hover:bg-border hover:shadow-lg xl:mb-0">
         <div className="flex items-center">
           <div className="mr-3 flex h-10 w-10 overflow-hidden rounded-full">
             {
@@ -42,8 +42,9 @@ function WithSiteContent(props: any) {
           navResources.map((category: any) => {
             return (
               <div id={category.id} key={category.id} className="mb-4 md:mb-8">
-                <div className="my-4">
+                <div className="my-4 flex">
                   <h1 className="mb-2 text-2xl font-bold text-primary/80 sm:text-3xl">{ category.title }</h1>
+                  <p className="ml-4 mt-2 h-8 text-xs align-baseline text-slate-500 leading-7 hidden md:flex">{ category.description }</p>
                 </div>
                 <div className="grid grid-cols-1 gap-3 md:grid-cols-2 md:gap-6 lg:grid-cols-3">
                   {

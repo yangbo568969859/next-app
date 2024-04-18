@@ -29,6 +29,7 @@ export const WithSearchBox: FC<SearchBoxProps> = ({ onClose }) => {
 
   return (
     <div className={styles.searchContainer}>
+      <div className={styles.searchFilterModel}></div>
       <div className={styles.searchModelPanel} ref={searchBoxRef}>
         <div className={styles.searchBoxInputContainer}>
           <form onSubmit={onSubmit}>

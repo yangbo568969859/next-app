@@ -7,6 +7,9 @@ import { VFile } from 'vfile';
 import * as matter from 'gray-matter';
 import { evaluate } from '@mdx-js/mdx';
 import { Fragment, jsx, jsxs } from 'react/jsx-runtime';
+import { remark } from 'remark'
+import remarkParse  from 'remark-parse'
+import { visit } from 'unist-util-visit'
 
 const createCachedMarkdownCache = () => {
   return new Map();
@@ -80,11 +83,50 @@ const getContentRouter = async () => {
 
     // return compileMDX(sourceAsVirtualFile, fileExtension);
     
-    const { data } = matter(source);
+    const { data, content } = matter(source);
+    getContentInfo(content);
     return { MDXContent: source, meta: data };
   }
   const getMDXContent = cache(async(source, filename) => {
     return await _getMDXContent(source, filename);
+  })
+
+  function headingTree() {
+    return (node, file) => {
+      file.data.headings = getHeadings(node);
+    };
+  }
+
+  function transformNode(node, output, indexMap) {
+    const transformedNode = {
+      value: node.children[0].value,
+      depth: node.depth,
+      children: [],
+    };
+  
+    if (node.depth === 2) {
+      output.push(transformedNode);
+      indexMap[node.depth] = transformedNode;
+    } else {
+      const parent = indexMap[node.depth - 1];
+      if (parent) {
+        parent.children.push(transformedNode);
+        indexMap[node.depth] = transformedNode;
+      }
+    }
+  }
+
+  function getHeadings(root) {
+    const output = [];
+    const indexMap = {};
+    visit(root, "heading", (node) => {
+      transformNode(node, output, indexMap);
+    })
+    return output;
+  }
+  const getContentInfo = cache(async(source) => {
+    const { data } = await remark().use(headingTree).process(source)
+    return data.headings || []
   })
 
   const reactRuntime = { Fragment, jsx, jsxs };
@@ -105,6 +147,7 @@ const getContentRouter = async () => {
     getMarkdownFile,
     getPathname,
     getMDXContent,
+    getContentInfo,
   }
 }
 

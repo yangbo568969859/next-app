@@ -14,6 +14,7 @@ export default async function Home() {
       children: n.children,
       isDir: n.isDir,
       link: n.link,
+      description: n.description,
     }
   })
   return (

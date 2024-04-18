@@ -11,7 +11,7 @@ const WithSiteHeader: FC = () => {
       <div className='container flex h-16 items-center px-4 sm:justify-between sm:space-x-0'>
         <div className='flex'>
           <Link href="/" aria-label="Home">
-            阿呆是一只猫🐱
+            阿呆🐱的空间站
           </Link>
         </div>
         <div className='flex flex-1 items-center justify-end space-x-4'>

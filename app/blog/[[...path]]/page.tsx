@@ -30,6 +30,7 @@ const getBlogPage: FC<Params> = async ({ params }: Params) => {
           links: n.children,
           isDir: n.isDir,
           link: n.link,
+          description: n.description,
         }
       })
     }
