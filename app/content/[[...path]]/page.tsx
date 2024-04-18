@@ -20,7 +20,7 @@ interface Params {
 const getPage: FC<Params> = async ({ params }: Params) => {
   const { path = [] } = params;
   const { source, filename } = await dynamicRouter.getMarkdownFile(
-    path.join('/')
+    decodeURI(path.join('/'))
   )
   if (source.length && filename.length) {
     const { MDXContent, meta } = await dynamicRouter.getMDXContent(source, filename);

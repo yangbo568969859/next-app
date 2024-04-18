@@ -6,7 +6,7 @@
 
 - nrm ls 查看可选的源
 - nrm use taobao 切换源
-- nrm add registry <http://192.168.10.127:8081/repository/npm-public/>  其中reigstry为源名，url为源的路径
+- nrm add registry http://192.168.10.127:8081/repository/npm-public  其中reigstry为源名，url为源的路径
 - nrm del registry 删除对应的源，reigstry为源名
 - nrm test 测试相应源的响应时间
 
@@ -28,7 +28,7 @@ npm 的 .npmrc 文件在哪里？缓存及全局包文件在什么位置？
 - npm缓存清理 npm cache clean --force
 - 淘宝源镜像证书问题
   - 设置npm ssl不校验 npm config set strict-ssl false
-  - package.lock 或 yarn.lock 全局替换 <https://registry.npm.taobao.org> 为 <https://registry.npmmirror.com>
+  - package.lock 或 yarn.lock 全局替换 https://registry.npm.taobao.org 为 https://registry.npmmirror.com
 
 ### 碰到问题
 

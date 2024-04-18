@@ -7,7 +7,7 @@ import { buttonVariants } from '@/src/components/UIBase/Button'
 
 const WithSiteHeader: FC = () => {
   return (
-    <header className='sticky top-0 z-40 px-4 md:px-12 w-full bg-background dark:border-slate-50/[0.06] lg:border-b'>
+    <header className='sticky top-0 z-40 px-4 md:px-12 w-full bg-background dark:border-slate-50/[0.06] border-b'>
       <div className='container flex h-16 items-center px-4 sm:justify-between sm:space-x-0'>
         <div className='flex'>
           <Link href="/" aria-label="Home">

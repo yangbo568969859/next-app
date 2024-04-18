@@ -3,6 +3,7 @@ const fs = require('fs-extra');
 const { v4: uuidv4 } = require('uuid');
 const matter = require('gray-matter');
 const supportedIcons = require('./supportedIcons');
+const dirInfo = require('./dirInfo');
 
 let menusTree = []
 const getNavigationMenu = () => {
@@ -49,11 +50,12 @@ function findFileTree(dir, slug, parent) {
   dirs.forEach((value, index) => {
     if (value.isDirectory()) {
       let slugPush = slug + '/' + value.name;
+      const dirInfoData = dirInfo[value.name.toLowerCase()]
       parent.push({
         id: uuidv4(),
-        title: value.name,
+        title: dirInfoData ? dirInfoData.title : value.name,
         icon: "/icons/Logos/default_folder.svg",
-        description: '',
+        description: dirInfoData ? dirInfoData.description : '',
         link: slugPush,
         isDir: true,
         children: []
@@ -65,6 +67,9 @@ function findFileTree(dir, slug, parent) {
       );
     } else if (value.isFile()) {
       let name = value.name.slice(0, value.name.lastIndexOf('.'));
+      if (name === 'index') {
+        name = ''
+      }
       const { meta } = getMetaBySlug(path.join(value.path, value.name));
       
       let icon
@@ -76,7 +81,7 @@ function findFileTree(dir, slug, parent) {
         title: value.name,
         icon: icon || '',
         description: meta.spoiler,
-        link: slug + '/' + name,
+        link: slug + (name ? ('/' + name) : ''),
         isDir: false,
         meta: meta,
       });

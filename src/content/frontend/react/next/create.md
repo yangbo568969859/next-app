@@ -49,7 +49,7 @@ Creating a new Next.js app in D:\study\react\next-project.
 npm run dev
 ```
 
-打开 <http://localhost:3000/> 成功运行
+打开 http://localhost:3000 成功运行
 
 ![next-start](./image/next-start.png)
 

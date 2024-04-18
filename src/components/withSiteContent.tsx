@@ -36,12 +36,12 @@ function WithSiteContentItems(props: any) {
 function WithSiteContent(props: any) {
   const { navResources } = props;
   return (
-    <div className="w-full px-12 pt-4">
+    <div className="w-full px-0 pt-4 md:px-12">
       <div className="mx-auto w-full px-4 md:px-6">
         {
           navResources.map((category: any) => {
             return (
-              <div id={category.id} key={category.id} className="mb-12">
+              <div id={category.id} key={category.id} className="mb-4 md:mb-8">
                 <div className="my-4">
                   <h1 className="mb-2 text-2xl font-bold text-primary/80 sm:text-3xl">{ category.title }</h1>
                 </div>

@@ -49,7 +49,7 @@ Creating a new Next.js app in D:\study\react\next-project.
 npm run dev
 ```
 
-打开 <http://localhost:3000/> 成功运行
+打开 http://localhost:3000/ 成功运行
 
 ![next-start](./image/next-start.png)
 
@@ -368,7 +368,7 @@ npm install lint-staged --save-dev
       "name": "Next.js: debug client-side",
       "type": "chrome",
       "request": "launch",
-      "url": "<http://localhost:3000>"
+      "url": "http://localhost:3000"
     },
     {
       "name": "Next.js: debug full stack",

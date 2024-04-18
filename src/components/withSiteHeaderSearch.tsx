@@ -26,15 +26,19 @@ const WithSiteHeaderSearch: FC = () => {
   const isOSLoading = os === 'LOADING';
 
   return (
-    <div>
+    <div className='hidden md:flex'>
       <div className="flex w-190">
-        <button className='flex w-52 gap-2 rounded-md bg-neutral-200 p-2 text-sm transition-all duration-300 ease-in-out text-neutral-600
-        hover:bg-neutral-300 hover:text-neutral-900 dark:bg-neutral-900 dark:text-neutral-600 dark:hover:bg-neutral-800 dark:hover:text-neutral-500' onClick={openSearchBox}>
-          <Icons.search className="h-5 w-5" />
-          start Typing ...
-          <kbd>
-            <abbr>{osCommandKey} K</abbr>
-          </kbd>
+        <button className='flex w-52 gap-2 rounded-md bg-secondary p-2 text-sm transition-all duration-300 ease-in-out justify-between text-neutral-600 px-3
+        hover:bg-neutral-200 hover:text-neutral-900 dark:bg-neutral-900 dark:text-neutral-600 dark:hover:bg-neutral-800 dark:hover:text-neutral-500' onClick={openSearchBox}>
+          <span className='flex'>
+            <Icons.search className="h-5 w-5 mr-1" />
+            Search ...
+          </span>
+          <span>
+            <kbd>
+              <abbr>{osCommandKey} K</abbr>
+            </kbd>
+          </span>
         </button>
       </div>
       {isOpen ? <WithSearchBox onClose={closeSearchBox} /> : null}
