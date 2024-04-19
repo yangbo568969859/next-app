@@ -1,3 +1,5 @@
+import { Icons } from '@/src/components/UIBase/Icons'
+
 type SiteContentHeadingProps = {
   depth: number;
   title: string;
@@ -46,7 +48,12 @@ function WithSiteContentHeading(props: any) {
                 } else {
                   return (
                     <li className="ml-4" key={index}>
-                      <a href={`#${item.anchor}`} className="group flex items-start py-1 hover:text-slate-900 dark:text-slate-400 dark:hover:text-slate-300">{item.title}</a>
+                      <a href={`#${item.anchor}`} className="group flex items-start py-1 hover:text-slate-900 dark:text-slate-400 dark:hover:text-slate-300">
+                        <div className='flex items-center mr-1'>
+                        <Icons.arrawRight className="h-5 w-4 text-slate-400 group-hover:text-slate-900 dark:text-slate-400 dark:group-hover:text-slate-300" />
+                        </div>
+                        <div>{item.title}</div>
+                      </a>
                     </li>
                   )
                 }

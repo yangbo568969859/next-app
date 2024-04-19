@@ -41,7 +41,9 @@ function findIcon(filekey) {
       break;
     }
   }
-  console.log(result)
+  if (result) {
+    console.log(result)
+  }
   return result
 }
 

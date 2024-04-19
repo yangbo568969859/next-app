@@ -31,30 +31,32 @@ const getPage: FC<Params> = async ({ params }: Params) => {
         <WithSiteHeader></WithSiteHeader>
         <div className='max-w-8xl mx-auto px-4 sm:px-6 md:px-8'>
           <div className="lg:pl-[19.5rem]">
-            <div className="markdown max-w-3xl mx-auto pt-10 xl:max-w-none xl:ml-0 xl:mr-[15.5rem] xl:pr-16">
-              <MDXRemote
-                source={ MDXContent || '' }
-                options={{
-                  parseFrontmatter: true,
-                  mdxOptions: {
-                    // @ts-ignore
-                    remarkPlugins: [remarkMath],
-                    rehypePlugins: [
-                      // Generates `id` attributes for headings (H1, ...)
-                      rehypeSlug,
+            <div className="max-w-3xl mx-auto pt-10 xl:max-w-none xl:ml-0 xl:mr-[15.5rem] xl:pr-16">
+              <div className='markdown'>
+                <MDXRemote
+                  source={ MDXContent || '' }
+                  options={{
+                    parseFrontmatter: true,
+                    mdxOptions: {
                       // @ts-ignore
-                      rehypeKatex,
-                      [
+                      remarkPlugins: [remarkMath],
+                      rehypePlugins: [
+                        // Generates `id` attributes for headings (H1, ...)
+                        rehypeSlug,
                         // @ts-ignore
-                        rehypePrettyCode,
-                        {
-                          theme: 'material-theme-palenight',
-                        },
+                        rehypeKatex,
+                        [
+                          // @ts-ignore
+                          rehypePrettyCode,
+                          {
+                            theme: 'material-theme-palenight',
+                          },
+                        ],
                       ],
-                    ],
-                  },
-                }}
-              />
+                    },
+                  }}
+                />
+              </div>
             </div>
           </div>
         </div>

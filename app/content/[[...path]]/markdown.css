@@ -44,7 +44,7 @@
 }
 
 .markdown pre {
-  @apply -mx-4 mb-8 overflow-y-auto p-4 text-sm;
+  @apply mb-8 overflow-y-auto p-4 text-sm;
   clip-path: var(--path);
   border-top-right-radius: var(--radius-top);
   border-top-left-radius: var(--radius-top);
@@ -76,15 +76,12 @@
 }
 
 .markdown ul {
-  margin-top: 0;
-  padding-bottom: 0;
-  padding-left: 0;
-  padding-right: 0;
-  padding-top: 0;
-  margin-bottom: 1.75rem;
-  list-style-position: outside;
-  list-style-image: none;
-  list-style: disc;
+  @apply list-disc
+  pl-9
+  pr-5
+  leading-6
+  text-neutral-900
+  dark:text-white
 }
 
 .markdown li {

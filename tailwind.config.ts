@@ -61,6 +61,9 @@ const config: Config = {
       fontFamily: {
         sans: ["var(--font-sans)", ...fontFamily.sans],
       },
+      maxWidth: {
+        '8xl': '90rem',
+      },
       keyframes: {
         "accordion-down": {
           from: { height: '0' },

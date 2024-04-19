@@ -24,12 +24,8 @@ module.exports = supportedIcons = [
     extensions: ['koa']
   },
   {
-    icon: 'vue',
-    extensions: ['vue']
-  },
-  {
     icon: 'apache',
-    extensions: []
+    extensions: ['apache']
   },
   {
     icon: 'ats',
@@ -77,7 +73,7 @@ module.exports = supportedIcons = [
   },
   {
     icon: 'mysql',
-    extensions: ['mysql']
+    extensions: ['mysql', 'mongodb']
   },
   {
     icon: 'nestjs',
@@ -85,7 +81,11 @@ module.exports = supportedIcons = [
   },
   {
     icon: 'next',
-    extensions: []
+    extensions: ['next', 'nextjs']
+  },
+  {
+    icon: 'nuxt',
+    extensions: ['nuxt', 'nuxtjs']
   },
   {
     icon: 'node',

@@ -1,6 +1,8 @@
 import Link from "next/link"
 import Image from "next/image"
 
+import { Button } from '@/src/components/UIBase/Button'
+
 
 function WithSiteContentItems(props: any) {
   const { link } = props;
@@ -10,7 +12,7 @@ function WithSiteContentItems(props: any) {
     >
       <div className="relative mb-6 flex min-h-[122px] min-w-0 cursor-pointer flex-col break-words rounded-lg border border-gray-200 p-4 shadow-md transition-all hover:-translate-y-1 hover:scale-105 hover:bg-border hover:shadow-lg xl:mb-0">
         <div className="flex items-center">
-          <div className="mr-3 flex h-10 w-10 overflow-hidden rounded-full">
+          <div className="mr-3 flex h-10 w-10 overflow-hidden rounded-md">
             {
               link.icon 
                 ? <Image
@@ -28,6 +30,12 @@ function WithSiteContentItems(props: any) {
         <div className="mt-2 line-clamp-2 text-sm text-primary">
           { link.description }   
         </div>
+        {/* <div className="absolute right-2 bottom-2">
+          <Button variant="ghost"
+            size="sm">
+            { link.isDir ? '进入目录' : '进入文件' }
+          </Button>
+        </div> */}
       </div>
     </Link>
   )
