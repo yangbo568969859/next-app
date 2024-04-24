@@ -5,6 +5,12 @@ import styles from './index.module.css';
 import { useClickOutside } from '@/src/hooks/react-client';
 
 import { WithAlgoliaBy } from './WithAlgoliaBy';
+import algoliasearch from 'algoliasearch';
+import {
+  NEXT_PUBLIC_ALGOLIA_APP_ID,
+  NEXT_PUBLIC_ALGOLIA_SEARCH_ONLY_API_KEY,
+  NEXT_PUBLIC_ALGOLIA_INDEX
+} from '@/src/utils/content.constants'
 
 type SearchBoxProps = { onClose: () => void };
 
@@ -25,6 +31,19 @@ export const WithSearchBox: FC<SearchBoxProps> = ({ onClose }) => {
     e.preventDefault();
     // dosome
     // onClose();
+    handleSearch(searchTerm, 1);
+  }
+  console.log(process.env.NEXT_PUBLIC_ALGOLIA_APP_ID)
+  const client = algoliasearch(NEXT_PUBLIC_ALGOLIA_APP_ID, NEXT_PUBLIC_ALGOLIA_SEARCH_ONLY_API_KEY)
+  const index = client.initIndex(NEXT_PUBLIC_ALGOLIA_INDEX);
+
+  const handleSearch = async (query: any, page: any) => {
+    try {
+      const res = await index.search(query, { page, hitsPerPage: 10 })
+      console.log(res)
+    } catch (error) {
+      
+    }
   }
 
   return (

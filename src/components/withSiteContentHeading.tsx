@@ -1,4 +1,7 @@
+'use client'
 import { Icons } from '@/src/components/UIBase/Icons'
+import { useState, useEffect, useRef } from 'react'
+import clsx from 'clsx'
 
 type SiteContentHeadingProps = {
   depth: number;
@@ -17,18 +20,34 @@ function WithSiteContentHeading(props: any) {
     realList.push({
       depth: value.depth,
       title: value.value,
-      anchor: value.value,
+      anchor: value.value.replaceAll(' ', '-').toLowerCase(),
     })
     if (value.children) {
       value.children.forEach((child: any) => {
         realList.push({
           depth: child.depth,
           title: child.value,
-          anchor: child.value,
+          anchor: child.value.replaceAll(' ', '-').toLowerCase(),
         })
       })
     }
   })
+  const [activeNavId, setActiveNavId] = useState(realList[0].anchor)
+  // const renderCount = useRef(0)
+  useEffect(() => {
+    // console.log('renderCount', renderCount.current)
+    // if (renderCount.current < 2) {
+    //   renderCount.current++
+    //   return
+    // }
+    const ele = document.getElementById(`${activeNavId}`)
+    const elePos = ele?.getBoundingClientRect().top || 0
+    const offsetPos = elePos + window.pageYOffset - 80
+    window.scrollTo({
+      top: offsetPos,
+      behavior: 'smooth'
+    })
+  }, [activeNavId])
   if (contentHeads.length) {
     return (
       <div className="fixed z-20 top-[3.8125rem] bottom-0 right-[max(0px,calc(50%-45rem))] w-[19.5rem] py-10 overflow-y-auto hidden xl:block">
@@ -42,15 +61,16 @@ function WithSiteContentHeading(props: any) {
                 if (item.depth === 2) {
                   return (
                     <li key={index}>
-                      <a href={`#${item.anchor}`} className="block py-1 hover:text-slate-900 dark:text-slate-400 dark:hover:text-slate-300">{item.title}</a>
+                      <a onClick={() => setActiveNavId(item.anchor)} className={clsx("cursor-pointer block py-1",
+                      activeNavId === item.anchor ? "text-sky-500 dark:text-sky-400" : "hover:text-slate-900 dark:text-slate-400 dark:hover:text-slate-300")}>{item.title}</a>
                     </li>
                   )
                 } else {
                   return (
                     <li className="ml-4" key={index}>
-                      <a href={`#${item.anchor}`} className="group flex items-start py-1 hover:text-slate-900 dark:text-slate-400 dark:hover:text-slate-300">
+                      <a onClick={() => setActiveNavId(item.anchor)} className={clsx("group cursor-pointer flex items-start py-1", activeNavId === item.anchor ? "text-sky-500 dark:text-sky-400" : "dark:text-slate-400")}>
                         <div className='flex items-center mr-1'>
-                        <Icons.arrawRight className="h-5 w-4 text-slate-400 group-hover:text-slate-900 dark:text-slate-400 dark:group-hover:text-slate-300" />
+                          <Icons.arrawRight className="h-5 w-4 text-slate-400 group-hover:text-slate-900 dark:text-slate-400 dark:group-hover:text-slate-300" />
                         </div>
                         <div>{item.title}</div>
                       </a>

@@ -22,7 +22,6 @@ const WithSiteHeaderSearch: FC = () => {
   });
 
   useEffect(() => {
-    console.log(isOpen)
     if (isOpen) {
       if (!document.body.classList.contains('DocSearch--active')) {
         document.body.classList.add('DocSearch--active')

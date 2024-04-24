@@ -21,6 +21,7 @@
   "dependencies": {
     "@mdx-js/mdx": "^3.0.1",
     "@vercel/analytics": "^1.2.2",
+    "algoliasearch": "^4.23.3",
     "class-variance-authority": "^0.7.0",
     "clsx": "^2.1.0",
     "glob": "^10.3.12",

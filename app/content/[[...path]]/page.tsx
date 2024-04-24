@@ -7,7 +7,7 @@ import rehypeKatex from 'rehype-katex';
 import rehypeSlug from 'rehype-slug';
 import { dynamicRouter } from '@/src/utils/content.dynamic'
 import WithSiteHeader from '@/src/components/withSiteHeader'
-import WithSiteContentHead from '@/src/components/withSiteContentHeading'
+import WithSiteContentHeading from '@/src/components/withSiteContentHeading'
 import './markdown.css';
 
 interface Params {
@@ -60,7 +60,7 @@ const getPage: FC<Params> = async ({ params }: Params) => {
             </div>
           </div>
         </div>
-        <WithSiteContentHead contentHeads={res}></WithSiteContentHead>
+        <WithSiteContentHeading contentHeads={res}></WithSiteContentHeading>
       </div>
     );
   }

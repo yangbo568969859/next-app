@@ -39,6 +39,7 @@ Creating a new Next.js app in D:\study\react\next-project.
 
 - TypeScript YES
 - ESLint YES
+- Tailwind CSS  引入Tailwind css
 - use `src/` directory 默认是 app 路径（前端一般较多使用 src 目录，这个选 NO 会生成 src/app 路径）
 - App Router 是否使用 APP 路由模式
 - 是否使用 @ 设置别名

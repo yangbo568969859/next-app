@@ -3,12 +3,10 @@ import { existsSync } from 'fs';
 import { cache } from 'react';
 import { glob } from 'glob';
 import { normalize, join } from 'path';
-import { VFile } from 'vfile';
 import * as matter from 'gray-matter';
 import { evaluate } from '@mdx-js/mdx';
 import { Fragment, jsx, jsxs } from 'react/jsx-runtime';
 import { remark } from 'remark'
-import remarkParse  from 'remark-parse'
 import { visit } from 'unist-util-visit'
 
 const createCachedMarkdownCache = () => {
