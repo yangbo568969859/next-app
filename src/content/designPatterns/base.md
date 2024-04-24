@@ -116,6 +116,112 @@ Singleton(单例)：定义一个Instance操作，允许客户端访问它的唯�
 
 ## 结构型
 
+### 适配器模式
+
+适配器模式允许一个类接口转换成客户端所期望地另一种接口，从而使原本由于接口不兼容而无法一起工作的类能一起工作
+
+核心思想是将一个类的接口包装在一个新的适配器类中，从而使其与其他类兼容。适配器模式分为类适配器和对象适配器；类适配器通过继承实现，对象适配器通过组合实现
+
+### 组合模式
+
+组合模式是一种结构型设计模式，它允许你将对象组合成树形结构来表现 “部分-整体” 的层次关系。组合模式使得客户端对单个对象和组合对象的使用具有一致性
+
+组合模式的核心思想是定义一个抽象的组件接口，让单个对象和组合对象都实现这个接口。这样，客户端就可以一致的对待单个对象和组合对象，而不必关心他们的具体类型
+
+包含角色
+
+- Component(组件) 定义组合中所有对象的通用接口，并为所有类声明一个接口用于访问和管理它的子组件
+- Leaf(叶子) 在组合中表示叶子节点，叶子节点没有子节点
+- Composite(组合) 定义所有子部件的那些部件的行为，存储子部件，在组件接口中实现与子部件有关的操作
+
+工作流程
+
+```js
+// 下面是一个使用JavaScript实现的组合模式的例子,演示了如何使用组合模式来表示文件系统中的目录和文件
+class FileSystemItem {
+  constructor(name) {
+    this.name = name;
+  }
+
+  display() {
+    throw new Error("Method 'display()' must be implemented.");
+  }
+}
+// 叶子：文件
+class File extends FileSystemItem {
+  contructor(name) {
+    super(name);
+  }
+
+  display() {
+    console.log(`Displaying file ${this.name}`);
+  }
+}
+// 组合：目录
+class Directory extends FileSystemItem {
+  constructor(name) {
+    super(name);
+    this.items = [];
+  }
+
+  add(item) {
+    this.items.push(item);
+  }
+
+  remove(item) {
+    const index = this.items.indexOf(item);
+    if (index !== -1) {
+      this.items.splice(index, 1);
+    }
+  }
+
+  display() {
+    console.log(`Directory: ${this.name}`);
+    for (const item of this.items) {
+      item.display();
+    }
+  }
+}
+
+// 客户端代码
+function clientCode () {
+  const root = new Directory("root");
+  const dir1 = new Directory("dir1");
+  const dir2 = new Directory("dir2");
+
+  const file1 = new File("file1.txt");
+  const file2 = new File("file2.txt");
+  const file3 = new File("file3.txt");
+
+  root.add(dir1);
+  root.add(dir2);
+  root.add(file1);
+
+  dir1.add(file2);
+  dir2.add(file3);
+
+  root.display();
+}
+
+clientCode();
+```
+
+优点
+
+- 客户端可以一致地对待单个对象和组合对象
+- 组合模式使得在组合体内加入新组件很容易，客户端不会察觉到组合体内部地数据变化
+- 组合模式提供了一种灵活地方式来构建复杂地树形结构并可以方便地对整个结构进行操作
+
+缺点
+
+- 某些情况下，组合模式会使设计变得过于一般化，导致系统中出现大量地小类，增加了系统地复杂度
+- 组合模式地叶子和组合类需要实现相同地接口，这可能会带来一些额外地工作量
+
+使用场景
+
+- 你想表示对象的部分-整体层次结构
+- 你希望客户端能够忽略组合对象与单个对象的不同,客户端将统一地使用组合结构中的所有对象
+
 ### 桥接模式
 
 桥接模式是一个结构性设计模式，它将抽象部分和实现部分分离，使他们都可以独立地变化。这种分离可以在程序运行时刻实现，也可以在编译时实现。桥接模式通过提供抽象化和现实化之间地桥接结构，来实现二者地解耦
@@ -124,13 +230,140 @@ Singleton(单例)：定义一个Instance操作，允许客户端访问它的唯�
 
 - Abstration(抽象化) 定义抽象类的接口，它一般是抽象类而不是接口，其中定义了一个Implementor类型的对象并可以维护该对象，它与Implementor之间具有关联关系，它即可易包含抽象的业务方法，也可以包含具体的业务方法
 - RefinedAbstraction(具体抽象化)  扩充由Abstration定义的接口，通常情况下它不再是抽象类而是具体类。它实现了Abstration中声明的抽象业务方法。在RefinedAbstraction可以调用在 Implementor 中定义的业务方法
-- Implementor(实现类接口) 定义实现类的接口，这个接口不一定要与 Abstraction 的接口完全一致，事实上这两个接口可以完全不同，一般而言，Implementor 接口仅提供基本操作，而 Abstraction 定义的接口可能会做更多更复杂的操作。Implementor 接口对这些基本操作进行了声明，而具体实现交给其子类。通过关联关系，在 Abstraction 中不仅拥有自己的方法，还可以调用到 Implementor 中定义的方法
+- Implementor(实现化接口) 定义实现类的接口，这个接口不一定要与 Abstraction 的接口完全一致，事实上这两个接口可以完全不同，一般而言，Implementor 接口仅提供基本操作，而 Abstraction 定义的接口可能会做更多更复杂的操作。Implementor 接口对这些基本操作进行了声明，而具体实现交给其子类。通过关联关系，在 Abstraction 中不仅拥有自己的方法，还可以调用到 Implementor 中定义的方法
 - 具体实现化(Concrete Implementor)：实现实现化角色，定义具体的实现。
 
 工作流程
 
 ```js
+// 下面是一个简单的例子，演示了一个绘图应用,它可以使用不同的渲染器(如SVG、Canvas)来绘制不同的形状(如圆形、矩形)。
+// 实现化角色
+class Renderer {
+  constructor() {
+    if (new.target === Renderer) {
+      throw new Error("Cannot instantiate abstract class.");
+    }
+  }
 
+  renderCircle(radius) {
+
+  }
+
+  renderRect(width, height) {
+
+  }
+}
+// 具体化实现角色：SVG渲染器
+class SVGRenderer extends Renderer {
+  renderCircle(radius) {
+    console.log(`Rendering a circle with radius ${radius} using SVG.`);
+  }
+
+  renderRect(width, height) {
+    console.log(`Rendering a rectangle with width ${width} and height ${height} using SVG.`);
+  }
+}
+// 具体实现化角色:Canvas渲染器
+class CanvasRenderer extends Renderer {
+  renderCircle(radius) {
+    console.log(`Rendering a circle with radius ${radius} using Canvas.`);
+  }
+
+  renderRect(width, height) {
+    console.log(`Rendering a rectangle with width ${width} and height ${height} using Canvas.`);
+  }
+}
+// 抽象化角色:形状
+class Shape {
+  constructor(renderer) {
+    this.renderer = renderer
+  }
+}
+// 修正抽象化角色：圆形
+class Circle extends Shape {
+  constructor(renderer, radius) {
+    super(renderer);
+    this.radius = radius;
+  }
+
+  draw() {
+    this.renderer.renderCircle(this.radius);
+  }
+}
+// 修正抽象化角色:矩形
+class Rect extends Shape {
+  constructor(renderer, width, height) {
+    super(renderer);
+    this.width = width;
+    this.height = height;
+  }
+
+  draw() {
+    this.renderer.renderRect(this.width, this.height);
+  }
+}
+
+// 客户端代码
+function clientCode () {
+  const svgRenderer = new SVGRenderer();
+  const canvasRenderer = new CanvasRenderer();
+
+  const svgCircle = new Circle(svgRenderer, 100);
+  const svgRect = new Rect(svgRenderer, 100, 200);
+  const canvasCircle = new Circle(canvasRenderer, 100);
+  const canvasRect = new Rect(canvasRenderer, 100, 200);
+
+  svgCircle.draw();
+  svgRect.draw();
+  canvasCircle.draw();
+  canvasRect.draw();
+}
+
+clientCode();
+
+// Renderer是实现化角色,定义了渲染器的接口。
+// SVGRenderer和CanvasRenderer是具体实现化角色,实现了具体的渲染方法。
+// Shape是抽象化角色,持有一个渲染器的引用。
+// Circle和Rect是修正抽象化角色,继承自Shape,并定义了具体的绘制方法。
+
+// Rendering a circle with radius 5 using SVG.
+// Rendering a rectangle with width 10 and height 20 using SVG.
+// Rendering a circleRendering a circle with radius 8 using Canvas.
+// Rendering a rectangle with width 15 and height 30 using Canvas.
+
+// 如果我们想要添加一个新的渲染器(如WebGL渲染器),只需要创建一个新的WebGLRenderer类,实现Renderer接口,而不需要修改任何形状的代码
+
+class WebGLRenderer extends Renderer {
+  renderCircle(radius) {
+    console.log(`Rendering a circle with radius ${radius} using WebGL.`);
+  }
+
+  renderRect(width, height) {
+    console.log(`Rendering a rectangle with width ${width} and height ${height} using WebGL.`);
+  }
+}
+
+// 客户端代码
+const webglRenderer = new WebGLRenderer();
+const webglCircle = new Circle(webglRenderer, 6);
+const webglRect = new Rect(webglRenderer, 12, 24);
+
+webglCircle.draw();
+webglRect.draw();
+
+// 同样地,如果我们想要添加一个新的形状(如三角形),只需要创建一个新的Triangle类,继承自Shape,并实现draw()方法,而不需要修改任何渲染器的代码
+class Triangle extends Shape {
+  constructor(renderer, base, height) {
+    super(renderer);
+    this.base = base;
+    this.height = height;
+  }
+
+  draw() {
+    console.log(`Rendering a triangle with base ${this.base} and height ${this.height}.`);
+    // 使用渲染器绘制三角形...
+  }
+}
 ```
 
 优点
