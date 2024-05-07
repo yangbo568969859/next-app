@@ -72,8 +72,19 @@ mysqld --install
 net start mysql
 ```
 
+如果上一步出现错误，例如以下错误
+
+- 发生系统错误 5 拒绝访问 解决方法：使用管理员权限打开cmd.右键以管理员权限打开。
+- 发生系统错误 2 系统找不到指定的文件。 解决方法：执行 mysqld remove 先卸载再重新安装 mysqld install，安装成功后再次启动该服务
+
 ## 登录数据库
 
+```shell
 mysql -u root -p
+```
 
-## 创建数据库
+修改密码（执行以下语句，即可将密码改为 root）
+
+```shell
+ALTER USER 'root'@'localhost' IDENTIFIED WITH mysql_native_password BY 'root';
+```

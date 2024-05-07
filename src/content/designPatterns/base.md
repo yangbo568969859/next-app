@@ -116,6 +116,203 @@ Singleton(单例)：定义一个Instance操作，允许客户端访问它的唯�
 
 ## 结构型
 
+### 装饰模式
+
+允许向一个现有的对象添加新的功能，同时又不改变其结构
+
+核心思想是动态地给一个对象添加一些额外地职责，就增加功能来说：装饰模式相比生成子类更加灵活。装饰模式以对客户端透明地方式动态地给一个对象附加更多责任。换言之：客户端并不会觉得对象在装饰前和装饰后有什么不同。装饰模式可以在不需要创造更多子类的情况下，将对象地功能加以扩展
+
+包含角色
+
+- Component(抽象组件) 定义一个对象接口，可以给这些对象动态地添加职责
+- Concrete Component(具体组件) 定义一个对象，可以给这个对象添加一些职责
+- Decotator(抽象装饰类) 维持一个指向组件对象地指针，并定义一个与组件接口一致的接口
+- Concrete Decotator(具体装饰类) 向组件添加职责
+
+工作流程
+
+```js
+// 举例：向咖啡中加配料更新价格
+// 抽象组件：饮料
+class Beverage {
+  constructor() {
+    if (new.target === Beverage) {
+      throw new Error("Beverage is an abstract class.");
+    }
+  }
+
+  getDescription() {
+    throw new Error("Method 'getDescription()' must be implemented.");
+  }
+
+  cost() {
+    throw new Error("Method 'cost()' must be implemented.");
+  }
+}
+// 具体组件：浓缩咖啡
+class Espresso extends Beverage {
+  getDescription() {
+    return "Espresso";
+  }
+
+  cost() {
+    return 1.99;
+  }
+}
+// 抽象装饰类：调料
+class CondimentDecorator extends Beverage {
+  constructor(beverage) {
+    super();
+    if (new.target === CondimentDecorator) {
+      throw new Error("CondimentDecorator is an abstract class.");
+    }
+    this.beverage = beverage;
+  }
+
+  getDescription() {
+    return this.beverage.getDescription();
+  }
+
+  cost() {
+    return this.beverage.cost();
+  }
+}
+// 具体装饰类：摩卡
+class Mocha extends CondimentDecorator {
+  getDescription() {
+    return `${this.beverage.getDescription()}, Mocha`;
+  }
+
+  cost() {
+    return this.beverage.cost() + 0.2;
+  }
+}
+class Milk extends CondimentDecorator {
+  getDescription() {
+    return `${this.beverage.getDescription()}, Milk`;
+  }
+
+  cost() {
+    return this.beverage.cost() + 0.1;
+  }
+}
+// 客户端代码
+let beverage = new Espresso();
+console.log(`${beverage.getDescription()} $${beverage.cost()}`);
+beverage = new Mocha(beverage);
+console.log(`${beverage.getDescription()} $${beverage.cost()}`);
+beverage = new Milk(beverage);
+console.log(`${beverage.getDescription()} $${beverage.cost()}`);
+```
+
+优点
+
+- 装饰类和被装饰类可以独立发展，不会相互耦合，装饰模式是继承的一个替代模式，装饰模式可以动态扩展一个实现类的功能
+- 通过使用不同的具体装饰类以及这些装饰类的排列组合，可以创造出很多不同行为的组合
+- 装饰模式完全遵守开闭原则，对现有代码的修改是关闭的，对扩展时开放的
+
+缺点
+
+- 会产生很多小对象，过度使用会让程序变得复杂
+- 装饰模式相对于继承更加灵活，但是也更加容易出错
+
+使用场景
+
+- 需要扩展一个类的功能,或给一个类添加附加职责
+- 需要动态的给一个对象添加功能,这些功能可以再动态的撤销
+- 需要增加由一些基本功能的排列组合而产生的非常大量的功能,从而使继承关系变的不现实
+
+实际例子
+
+- Java I/O 类:Java的I/O类广泛使用了装饰模式。例如,BufferedInputStream是一个装饰类,它装饰了InputStream类,为其添加了缓冲功能。类似地,DataInputStream、LineNumberInputStream等都是装饰类
+- Web服务器请求处理:在Web服务器中,可以使用装饰模式来处理请求。例如,可以有一个基本的请求处理组件,然后使用装饰器来添加日志记录、身份验证、数据压缩等功能
+- 图形用户界面:在图形用户界面中,可以使用装饰模式来添加滚动条、边框等装饰。例如,在Java Swing中,JScrollPane是一个装饰类,它可以给其他组件添加滚动条
+- 游戏角色装备:在游戏中,可以使用装饰模式来表示角色的装备。例如,可以有一个基本的角色类,然后使用装饰器来添加武器、盔甲等装备,每个装备都会影响角色的属性和行为
+
+```js
+// 抽象组件：角色
+class Character {
+  constructor(name) {
+    this.name = name;
+  }
+
+  getAttack() {
+    return 10;
+  }
+
+  getDefense() {
+    return 10;
+  }
+
+  getDescription() {
+    return `${this.name}`;
+  }
+}
+// 抽象装饰类: 装备
+class EquipmentDecorator extends Character {
+  constructor(character) {
+    super();
+    this.character = character;
+  }
+
+  getAttack() {
+    return this.character.getAttack();
+  }
+
+  getDefense() {
+    return this.character.getDefense();
+  }
+
+  getDescription() {
+    return this.character.getDescription();
+  }
+}
+// 具体装饰类：武器
+class WeaponDecorator extends EquipmentDecorator {
+  constructor(character, weaponName, attactBonus) {
+    super(character);
+    this.weaponName = weaponName;
+    this.attactBonus = attactBonus;
+  }
+
+  getAttack() {
+    return super.getAttack() + this.attactBonus;
+  }
+
+  getDescription() {
+    return `${super.getDescription()}, Weapon: ${this.weaponName}`
+  }
+}
+// 具体装饰类:盔甲
+class ArmorDecorator extends EquipmentDecorator {
+  constructor(character, armorName, defenseBonus) {
+    super(character);
+    this.armorName = armorName;
+    this.defenseBonus = defenseBonus;
+  }
+
+  getDefense() {
+    return super.getDefense() + this.defenseBonus;
+  }
+
+  getDescription() {
+    return `${super.getDescription()}, Armor: ${this.armorName}`;
+  }
+}
+// 客户端代码
+let character = new Character("Warrior");
+console.log(character.getDescription());
+console.log(`Attack: ${character.getAttack()}, Defense: ${character.getDefense()}`);
+
+character = new WeaponDecorator(character, "Sword", 5);
+console.log(character.getDescription());
+console.log(`Attack: ${character.getAttack()}, Defense: ${character.getDefense()}`);
+
+character = new ArmorDecorator(character, "Shield", 3);
+console.log(character.getDescription());
+console.log(`Attack: ${character.getAttack()}, Defense: ${character.getDefense()}`);
+```
+
 ### 适配器模式
 
 适配器模式允许一个类接口转换成客户端所期望地另一种接口，从而使原本由于接口不兼容而无法一起工作的类能一起工作
@@ -671,6 +868,198 @@ image.display();
 - 某些代理（如保护代理）可能会过度限制客户端对真实对象的访问，从而降低系统的灵活性
 
 ## 行为型模式
+
+### 观察者模式
+
+定义了一种一对多的依赖关系，让多个观察者对象同时监听某一个主题对象，这个主题对象在状态发生变化时，会通知所有观察者对象，使他们能够主动更新自己
+
+核心思想：当一个对象的状态发生变化时，所有依赖它的对象都得到通知并被自动更新。这种交互也称为 发布-订阅模式。观察者模式可以实现表示层和数据逻辑层的分离，并在观察目标和观察者之间建立一个抽象的耦合，观察者支持广播通信，观察目标会向所有登记过的观察者发出通知
+
+包含角色
+
+- Subject(主题) 也被称为观察者或可观察对象，它是指被观察的对象。主题提供了一个接口，可以增加和删除观察者对象
+- Concrete Subject(具体主题) 主题的具体实现。当主题的状态发生变化时，所有注册过的观察者都会收到通知
+- Observer(观察者) 将对观察主题的改变做出反应的对象
+- Concrete Observer(具体观察者) 观察者的具体实现，它维护一个指向具体主题对象的引用，存储有关状态，这些状态应与主题的状态保持一致，并实现Observer的更新接口以使自己状态和主题状态保持一致
+
+工作流程
+
+```js
+// 天气数据和显示板的交互
+// 主题：天气数据
+class WeatherData {
+  constructor() {
+    this.observers = [];
+    this.temperature = null;
+    this.humidity = null;
+    this.pressure = null;
+  }
+
+  registerObserver(observer) {
+    this.observer.push(observer);
+  }
+
+  removeObserver(observer) {
+    const index = this.observers.indexOf(observer);
+    if (index !== -1) {
+      this.observers.splice(index, 1);
+    }
+  }
+
+  notifyObservers() {
+    this.observers.forEach(observer => observer.update())
+  }
+
+  measurementsChanged() {
+    this.notifyObservers();
+  }
+
+  setMeasurements(temperature, humidity, pressure) {
+    this.temperature = temperature;
+    this.humidity = humidity;
+    this.pressure = pressure;
+    this.measuredChanged();
+  }
+
+  getTemperature() {
+    return this.temperature;
+  }
+
+  getHumidity() {
+    return this.humidity;
+  }
+
+  getPressure() {
+    return this.pressure;
+  }
+}
+// 观察者：显示面板
+class DisplayElement {
+  constructor(weatherData) {
+    this.weatherData = weatherData;
+    this.temperature = null;
+    this.humidity = null;
+    this.pressure = null;
+    this.weatherData.registerObserver(this);
+  }
+
+  update() {
+    this.temperature = this.weatherData.getTemperature();
+    this.humidity = this.weatherData.getHumidity();
+    this.pressure = this.weatherData.getPressure();
+    this.display();
+  }
+
+  display() {
+    console.log(`Temperature: ${this.temperature}°C, Humidity: ${this.humidity}%, Pressure: ${this.pressure}hPa`);
+  }
+}
+
+// 客户端// 客户端代码
+const weatherData = new WeatherData();
+const displayElement1 = new DisplayElement(weatherData);
+const displayElement2 = new DisplayElement(weatherData);
+
+weatherData.setMeasurements(25, 65, 1013);
+weatherData.setMeasurements(26, 70, 1015);
+
+weatherData.removeObserver(displayElement2);
+
+weatherData.setMeasurements(27, 75, 1020);
+
+// Temperature: 25°C, Humidity: 65%, Pressure: 1013hPa
+// Temperature: 25°C, Humidity: 65%, Pressure: 1013hPa
+// Temperature: 26°C, Humidity: 70%, Pressure: 1015hPa
+// Temperature: 26°C, Humidity: 70%, Pressure: 1015hPa
+// Temperature: 27°C, Humidity: 75%, Pressure: 1020hPa
+```
+
+优点
+
+- 观察者和被观察者是抽象耦合的
+- 建立一套触发机制
+
+缺点
+
+- 如果一个被观察者对象有很多的直接和间接的观察者的话，将所有的观察者都通知到会花费很多时间
+- 如果在观察者和观察目标之间有循环依赖的话,观察目标会触发它们之间进行循环调用,可能导致系统崩溃
+- 观察者模式没有相应的机制让观察者知道所观察的目标对象是怎么发生变化的,而仅仅只是知道观察目标发生了变化
+
+使用场景
+
+- 一个抽象模型有两个方面,其中一个方面依赖于另一个方面。将这些方面封装在独立的对象中使它们可以各自独立地改变和复用
+- 一个对象的改变将导致其他一个或多个对象也发生改变,而不知道具体有多少对象将发生改变,可以降低对象之间的耦合度
+- 一个对象必须通知其他对象,而并不知道这些对象是谁
+- 需要在系统中创建一个触发链,A对象的行为将影响B对象,B对象的行为将影响C对象……,可以使用观察者模式创建一种链式触发机制
+
+实例
+
+- 图形用户界面:当一个控件的状态发生改变时,其他控件需要自动更新。例如,当一个按钮被点击时,其他控件需要响应这个事件
+- 事件管理:在事件驱动的系统中,观察者模式可以用来管理事件和事件的订阅者
+- 系统通知:在许多系统中,当某些重要的事情发生时,系统需要通知所有相关的对象。例如,当一个任务完成时,所有等待这个任务的对象都需要得到通知
+
+```js
+// 使用观察者模式实现简单的事件管理的例子
+// 主题:事件管理器
+class EventManager {
+  constructor() {
+    this.listeners = new Map();
+  }
+
+  subscribe(eventType, listener) {
+    if (!this.listeners.has(eventType)) {
+      this.listeners.set(eventType, []);
+    }
+    this.listeners.get(eventType).push(listener);
+  }
+
+  unsubscribe(eventType, listener) {
+    if (this.listeners.has(eventType)) {
+      const index = this.listeners.get(eventType).indexOf(listener);
+      if (index !== -1) {
+        this.listeners.get(eventType).splice(index, 1);
+      }
+    }
+  }
+
+  notify (eventType, data) {
+    if (this.listeners.has(eventType)) {
+      this.listeners.get(eventType).forEach(listener => listener(data));
+    }
+  }
+}
+// 观察者：事件监听器
+class EventListener {
+  constructor(name) {
+    this.name = name;
+  }
+
+  handleEvent(data) {
+    console.log(`${this.name} received: ${data}`);
+  }
+}
+
+// 客户端代码
+const eventManager = new EventManager();
+
+const listener1 = new EventListener("Listener 1");
+const listener2 = new EventListener("Listener 2");
+
+eventManager.subscribe("eventA", listener1.handleEvent.bind(listener1));
+eventManager.subscribe("eventA", listener2.handleEvent.bind(listener2));
+eventManager.subscribe("eventB", listener1.handleEvent.bind(listener1));
+
+eventManager.notify("eventA", "Event A occurred!");
+eventManager.notify("eventB", "Event B occurred!");
+
+eventManager.unsubscribe("eventA", listener2.handleEvent);
+
+eventManager.notify("eventA", "Event A occurred again!");
+
+// Listener 1 received: Event A occurred!Listener 2 received: Event A occurred!
+// Listener 1 received: Event B occurred!
+// Listener 1 received: Event A occurred again!
+```
 
 ### 备忘录模式
 
