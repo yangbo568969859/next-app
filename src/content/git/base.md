@@ -64,6 +64,14 @@ git fetch <远程主机名> <分支名>
 git fetch --all
 ```
 
+#### git merge
+
+```sh
+# 多人开发完成，将自己的代码合并到这次共同的开发分支上
+git checkout feat-feature/goods
+git merge feat-feature/goods-xxx
+```
+
 #### git push
 
 #### git branch
