@@ -165,7 +165,7 @@ module.exports = {
 };
 ```
 
-设置根元素fon-size
+设置根元素font-size
 
 假设设计稿的宽度是1242px，那么根元素font-size的值为：屏幕宽度 * 16 / 1242
 
@@ -197,3 +197,43 @@ window.addEventListener('resize', setFontSize);
 ```
 
 ### vw
+
+### tailwindcss
+
+使用 Tailwind CSS 可以轻松实现自适应布局，Tailwind CSS提供了一组响应式工具类，可以根据不同的屏幕尺寸应用不同的样式
+
+主要思路
+
+- 设置响应式断点
+  - Tailwind CSS 默认提供了五个响应式断点：sm(640px)、md(768px)、lg(1024px)、xl(1280px)和2xl(1536px)
+  - 在 tailwind.config.js 文件中，可以自定义响应式断点
+- 使用响应式工具类
+  - Tailwind CSS 的响应式工具类允许你根据不同的屏幕尺寸应用不同的样式，这些工具类以断点前缀开头，后跟样式类名
+    - 例如：sm:text-lg 表示在sm断点及以上应用text-lg样式
+    - 例如：md:flex 表示在md断点及以上应用flex样式
+- 使用flexbox或grid布局
+  - Tailwind CSS 提供了flexbox和grid布局，可以轻松创建自适应的布局结构
+  - 对于 flexbox，可以使用flex、flex-col、flex-wrap等工具类
+  - 对于 grid，grid、grid-cols-*、grid-rows-*、gap-* 等工具类
+- 利用margin和padding工具类
+  - Tailwind CSS 提供了丰富的 Margin 和 Padding 工具类，可以控制元素的间距和内边距
+  - 使用 m-*、my-*、mx-*、mt-*、mb-*、ml-*、mr-*、p-*、py-*、px-*、pt-*、pb-*、pl-*、pr-* 等工具类来调整元素的间距
+- 使用响应式显示和隐藏工具类
+  - Tailwind CSS 提供了响应式显示和隐藏工具类，可以根据屏幕尺寸控制元素的可见性
+  - 使用 hidden、block、inline-block、flex、inline-flex、sm:hidden、md:block 等工具类来控制元素的显示和隐藏
+
+```xml
+<div class="container mx-auto">
+  <div class="flex flex-col md:flex-row">
+    <div class="w-full md:w-1/2 lg:w-1/3 p-4">
+      <!-- 内容区域 1 -->
+    </div>
+    <div class="w-full md:w-1/2 lg:w-1/3 p-4">
+      <!-- 内容区域 2 -->
+    </div>
+    <div class="w-full lg:w-1/3 p-4">
+      <!-- 内容区域 3 -->
+    </div>
+  </div>
+</div>
+```

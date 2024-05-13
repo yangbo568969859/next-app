@@ -1,5 +1,7 @@
-### 主题色更改
-- 利用
+# 主题更改
+
+## 纯js主题色更改
+
 ```css
 :root {
   --red: #f10000;
@@ -14,6 +16,7 @@ html[data-theme=dark] {
   --primary: #f10000;
 }
 ```
+
 ```js
 const rootHtml = document.querySelector('html')
 if (rootHtml.getAttribute('data-theme') && rootHtml.getAttribute('data-theme') === 'dark') {
@@ -22,3 +25,7 @@ if (rootHtml.getAttribute('data-theme') && rootHtml.getAttribute('data-theme') =
   document.querySelector('html').setAttribute('data-theme', 'dark')
 }
 ```
+
+## nextjs
+
+借助第三方插件 [next-themes](https://github.com/pacocoursey/next-themes) 实现主题切换
