@@ -379,7 +379,7 @@ export const say = function (){
 
 ```js
 // name , author , say 对应 a.js 中的  name , author , say
-import { name , author , say } from './a.js'
+import { name, author, say } from './a.js'
 ```
 
 默认导出 export default
@@ -413,7 +413,7 @@ export default function say (){
 
 ```js
 // 第一种：
-import theSay, { name, author as  bookAuthor } from './a.js'
+import theSay, { name, author as bookAuthor } from './a.js'
 console.log(
     theSay,     // ƒ say() {console.log('hello , world') }
     name,       // "《React进阶实践指南》"

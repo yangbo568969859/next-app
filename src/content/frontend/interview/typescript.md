@@ -49,12 +49,13 @@ enum Direction {
     horizontal,
     vertical
 }
-let dir: Direction = Direction.default;
+let dir: Direction = Direction.default; // dir = 0
 enum Direction2 {
     default = 2,
     horizontal,
     vertical
 }
+let dir2: Direction = Direction.horizontal; // dir2 = 3
 // 字符串枚举
 enum Direction3 {
     default = 'default',

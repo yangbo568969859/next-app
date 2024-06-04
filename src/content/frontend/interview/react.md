@@ -129,6 +129,32 @@ Redux 的灵感来源于 Flux 架构和函数式编程原理，状态更新可�
 - reducer 需要返回新的对象，如果更新的值层级较深，更新成本也很高
 - 更多的内存占用，由于采用单一数据源，所有状态存储在一个 state 中，当某些状态不在需要使用时，也不会被垃圾回收器释放资源
 
+### zustand
+
+Zustand 是一个轻量级的状态管理库，它使用简单的API和最小的样板代码来管理状态；基于hooks概念，通过创建一个自定义的Hook来管理状态
+
+支持多个状态切片(slices),每个切片都有自己的状态和操作方法，简单易用、学习成本低、适用于中小型应用程序
+
+```js
+import create from 'zustand';
+const useCounterStore = create((set) => ({
+  count: 0,
+  increment: () => set((state) => ({ count: state.count + 1 })),
+  decrement: () => set((state) => ({ count: state.count - 1 })),
+})
+
+function Counter() {
+  const { count, increment, decrement } = useCounterStore();
+  return (
+    <div>
+      <p>Count: {count}</p>
+      <button onClick={increment}>Increment</button>
+      <button onClick={decrement}>Decrement</button>
+    </div>
+  )
+}
+```
+
 ## React Hooks
 
 Hooks 通常指：系统运行到某一时期时，会调用被注册到该时机的回调函数
@@ -472,3 +498,65 @@ function FriendListItem(props) {
 ```
 
 ## React-Fiber
+
+## 其他
+
+### 受控组件和非受控组件区别（表单数据的控制方式）
+
+- 受控组件
+  - 在受控组件中，表单数据由React组件来管理
+  - 通过在组件的state中存储表单数据，并通过onChange事件处理函数来更新state
+  - 表单元素的值由state驱动,每次用户输入时都会触发onChange事件,更新state,并重新渲染组件
+  - 受控组件使得表单数据与组件状态保持同步,可以实时响应用户的输入
+  - 适用于需要实时验证和处理表单数据的场景
+- 非受控组件
+  - 在非受控组件中,表单数据由DOM元素自身管理,而不是由React组件管理
+  - 通过使用ref属性获取DOM元素的引用,然后通过该引用访问表单元素的值
+  - 表单元素的值由用户输入直接控制,React组件只在需要时才获取表单数据
+  - 非受控组件更接近传统的HTML表单,适用于简单的表单场景或者需要与第三方库集成的情况
+
+```js
+// 受控组件
+import React, { useState } from 'react';
+
+function ControlledForm() {
+  const [value, setValue] = useState('');
+
+  const handleChange = (event) => {
+    setValue(event.target.value);
+  };
+
+  const handleSubmit = (event) => {
+    event.preventDefault();
+    console.log('提交的值:', value);
+  };
+
+  return (
+    <form onSubmit={handleSubmit}>
+      <input type="text" value={value} onChange={handleChange} />
+      <button type="submit">提交</button>
+    </form>
+  );
+}
+```
+
+```js
+// 非受控组件
+import React, { useRef } from 'react';
+
+function UncontrolledForm() {
+  const inputRef = useRef(null);
+
+  const handleSubmit = (event) => {
+    event.preventDefault();
+    console.log('提交的值:', inputRef.current.value);
+  };
+
+  return (
+    <form onSubmit={handleSubmit}>
+      <input type="text" ref={inputRef} />
+      <button type="submit">提交</button>
+    </form>
+  );
+}
+```
