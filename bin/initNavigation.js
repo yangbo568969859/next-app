@@ -82,7 +82,8 @@ function findFileTree(dir, slug, parent) {
       }
       parent.push({
         id: uuidv4(),
-        title: value.name,
+        // title: value.name,
+        title: name,
         icon: icon || '',
         description: meta.spoiler,
         link: slug + (name ? ('/' + name) : ''),
@@ -94,6 +95,8 @@ function findFileTree(dir, slug, parent) {
 }
 
 getNavigationMenu()
+
+// const sortIndex = ['前端知识库']
 
 fs.writeFileSync(
   path.join(process.cwd(), 'navigation.json'),

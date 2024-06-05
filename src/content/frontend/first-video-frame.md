@@ -1,4 +1,11 @@
-## 获取视频第一帧
+---
+title: 前端获取视频第一帧
+description: 如何通过js获取视频第一帧
+date: 2021-06-05
+---
+
+# 获取视频第一帧
+
 ```js
 // file 文件可以利用 URL.createObjectURL(file) 转成本地url
 const getVideoPoster = (url, time = 1, coverWidth = 300) => {

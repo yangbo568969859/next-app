@@ -7,6 +7,14 @@ module.exports = supportedIcons = {
     title: '后端',
     description: '后端相关知识，包括Go、Node、Python等'
   },
+  "go": {
+    title: '后端go语言',
+    description: 'go语言相关基础知识'
+  },
+  "node": {
+    title: '前端node',
+    description: 'node基础以及其它',
+  },
   "blender": {
     title: '建模',
     description: '建模知识，blender使用',
@@ -26,6 +34,10 @@ module.exports = supportedIcons = {
   "frontend": {
     title: '前端知识库',
     description: 'vue、react、css、面试等前端知识',
+  },
+  "interview": {
+    title: '前端面试相关',
+    description: '前端面试知识汇总',
   },
   "git": {
     title: 'git操作手册',
@@ -54,5 +66,9 @@ module.exports = supportedIcons = {
   "stable difussion": {
     title: 'stable difussion',
     description: 'stable difussion 相关提示词知识',
+  },
+  "webgl": {
+    title: 'webgl 相关知识',
+    description: 'webgl、three.js、unity输出webgl等相关知识',
   }
 }

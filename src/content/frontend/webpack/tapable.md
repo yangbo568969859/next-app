@@ -1,3 +1,9 @@
+---
+title: Webpack 插件机制之 Tapable-源码解析
+description: Webpack 插件机制之 Tapable-源码解析
+date: 2021-05-22
+---
+
 # Webpack 插件机制之 Tapable-源码解析
 
 webpack 本质上是一种事件流的机制，他的工作流程就是将各个插件串联起来，而实现这一切的核心就是 Tapable。

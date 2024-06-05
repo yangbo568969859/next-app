@@ -1,3 +1,9 @@
+---
+title: 组件库设计
+description: 组件库设计原则以及简单初始化一个脚手架
+date: 2024-06-05
+---
+
 # 组件库设计
 
 ## 组件库设计原则
@@ -115,4 +121,161 @@ pnpm install @xxx/utils -w
   },
 }
 // 注意：workspace:* 将来发布的时候会被转换成具体的版本号。
+```
+
+### 快速生成模板
+
+```shell
+npm install fs-extra mustache log-symbols inquirer
+```
+
+- fs-extra 操作文件读写
+- mustache 是一种无逻辑的模板语法。它可用于 HTML、配置文件、源代码 - 任何东西
+- log-symbols 各种日志级别的彩色符号
+- inquirer Node.js 的一个易于嵌入且美观的命令行界面
+
+注意：如果出现 Error [ERR_REQUIRE_ESM]: require() of ES Module not supported 说明是某个包不支持 require，就需要看对应的包哪个版本支持 require，我这边碰到两个包最新版本不支持 require，因此我选择了低版本（inquirer@7.1.0, log-symbols@4.0.0）
+
+bin 文件夹下创建 new/index.js 用于生成模板文件
+
+```js
+const rimraf = require("rimraf");
+const inquirer = require("inquirer");
+const fs = require("fs-extra");
+const path = require("path");
+const Mustache = require("mustache");
+
+const createModuleFiles = (moduleName, moduleType, moduleDesc) => {
+  const outputName =
+    moduleName[0].toLowerCase() + moduleName.slice(1, moduleName.length);
+  const templates = [
+    {
+      template: "moduleComponentTsx.tpl",
+      output: `app/components/${moduleName}/${moduleName}.tsx`
+    },
+    {
+      template: "moduleComponentStyle.tpl",
+      output: `app/components/${moduleName}/${moduleName}.module.css`
+    }
+  ];
+  try {
+    let tpl, output;
+    templates.forEach(temp => {
+      tpl = fs.readFileSync(
+        path.resolve(__dirname, `./templates/component/${temp.template}`),
+        "utf8"
+      );
+      output = Mustache.render(tpl, { moduleName, outputName, moduleDesc });
+      fs.outputFileSync(path.resolve(process.cwd(), temp.output), output);
+    });
+    console.log("模块文件创建完成");
+  } catch (error) {
+    console.error(error);
+  }
+};
+
+class NewModule {
+  constructor() {
+    this.createModule();
+  }
+
+  async createModule() {
+    // 模块类型
+    const moduleType = await this.inputType();
+    // 模块名
+    const moduleName = await this.inputName();
+    // 模块描述
+    const moduleDesc = await this.inputDesc();
+    // 清除重名文件
+    await this.clearFile(moduleName, moduleType);
+    createModuleFiles(moduleName, moduleType, moduleDesc);
+  }
+
+  async inputType() {
+    const { moduleType } = await inquirer.prompt([
+      {
+        name: "moduleType",
+        message: "请选择创建类型",
+        type: "list",
+        choices: [
+          {
+            name: "UI组件",
+            value: "component"
+          },
+          {
+            name: "页面",
+            value: "page"
+          }
+        ],
+        default: "component"
+      }
+    ]);
+    return moduleType;
+  }
+  async inputName() {
+    const { moduleName } = await inquirer.prompt([
+      {
+        name: "moduleName",
+        message: "请输入模块名称",
+        type: "input"
+      }
+    ]);
+    return moduleName;
+  }
+  async inputDesc() {
+    const { moduleDesc } = await inquirer.prompt([
+      {
+        name: "moduleDesc",
+        message: "请输入模块描述",
+        type: "input"
+      }
+    ]);
+    return moduleDesc;
+  }
+
+  async clearFile(moduleName, moduleType) {
+    if (moduleType === "page") {
+      rimraf.rimraf(
+        path.resolve(process.cwd(), "app/component", `${moduleName}.module.css`)
+      );
+      rimraf.rimraf(
+        path.resolve(process.cwd(), "app/app", `${moduleName}.tsx`)
+      );
+    } else if (moduleType === "component") {
+    }
+  }
+}
+
+new NewModule();
+```
+
+模板文件：可以读取命令行参数，然后根据参数生成模板文件
+
+```templete
+// {{moduleDesc}}
+import styles from './{{outputName}}.module.css';
+
+export interface I{{outputName}} {
+  sampleTextProp: string;
+}
+
+const {{outputName}}: React.FC<I{{outputName}}> = ({sampleTextProp}) => {
+  return (
+    <div className={styles.{{outputName}}}>
+      { sampleTextProp }
+    </div>
+  )
+}
+
+export default {{outputName}};
+```
+
+运行命令：npm run create
+
+```json
+{
+  "scripts: {
+    "create": "node bin/new"
+  }
+}
 ```
