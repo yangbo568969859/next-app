@@ -200,6 +200,13 @@ interface Props1 extends Pick<Props, 'a' | 'b'> {
 }
 ```
 
+```ts
+// pick 类型
+type Pick<T, U extends keyof T> = {
+  [P in U]: T[P];
+}
+```
+
 ### type还是interface
 
 - interface 只能定义对象类型，而type只能定义函数类型
@@ -610,6 +617,25 @@ semlinker.#name;
 - 私有字段不能在包含的类之外访问，甚至不能被检测到。
 
 ## 模块
+
+## 其他
+
+### Promise
+
+- Awaited 如果函数返回值为Promise，这个可以获取最终的值类型
+- ReturnType 获取某个函数的返回值
+
+```ts
+function getData(): Promise<{ name: string }[]> {
+  return new Promise((resolve) => {
+    setTimeout(() => {
+      resolve([{ name: "Semlinker" }, { name: "Semlinker1" }]);
+    }, 200)
+  })
+}
+type t = Awaited<ReturnType<typeof getData>>;
+// Awaited<ReturnType<T>>获取函数的返回类型
+```
 
 ## tsconfig.json
 
