@@ -22,7 +22,7 @@ Nginx 是开源、高性能、高可靠的 Web 和反向代理服务器，而且
 - server块：虚拟主机的参数设置(一个http可包含多个server块)
 - location块：定义请求路由及页面处理方式
 
-![nginx配置文件](./images/nginx-config.png)
+![nginx配置文件](./images/nginx_config.png)
 
 ```yaml
 main        # 全局配置，对全局生效
@@ -398,12 +398,12 @@ nginx -s reopen # 重启 Nginx
 nginx -s stop    # 快速关闭
 nginx -s quit    # 等待工作进程处理完成后关闭
 nginx -T         # 查看当前 Nginx 最终的配置
-nginx -t -c <配置路径>    # 检查配置是否有问题，如果已经在配置目录，则不需要-c
+nginx -t -c 配置路径    # 检查配置是否有问题，如果已经在配置目录，则不需要-c
 ```
 
 ## 最佳实践
 
 - 为了使 Nginx 配置更易于维护，建议为每个服务创建一个单独的配置文件，存储在 /etc/nginx/conf.d 目录，根据需求可以创建任意多个独立的配置文件
-- 独立的配置文件，建议遵循以下命名约定 <服务>.conf，比如域名是 sherlocked93.club，那么你的配置文件的应该是这样的 /etc/nginx/conf.d/sherlocked93.club.conf，如果部署多个服务，也可以在文件名中加上 Nginx 转发的端口号，比如 sherlocked93.club.8080.conf，如果是二级域名，建议也都加上 fe.sherlocked93.club.conf
+- 独立的配置文件，建议遵循以下命名约定 服务.conf，比如域名是 sherlocked93.club，那么你的配置文件的应该是这样的 /etc/nginx/conf.d/sherlocked93.club.conf，如果部署多个服务，也可以在文件名中加上 Nginx 转发的端口号，比如 sherlocked93.club.8080.conf，如果是二级域名，建议也都加上 fe.sherlocked93.club.conf
 - 常用的、复用频率比较高的配置可以放到 /etc/nginx/snippets 文件夹，在 Nginx 的配置文件中需要用到的位置 include 进去，以功能来命名，并在每个 snippet 配置文件的开头注释标明主要功能和引入位置，方便管理。比如之前的 gzip、cors 等常用配置，我都设置了 snippet
 - Nginx 日志相关目录，内以 域名.type.log 命名（比如 be.sherlocked93.club.access.log 和 be.sherlocked93.club.error.log ）位于 /var/log/nginx/ 目录中，为每个独立的服务配置不同的访问权限和错误日志文件，这样查找错误时，会更加方便快捷

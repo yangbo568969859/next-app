@@ -1,14 +1,19 @@
 .markdown {
-  line-height: 28px;
+  /* line-height: 28px; */
+  display: flex;
+  width: 100%;
+  flex-direction: column;
+  gap: 1.5rem;
+  margin-bottom: 6rem;
   --path: none;
-  --radius-top: 12px;
-  --radius-bottom: 12px;
+  --radius-top: 10px;
+  --radius-bottom: 10px;
   --padding-top: 1rem;
   --padding-bottom: 1rem;
 }
 
 .markdown p {
-  @apply pb-8 text-slate-700 dark:text-slate-400;
+  @apply text-slate-700 dark:text-slate-400;
 }
 
 .markdown a {
@@ -16,23 +21,27 @@
 }
 
 .markdown hr {
-  @apply pt-8 opacity-60 dark:opacity-10;
+  @apply opacity-60 dark:opacity-10;
 }
 
 .markdown h1 {
-  @apply mt-2 pb-8 text-4xl font-bold;
+  @apply text-3xl font-bold;
 }
 
 .markdown h2 {
-  @apply mt-2 pb-8 text-3xl font-bold;
+  @apply text-2xl font-bold;
 }
 
 .markdown h3 {
-  @apply mt-2 pb-8 text-2xl font-bold;
+  @apply text-lg font-bold;
 }
 
 .markdown h4 {
-  @apply mt-2 pb-8 text-xl font-bold;
+  @apply text-base font-bold;
+}
+
+.markdown a {
+  @apply text-sky-500 dark:text-sky-400;
 }
 
 .markdown :not(pre) > code {
@@ -59,8 +68,21 @@
 }
 
 .markdown blockquote {
-  @apply relative -left-2 -ml-4 mb-8 pl-4;
-  font-style: italic;
+  @apply flex
+  max-w-2xl
+  flex-col
+  items-start
+  gap-4
+  self-stretch
+  border-l-2
+  border-green-600
+  py-2
+  pl-5
+  text-base
+  font-semibold
+  text-neutral-900
+  dark:border-green-400
+  dark:text-white;
   border-left: 3px solid hsla(0, 0%, 0%, 0.9);
   border-left-color: inherit;
   opacity: 0.8;
@@ -85,7 +107,12 @@
 }
 
 .markdown li {
-  margin-bottom: calc(1.75rem / 2);
+  margin-bottom: calc(1.4rem / 2);
+}
+
+.markdown li ul {
+  @apply mt-2
+  pl-4;
 }
 
 .markdown img {

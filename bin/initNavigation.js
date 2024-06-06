@@ -16,6 +16,7 @@ const getNavigationMenu = () => {
 const formatNavigationMenu = (menusTree) => {
   for (let i = 0; i < menusTree.length; i++) {
     if (['images', 'image', 'img'].includes(menusTree[i].title.toLowerCase())) {
+      copyMdImage(menusTree[i])
       menusTree.splice(i, 1)
       continue;
     }
@@ -45,6 +46,32 @@ function findIcon(filekey) {
     console.log(result)
   }
   return result
+}
+
+const destinationFolder = path.join(process.cwd(), 'public/mdAssets')
+function copyMdImage(data) {
+  const filePath = path.join(process.cwd(), 'src/content', data.link)
+  fs.readdir(filePath, (err, files) => {
+    if (err) {
+      console.error('Error reading source folder:', err);
+      return;
+    }
+    files.forEach(file => {
+      const extname = path.extname(file).toLowerCase();
+      if (extname === '.jpg' || extname === '.jpeg' || extname === '.png' || extname === '.gif') {
+        // 构建源文件路径和目标文件路径
+        const sourceFilePath = path.join(filePath, file);
+        const destinationFilePath = path.join(destinationFolder, data.link, file);
+        fs.copy(sourceFilePath, destinationFilePath, (err) => {
+          if (err) {
+            console.error('Error copying file:', err);
+          } else {
+            console.log('File copied successfully:', file);
+          }
+        })
+      }
+    })
+  })
 }
 
 function findFileTree(dir, slug, parent) {
@@ -83,7 +110,7 @@ function findFileTree(dir, slug, parent) {
       parent.push({
         id: uuidv4(),
         // title: value.name,
-        title: name,
+        title: name || 'index',
         icon: icon || '',
         description: meta.spoiler,
         link: slug + (name ? ('/' + name) : ''),

@@ -17,22 +17,26 @@ function WithSiteContentHeading(props: any) {
   const { contentHeads } = props;
   const realList: Array<RealHeadingProp> = []
   contentHeads.forEach((value: any) => {
-    realList.push({
-      depth: value.depth,
-      title: value.value,
-      anchor: value.value.replaceAll(' ', '-').toLowerCase(),
-    })
-    if (value.children) {
-      value.children.forEach((child: any) => {
-        realList.push({
-          depth: child.depth,
-          title: child.value,
-          anchor: child.value.replaceAll(' ', '-').toLowerCase(),
-        })
+    if (value.value.indexOf('title') > -1 && value.value.indexOf('description') > -1 && value.value.indexOf('date') > -1) {
+      
+    } else {
+      realList.push({
+        depth: value.depth,
+        title: value.value,
+        anchor: value.value.replaceAll(' ', '-').toLowerCase(),
       })
+      if (value.children) {
+        value.children.forEach((child: any) => {
+          realList.push({
+            depth: child.depth,
+            title: child.value,
+            anchor: child.value.replaceAll(' ', '-').toLowerCase(),
+          })
+        })
+      }
     }
   })
-  const [activeNavId, setActiveNavId] = useState(realList[0].anchor)
+  const [activeNavId, setActiveNavId] = useState(realList && realList.length ? realList[0].anchor : '')
   // const renderCount = useRef(0)
   useEffect(() => {
     // console.log('renderCount', renderCount.current)

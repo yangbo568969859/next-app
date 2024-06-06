@@ -18,11 +18,38 @@ interface Params {
   };
 }
 
+const processImages = (node: any, pagePath: string) => {
+  if (node.type === 'element' && node.tagName === 'img') {
+    const src = node.properties.src;
+    const alt = node.properties.alt || '';
+    const title = node.properties.title || '';
+    node.properties.src = imageHandler(src, alt, title, pagePath);
+  } else if (node.children) {
+    node.children.forEach((item: any) => {
+      processImages(item, pagePath)
+    });
+  }
+}
+const imageHandler = (src: string, alt: string, title: string, pagePath: string) => {
+  console.log('imageHandler', src);
+  // 检查图片路径是否为相对路径
+  if (src.startsWith('./') || src.startsWith('../')) {
+    // 将相对路径转换为线上图片地址
+    const onlineImageUrl = `http://localhost:3000/mdAssets/${pagePath}/${src.replace(/^\.\/|\.\.\//, '')}`;
+    console.log(onlineImageUrl);
+    return onlineImageUrl;
+  }
+  // 如果不是相对路径,直接返回原始的图片标签
+  return src;
+}
+
 const getPage: FC<Params> = async ({ params }: Params) => {
   const { path = [] } = params;
+  const pagePath = path.join('/');
   const { source, filename } = await dynamicRouter.getMarkdownFile(
-    decodeURI(path.join('/'))
+    decodeURI(pagePath)
   )
+  const relativePath = path.splice(0, path.length - 1);
   const res = await dynamicRouter.getContentInfo(source)
   if (source.length && filename.length) {
     const { MDXContent, meta } = await dynamicRouter.getMDXContent(source, filename);
@@ -35,6 +62,11 @@ const getPage: FC<Params> = async ({ params }: Params) => {
               <div className='markdown'>
                 <MDXRemote
                   source={ MDXContent || '' }
+                  // components={
+                  //   {
+                  //     code: 
+                  //   }
+                  // }
                   options={{
                     parseFrontmatter: true,
                     mdxOptions: {
@@ -52,6 +84,9 @@ const getPage: FC<Params> = async ({ params }: Params) => {
                             theme: 'material-theme-palenight',
                           },
                         ],
+                        () => (tree) => {
+                          processImages(tree, relativePath.join('/'));
+                        }
                       ],
                     },
                   }}
