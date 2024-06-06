@@ -22,7 +22,7 @@
 
 - Dot 点乘又称点积或内积
 - 公式 各个分向量乘机和 [x1, y1, z1]·[x2, y2, z2] = x1x2 + y1y2 + z1z2
-- 几何意义 a·b = |a|·|b|cos<a,b> 两个向量的单位向量相乘后再乘以二者夹角的余弦值
+- 几何意义 a·b = |a|·|b|cos`<a,b>` 两个向量的单位向量相乘后再乘以二者夹角的余弦值
 - API float dot = Vector3.Dot(va, vb); // float dot = Vector3.Dot(t1.position.normalized, t2.position.normalized); angle = Mathf.Acos(dot) * Mathf.Rad2Deg; // 计算夹角
 - 计算后的夹角只能试0-180度之间的，区分不出正反
 - yingyong
@@ -33,7 +33,7 @@
 - 公式  [x1, y1, z1] x [x2, y2, z2] = [y1 * z2 - z1 * y2, z1 * x2 - x1 * z2, x1 * y2 - y1 * x2]
 - 几何意义：结果为两个向量所组成面的垂直向量，模长为两向量模长乘积在乘夹角的正弦值
 - API Vector vector = Vector.Cross(a, b)
-- 区分出正反 if (vector.y < 0) angle = 360 - angle
+- 区分出正反 if (vector.y `<` 0) angle = 360 - angle
 - 应用 创建垂直于平面的向量 判断两条向量的相对位置
 
 ### 角的度量方式
@@ -104,20 +104,20 @@ w = cos(0/2)
   - Screen Space 屏幕坐标系，以像素为单位，原点在屏幕的左下，Z为物体到相机的距离； 作用：表示物体在屏幕中的位置
   - Viewport Space 视口（摄像机）坐标系，原点在左下(0, 0)，Z为到相机的距离，右上角为(1, 1)； 作用：表示物体在摄像机中的位置
 - 坐标系转换
-  - Local Space -> World Space
+  - Local Space `->` World Space
     - transform.forward 在世界坐标系中表示物体正前方
     - transform.right 在世界坐标系中表示物体正右方
     - transform.up 在世界坐标系中表示物体正上方
     - transform.TransfromPoint 转换点，受变换组件位置、旋转和缩放影响
     - transform.TransfromDirection 转换方向，受变换组件旋转影响
     - transform.TransfromVector 转换向量，受变换组件旋转和缩放影响
-  - World Space -> Local Space
+  - World Space `->` Local Space
     - transform.InverseTransformPoint 转换点，受变换组件位置，旋转和缩放影响
     - transform.InverseTransformDirection 转换方向，受变换组件旋转影响
     - transform.InverseTransformVector 转换向量，受变换组件旋转和缩放影响
-  - World Space <-> Screen Space
+  - World Space `<->` Screen Space
     - Camera.main.WorldToScreenPoint 将点从世界坐标系转换到屏幕坐标系
     - Camera.main.ScreenToWorldPoint 将点从屏幕坐标系转换到世界坐标系
-  - World Space <-> ViewPort Space
+  - World Space `<->` ViewPort Space
     - Camera.main.WorldToViewportPoint 将点从世界坐标系转换到视口坐标系
     - Camera.main.ViewportToWorldPoint 将点从视口坐标系转换到世界坐标系

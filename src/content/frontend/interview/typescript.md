@@ -1,3 +1,9 @@
+---
+title: TypeScript
+description: TypeScript基础知识
+date: 2021-08-05
+---
+
 # TypeScript
 
 TypeScript 是 Javascript 的一个超集，并且向这个语言添加了可选的静态类型和基于类的面向对象编程

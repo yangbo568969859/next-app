@@ -12,7 +12,7 @@
 ![image](./images/config.png)
 2. 检测Unity工程
 
-同样在命令行敲入命令 assetcheck.exe --project=<project_path> 回车然后等待，因为是第一次运行所以运行时间可能会很久，根据项目的大小不同而不同，运行完后会在assetcheck.exe同级目录下生成名为assetcheck_result.json的检测结果。操作过程截图如下：
+同样在命令行敲入命令 assetcheck.exe --project=`<project_path>` 回车然后等待，因为是第一次运行所以运行时间可能会很久，根据项目的大小不同而不同，运行完后会在assetcheck.exe同级目录下生成名为assetcheck_result.json的检测结果。操作过程截图如下：
 ![image](./images/check.png)
 ![image](./images/check_json.png)
 3. 在Unity URP官网创建项目(同UPR创建步骤)，并导入assetcheck_result.json

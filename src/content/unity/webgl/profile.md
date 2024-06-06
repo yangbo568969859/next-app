@@ -49,15 +49,15 @@ Emscripten 通过将这些语言的源代码编译成 LLVM，然后再通过 LLV
 
 ### 将C代码编译为WASM
 
-在生成wasm文件需要配置编译参数，常用的参数一般有-O<level>、-s WASM=1、-s EXPORTED_FUNCTIONS等等
+在生成wasm文件需要配置编译参数，常用的参数一般有-O`<level>`、-s WASM=1、-s EXPORTED_FUNCTIONS等等
 
-- -O<level>: 设置优化级别，级别0表示不进行优化，级别1-3表示进行逐步增加的优化。
+- -O`<level>`: 设置优化级别，级别0表示不进行优化，级别1-3表示进行逐步增加的优化。
 - -s ALLOW_MEMORY_GROWTH=1 可以在运行时扩大内存容量的模式；当编译目标是asm.js时，可变内存模式会影响性能；当编译目标是wasm时，使用可变内存模式非常高效，不会影响运行性能
 - -s WASM=1：指定编译为WebAssembly模块。
 - -s EXPORTED_FUNCTIONS: 制定需要导出的函数，其值格式为函数1,函数2，这里需要强调的是函数都需要加上前缀下划线_
-- -o <target>: 设置输出的文件格式，可以为.js、.mjs、.html、.wasm，例如当指定为-o out.html，则会输出out.js、out.html、out.wasm三个文件。
-- -I <include_path>: 当emcc编译源文件时，会查找所包含的头文件，该参数可指定头文件的查找路径。
-- --preload-file <file>: 预加载资源文件，如果c代码中有加载静态资源，则需要使用--preload-file arial.ttf将资源文件打包到*.data。
+- -o `<target>`: 设置输出的文件格式，可以为.js、.mjs、.html、.wasm，例如当指定为-o out.html，则会输出out.js、out.html、out.wasm三个文件。
+- -I `<include_path>`: 当emcc编译源文件时，会查找所包含的头文件，该参数可指定头文件的查找路径。
+- --preload-file `<file>`: 预加载资源文件，如果c代码中有加载静态资源，则需要使用--preload-file arial.ttf将资源文件打包到*.data。
 - --profiling-funcs 将为 WASM 文件中的类和方法保留一些可读的名称，以便您在使用浏览器开发工具时能够跟踪代码
 - --memoryprofiler 将内存分配跟踪器嵌入到生成的页面上。 使用它来分析 Emscripten HEAP 的应用程序使用情况。
 - 可在[官网](https://emscripten.org/docs/tools_reference/emcc.html)或[github](https://github.com/emscripten-core/emscripten/blob/main/src/settings.js)查看全部参数

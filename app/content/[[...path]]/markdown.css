@@ -4,7 +4,6 @@
   width: 100%;
   flex-direction: column;
   gap: 1.5rem;
-  margin-bottom: 6rem;
   --path: none;
   --radius-top: 10px;
   --radius-bottom: 10px;

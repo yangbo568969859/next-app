@@ -28,16 +28,16 @@
   - 内置的 lambert（漫反射光照） BlinnPhong（高光光照）
   - 基于物理的光照模型函数 Standard StandardSpecular
   - 自定义光照： 名字为 Name
-    - half4 Lighting<Name>(SurfaceOutput s, half3 lightDir, half aten); // 用于不依赖视角的光照模型，漫反射
-    - half4 Lighting<Name>(SurfaceOutput s, half3 lightDir, half3 viewDir, half aten); // 用于不依赖视角的光照模型，高光反射
-    - half4 Lighting<Name>(SurfaceOutput s, half4 light);
+    - half4 Lighting`<Name>`(SurfaceOutput s, half3 lightDir, half aten); // 用于不依赖视角的光照模型，漫反射
+    - half4 Lighting`<Name>`(SurfaceOutput s, half3 lightDir, half3 viewDir, half aten); // 用于不依赖视角的光照模型，高光反射
+    - half4 Lighting`<Name>`(SurfaceOutput s, half4 light);
 
 - 可选参数 vertex:VertexFunction 顶点修改函数
-  - void<Name>(inout appdata_full v) 只需要改顶点着色器中的输入顶点数据
-  - half4<Name>(inout appdata_full v, out Input o) 修改输入顶点数据，以及为表面着色器传递数据
+  - void`<Name>`(inout appdata_full v) 只需要改顶点着色器中的输入顶点数据
+  - half4`<Name>`(inout appdata_full v, out Input o) 修改输入顶点数据，以及为表面着色器传递数据
 
 - 可选参数 finalcolor:ColorFunction 最终颜色修改函数
-  - void<Name>(Input IN, SurfaceOutput o, inout fixed4 color)
+  - void`<Name>`(Input IN, SurfaceOutput o, inout fixed4 color)
 
 - 其他可选参数
    1: alpha:Alpha 混合模式，用户半透明着色器;

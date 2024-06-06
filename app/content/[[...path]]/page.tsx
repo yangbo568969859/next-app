@@ -1,13 +1,22 @@
 import { FC } from 'react';
 import { notFound } from 'next/navigation';
 import { MDXRemote } from 'next-mdx-remote/rsc';
+import { serialize } from 'next-mdx-remote/serialize';
+import { MDXRenderer } from '@/src/components/Mdx/MdxRender'
 import rehypePrettyCode from 'rehype-pretty-code';
 import remarkMath from 'remark-math';
+import remarkGfm from 'remark-gfm';
+import remarkHtml from 'remark-html';
+import remarkParse from 'remark-parse';
+import remarkRehype from 'remark-rehype';
 import rehypeKatex from 'rehype-katex';
 import rehypeSlug from 'rehype-slug';
+import MdxCode from '@/src/components/Mdx/MdxCode';
 import { dynamicRouter } from '@/src/utils/content.dynamic'
 import WithSiteHeader from '@/src/components/withSiteHeader'
 import WithSiteContentHeading from '@/src/components/withSiteContentHeading'
+import WithSiteMenus from '@/src/components/withSiteMenus'
+import WithSiteMenusNav from '@/src/components/withSiteMenusNav'
 import './markdown.css';
 
 interface Params {
@@ -43,35 +52,39 @@ const imageHandler = (src: string, alt: string, title: string, pagePath: string)
   return src;
 }
 
+const components = {
+  pre: MdxCode,
+};
+
 const getPage: FC<Params> = async ({ params }: Params) => {
   const { path = [] } = params;
   const pagePath = path.join('/');
+  const data = await dynamicRouter.getPageMetadata(pagePath)
   const { source, filename } = await dynamicRouter.getMarkdownFile(
     decodeURI(pagePath)
   )
   const relativePath = path.splice(0, path.length - 1);
-  const res = await dynamicRouter.getContentInfo(source)
+  const res = await dynamicRouter.getContentInfo(source);
+  const menus = await dynamicRouter.getCurrentPageMenus(decodeURI(pagePath));
   if (source.length && filename.length) {
     const { MDXContent, meta } = await dynamicRouter.getMDXContent(source, filename);
+    // const mdxSource = await serialize(source);
     return (
       <div className="w-full">
         <WithSiteHeader></WithSiteHeader>
+        <WithSiteMenus menus={menus} selectKey={decodeURI(pagePath)}></WithSiteMenus>
         <div className='max-w-8xl mx-auto px-4 sm:px-6 md:px-8'>
           <div className="lg:pl-[19.5rem]">
             <div className="max-w-3xl mx-auto pt-10 xl:max-w-none xl:ml-0 xl:mr-[15.5rem] xl:pr-16">
               <div className='markdown'>
+                {/* <MDXRenderer Component={MDXContent} /> */}
                 <MDXRemote
                   source={ MDXContent || '' }
-                  // components={
-                  //   {
-                  //     code: 
-                  //   }
-                  // }
                   options={{
                     parseFrontmatter: true,
                     mdxOptions: {
                       // @ts-ignore
-                      remarkPlugins: [remarkMath],
+                      remarkPlugins: [remarkGfm, remarkHtml],
                       rehypePlugins: [
                         // Generates `id` attributes for headings (H1, ...)
                         rehypeSlug,
@@ -92,6 +105,9 @@ const getPage: FC<Params> = async ({ params }: Params) => {
                   }}
                 />
               </div>
+              <footer className='text-sm leading-6 mt-12 mb-12'>
+                <WithSiteMenusNav></WithSiteMenusNav>
+              </footer>
             </div>
           </div>
         </div>
@@ -100,6 +116,11 @@ const getPage: FC<Params> = async ({ params }: Params) => {
     );
   }
   return notFound();
+};
+
+export const generateMetadata = async ({ params }: any) => {
+  const { path = [] } = params;
+  return dynamicRouter.getPageMetadata(decodeURI(path.join('/')));
 };
 
 export default getPage;
