@@ -59,13 +59,14 @@ const imageHandler = (src: string, alt: string, title: string, pagePath: string)
 const getPage: FC<Params> = async ({ params }: Params) => {
   const { path = [] } = params;
   const pagePath = path.join('/');
-  const { source, filename } = await dynamicRouter.getMarkdownFile(
-    decodeURI(pagePath)
-  )
+  const decodePagePath = decodeURI(pagePath)
+  const { source, filename } = await dynamicRouter.getMarkdownFile(decodePagePath)
   console.log('source, filename', pagePath, source, filename)
   const relativePath = path.splice(0, path.length - 1);
   const res = await dynamicRouter.getContentInfo(source);
-  const menus = await dynamicRouter.getCurrentPageMenus(decodeURI(pagePath));
+  console.log('res', res)
+  const menus = await dynamicRouter.getCurrentPageMenus(decodePagePath);
+  console.log('menus', menus)
   if (source.length && filename.length) {
     const { MDXContent, meta } = await dynamicRouter.getMDXContent(source, filename);
     // const mdxSource = await serialize(source);
@@ -73,8 +74,8 @@ const getPage: FC<Params> = async ({ params }: Params) => {
       <div className="w-full">
         <WithSiteHeader></WithSiteHeader>
         {
-          (decodeURI(pagePath)).indexOf('frontend/resumes') > -1 ? null :
-          <WithSiteMenus menus={menus} selectKey={decodeURI(pagePath)}></WithSiteMenus>
+          (decodePagePath).indexOf('frontend/resumes') > -1 ? null :
+          <WithSiteMenus menus={menus} selectKey={decodePagePath}></WithSiteMenus>
         }
         <div className='max-w-8xl mx-auto px-4 sm:px-6 md:px-8'>
           <div className="lg:pl-[19.5rem]">
@@ -109,8 +110,8 @@ const getPage: FC<Params> = async ({ params }: Params) => {
               </div>
               <footer className='text-sm leading-6 mt-12 mb-12'>
                 {
-                  (decodeURI(pagePath)).indexOf('frontend/resumes') > -1 ? null :
-                    <WithSiteMenusNav menus={menus} selectKey={decodeURI(pagePath)}></WithSiteMenusNav>
+                  (decodePagePath).indexOf('frontend/resumes') > -1 ? null :
+                    <WithSiteMenusNav menus={menus} selectKey={decodePagePath}></WithSiteMenusNav>
                 }
               </footer>
             </div>
