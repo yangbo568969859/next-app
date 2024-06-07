@@ -59,11 +59,10 @@ const imageHandler = (src: string, alt: string, title: string, pagePath: string)
 const getPage: FC<Params> = async ({ params }: Params) => {
   const { path = [] } = params;
   const pagePath = path.join('/');
-  const data = await dynamicRouter.getPageMetadata(pagePath)
   const { source, filename } = await dynamicRouter.getMarkdownFile(
     decodeURI(pagePath)
   )
-  console.log('source, filename', 111, source, filename)
+  console.log('source, filename', pagePath, source, filename)
   const relativePath = path.splice(0, path.length - 1);
   const res = await dynamicRouter.getContentInfo(source);
   const menus = await dynamicRouter.getCurrentPageMenus(decodeURI(pagePath));
