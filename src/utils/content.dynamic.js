@@ -77,6 +77,23 @@ const getContentRouter = async () => {
         }
       }
     } else {
+      const websitePages = await getMarkdownFiles(
+        process.cwd(),
+        'src/content'
+      );
+    
+      websitePages.forEach((filename) => {
+        // console.log('fileName', filename)
+        let pathname = filename.replace(/((\/)?(index))?\.mdx?$/i, '');
+        if (pathname.length > 1 && pathname.endsWith('\\')) {
+          pathname = pathname.substring(0, pathname.length - 1);
+        }
+        // console.log('pathname', pathname)
+        pathname = normalize(pathname).replace('.', '');
+        // console.log('pathname1', pathname)
+        pathnameToFilename.set(pathname, filename);
+        pathnameToFilename.set(pathname.replaceAll('\\', '/'), filename);
+      })
       const filename = pathnameToFilename.get(normalizedPathname.replaceAll('/', '\\'));
       
       let filePath = join(process.cwd(), 'src/content');
