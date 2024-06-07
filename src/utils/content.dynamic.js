@@ -76,6 +76,30 @@ const getContentRouter = async () => {
           filename,
         }
       }
+    } else {
+      const filename = pathnameToFilename.get(normalizedPathname);
+      
+      let filePath = join(process.cwd(), 'src/content');
+      console.log('_getMarkdownFile', pathname, cachedMarkdownFiles.has(pathname))
+      if (cachedMarkdownFiles.has(pathname)) {
+        const fileContent = cachedMarkdownFiles.get(pathname);
+        return {
+          source: fileContent,
+          filename,
+        }
+      }
+      console.log('_getMarkdownFile existsSync', existsSync(join(filePath, filename)));
+      if (existsSync(join(filePath, filename))) {
+        filePath = join(filePath, filename)
+        console.log('_getMarkdownFile', filePath)
+        const fileContent = await readFile(filePath, 'utf-8');
+        cachedMarkdownFiles.set(pathname, fileContent);
+
+        return {
+          source: fileContent,
+          filename,
+        }
+      }
     }
 
     return { filename: '', source: '' };
