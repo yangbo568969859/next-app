@@ -61,12 +61,10 @@ const getPage: FC<Params> = async ({ params }: Params) => {
   const pagePath = path.join('/');
   const decodePagePath = decodeURI(pagePath)
   const { source, filename } = await dynamicRouter.getMarkdownFile(decodePagePath)
-  console.log('source, filename', pagePath, source, filename)
+  console.log('source, filename', pagePath, filename)
   const relativePath = path.splice(0, path.length - 1);
   const res = await dynamicRouter.getContentInfo(source);
-  console.log('res', res)
   const menus = await dynamicRouter.getCurrentPageMenus(decodePagePath);
-  console.log('menus', menus)
   if (source.length && filename.length) {
     const { MDXContent, meta } = await dynamicRouter.getMDXContent(source, filename);
     // const mdxSource = await serialize(source);
