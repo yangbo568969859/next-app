@@ -125,6 +125,18 @@ getNavigationMenu()
 
 // const sortIndex = ['前端知识库']
 
+let firstIndex = 0;
+for (let i = 0; i < menusTree.length; i++) {
+  if (menusTree[i].title === '前端知识库') {
+    firstIndex = i;
+    break;
+  }
+}
+
+const element = menusTree.splice(firstIndex, 1)[0];
+menusTree.unshift(element);
+
+
 fs.writeFileSync(
   path.join(process.cwd(), 'navigation.json'),
   JSON.stringify(menusTree)
