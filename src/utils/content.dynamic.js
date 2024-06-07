@@ -40,6 +40,7 @@ const getContentRouter = async () => {
       pathname = pathname.substring(0, pathname.length - 1);
     }
     pathname = normalize(pathname).replace('.', '');
+    console.log('pathname', pathname)
     pathnameToFilename.set(pathname, filename);
   })
 
