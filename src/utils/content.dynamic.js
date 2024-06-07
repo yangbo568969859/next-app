@@ -18,6 +18,7 @@ const createCachedMarkdownCache = () => {
   return new Map();
 }
 const getContentRouter = async () => {
+  console.log('getContentRouter')
   const cachedMarkdownFiles = createCachedMarkdownCache();
 
   const pathnameToFilename = new Map();

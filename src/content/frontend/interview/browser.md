@@ -500,7 +500,7 @@ js的加载、解析和执行会阻塞文档的解析，也就是说，在构建
 
 ### CSS如何阻塞文档解析
 
-在HTML文档中遇到 <link rel="stylesheet" href="style.css"> 这样的标签时，它会暂停HTML文档的解析，等待CSS文件加载完成并解析，然后再继续解析HTML文档
+在HTML文档中遇到 `<link rel="stylesheet" href="style.css">` 这样的标签时，它会暂停HTML文档的解析，等待CSS文件加载完成并解析，然后再继续解析HTML文档
 
 css加载是否会阻塞dom树渲染
 
