@@ -5,7 +5,7 @@ import { ContentPageContext } from '@/src/components/withSiteMenus'
 export function usePrevNext(menus: any, key: string) {
   // let router = useRouter();
   let aaa = useContext(ContentPageContext)
-  console.log(aaa);
+  // console.log(aaa);
   let prev = undefined;
   let next = undefined;
   for (let i = 0; i < menus.length; i++) {

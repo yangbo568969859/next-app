@@ -17,15 +17,13 @@ import siteConfig from '../../site.json' assert { type: 'json' };
 const createCachedMarkdownCache = () => {
   return new Map();
 }
-const getContentRouter = async () => {
-  console.log('getContentRouter')
+const getDynamicRouter = async () => {
   const cachedMarkdownFiles = createCachedMarkdownCache();
 
   const pathnameToFilename = new Map();
   const globCacheByPath = new Map();
   const getMarkdownFiles = async (root, cwd, ignore = []) => {
     const cacheKey = `${root}${cwd}${ignore.join('')}`;
-    console.log('cacheKey', cacheKey)
     if (!globCacheByPath.has(cacheKey)) {
       globCacheByPath.set(cacheKey, glob('**/*.{md,mdx}', { root, cwd, ignore }));
     }
@@ -33,40 +31,25 @@ const getContentRouter = async () => {
   }
   const websitePages = await getMarkdownFiles(
     process.cwd(),
-    'public/content'
+    'src/content'
   );
-  console.log('globCacheByPath', websitePages.length);
 
   websitePages.forEach((filename) => {
-    // console.log('fileName', filename)
     let pathname = filename.replace(/((\/)?(index))?\.mdx?$/i, '');
     if (pathname.length > 1 && pathname.endsWith('\\')) {
       pathname = pathname.substring(0, pathname.length - 1);
     }
-    // console.log('pathname', pathname)
     pathname = normalize(pathname).replace('.', '');
-    // console.log('pathname1', pathname)
     pathnameToFilename.set(pathname, filename);
-    // pathnameToFilename.set(pathname.replaceAll('\\', '/'), filename);
   })
 
 
   const _getMarkdownFile = async (pathname = '') => {
     const normalizedPathname = normalize(pathname).replace('.', '');
-    console.log('process.cwd()', process.cwd(), join(process.cwd(), 'public/content', `AI/base.md`));
-    const files = await readdir(process.cwd());
-    console.log('files', files)
-    const data = await readFile(join(process.cwd(), 'content', `AI/base.md`))
-    console.log('文件内容:', data);
-    console.log('特殊文件', existsSync(join(process.cwd(), 'public/content', `AI/base.md`)))
-    console.log('normalizedPathname', normalizedPathname);
-    console.log('_getMarkdownFile pathnameToFilename.has(normalizedPathname)', pathnameToFilename.has(normalizedPathname))
     if (pathnameToFilename.has(normalizedPathname)) {
       const filename = pathnameToFilename.get(normalizedPathname);
-      console.log('filename11111', filename)
       
-      let filePath = join(process.cwd(), 'public/content');
-      console.log('_getMarkdownFile', pathname, cachedMarkdownFiles.has(pathname))
+      let filePath = join(process.cwd(), 'src/content');
       if (cachedMarkdownFiles.has(pathname)) {
         const fileContent = cachedMarkdownFiles.get(pathname);
         return {
@@ -74,10 +57,8 @@ const getContentRouter = async () => {
           filename,
         }
       }
-      console.log('_getMarkdownFile existsSync', existsSync(join(filePath, filename)));
       if (existsSync(join(filePath, filename))) {
         filePath = join(filePath, filename)
-        console.log('_getMarkdownFile', filePath)
         const fileContent = await readFile(filePath, 'utf-8');
         cachedMarkdownFiles.set(pathname, fileContent);
 
@@ -199,4 +180,4 @@ const getContentRouter = async () => {
   }
 }
 
-export const dynamicRouter = await getContentRouter();
+export const dynamicRouter = await getDynamicRouter();
