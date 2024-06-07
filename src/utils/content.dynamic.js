@@ -84,6 +84,7 @@ const getContentRouter = async () => {
       for (let item of pathnameToFilename) {
         console.log('item', item)
       }
+      console.log('pathnameToFilename', pathnameToFilename.size);
       console.log('_getMarkdownFile', pathname, cachedMarkdownFiles.has(pathname), filename, filePath)
       if (cachedMarkdownFiles.has(pathname)) {
         const fileContent = cachedMarkdownFiles.get(pathname);
