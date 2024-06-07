@@ -35,7 +35,7 @@ const getContentRouter = async () => {
   );
 
   websitePages.forEach((filename) => {
-    console.log('fileName', filename)
+    // console.log('fileName', filename)
     let pathname = filename.replace(/((\/)?(index))?\.mdx?$/i, '');
     if (pathname.length > 1 && pathname.endsWith('\\')) {
       pathname = pathname.substring(0, pathname.length - 1);
@@ -77,7 +77,7 @@ const getContentRouter = async () => {
         }
       }
     } else {
-      const filename = pathnameToFilename.get(normalizedPathname);
+      const filename = pathnameToFilename.get(normalizedPathname.replaceAll('/', '\\'));
       
       let filePath = join(process.cwd(), 'src/content');
       console.log('_getMarkdownFile', pathname, cachedMarkdownFiles.has(pathname))
