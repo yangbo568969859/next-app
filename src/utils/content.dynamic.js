@@ -74,9 +74,9 @@ const getContentRouter = async () => {
     return { filename: '', source: '' };
   }
 
-  const getMarkdownFile = cache(async (pathname) => {
+  const getMarkdownFile = async (pathname) => {
     return await _getMarkdownFile(pathname);
-  });
+  };
 
 
   const getPathname = () => {}
