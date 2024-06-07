@@ -46,6 +46,8 @@ const getContentRouter = async () => {
 
   const _getMarkdownFile = async (pathname = '') => {
     const normalizedPathname = normalize(pathname).replace('.', '');
+    console.log('normalizedPathname', normalizedPathname);
+    console.log('_getMarkdownFile pathnameToFilename.has(normalizedPathname)', pathnameToFilename.has(normalizedPathname))
     if (pathnameToFilename.has(normalizedPathname)) {
       const filename = pathnameToFilename.get(normalizedPathname);
       
