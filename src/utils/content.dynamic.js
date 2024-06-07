@@ -25,6 +25,7 @@ const getContentRouter = async () => {
   const globCacheByPath = new Map();
   const getMarkdownFiles = async (root, cwd, ignore = []) => {
     const cacheKey = `${root}${cwd}${ignore.join('')}`;
+    console.log('cacheKey', cacheKey)
     if (!globCacheByPath.has(cacheKey)) {
       globCacheByPath.set(cacheKey, glob('**/*.{md,mdx}', { root, cwd, ignore }));
     }
@@ -34,6 +35,7 @@ const getContentRouter = async () => {
     process.cwd(),
     'src/content'
   );
+  console.log('globCacheByPath', websitePages.length);
 
   websitePages.forEach((filename) => {
     // console.log('fileName', filename)
