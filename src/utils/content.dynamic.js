@@ -11,7 +11,6 @@ import { Fragment, jsx, jsxs } from 'react/jsx-runtime';
 import { remark } from 'remark'
 import { visit } from 'unist-util-visit'
 import { PAGE_METADATA } from '@/src/utils/content.constants'
-import { getMenusByPath } from '@/src/utils/navigation'
 import siteConfig from '../../site.json' assert { type: 'json' };
 
 const createCachedMarkdownCache = () => {
@@ -162,21 +161,12 @@ const getDynamicRouter = async () => {
     return await _getPageMetadata(path);
   });
 
-  const _getCurrentPageMenus = async (path) => {
-    const res = await getMenusByPath(path);
-    return res;
-  }
-  const getCurrentPageMenus = cache(async (path) => {
-    return await _getCurrentPageMenus(path);
-  })
-
   return {
     getMarkdownFile,
     getPathname,
     getMDXContent,
     getContentInfo,
     getPageMetadata,
-    getCurrentPageMenus,
   }
 }
 
