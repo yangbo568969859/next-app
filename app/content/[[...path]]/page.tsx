@@ -64,17 +64,17 @@ const getPage: FC<Params> = async ({ params }: Params) => {
   // console.log('source, filename', pagePath, filename)
   const relativePath = path.splice(0, path.length - 1);
   const res = await dynamicRouter.getContentInfo(source);
-  const menus = await dynamicRouter.getCurrentPageMenus(decodePagePath);
+  // const menus = await dynamicRouter.getCurrentPageMenus(decodePagePath);
   if (source.length && filename.length) {
     const { MDXContent, meta } = await dynamicRouter.getMDXContent(source, filename);
     // const mdxSource = await serialize(source);
     return (
       <div className="w-full">
         <WithSiteHeader></WithSiteHeader>
-        {
+        {/* {
           (decodePagePath).indexOf('frontend/resumes') > -1 ? null :
           <WithSiteMenus menus={menus} selectKey={decodePagePath}></WithSiteMenus>
-        }
+        } */}
         <div className='max-w-8xl mx-auto px-4 sm:px-6 md:px-8'>
           <div className="lg:pl-[19.5rem]">
             <div className="max-w-3xl mx-auto pt-10 xl:max-w-none xl:ml-0 xl:mr-[15.5rem] xl:pr-16">
@@ -106,12 +106,12 @@ const getPage: FC<Params> = async ({ params }: Params) => {
                   }}
                 />
               </div>
-              <footer className='text-sm leading-6 mt-12 mb-12'>
+              {/* <footer className='text-sm leading-6 mt-12 mb-12'>
                 {
                   (decodePagePath).indexOf('frontend/resumes') > -1 ? null :
                     <WithSiteMenusNav menus={menus} selectKey={decodePagePath}></WithSiteMenusNav>
                 }
-              </footer>
+              </footer> */}
             </div>
           </div>
         </div>
