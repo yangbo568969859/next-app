@@ -4,7 +4,6 @@ import type { FC } from 'react';
 import CenteredLayout from '@/src/layouts/Centered';
 
 const NotFoundPage: FC = () => {
-
   return (
     <CenteredLayout>
       <div className='absolute top-0 right-0 bottom-0 left-0 h-full w-full flex items-center justify-center'>

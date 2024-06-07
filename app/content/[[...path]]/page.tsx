@@ -72,10 +72,10 @@ const getPage: FC<Params> = async ({ params }: Params) => {
     return (
       <div className="w-full">
         <WithSiteHeader></WithSiteHeader>
-        {/* {
+        {
           (decodeURI(pagePath)).indexOf('frontend/resumes') > -1 ? null :
           <WithSiteMenus menus={menus} selectKey={decodeURI(pagePath)}></WithSiteMenus>
-        } */}
+        }
         <div className='max-w-8xl mx-auto px-4 sm:px-6 md:px-8'>
           <div className="lg:pl-[19.5rem]">
             <div className="max-w-3xl mx-auto pt-10 xl:max-w-none xl:ml-0 xl:mr-[15.5rem] xl:pr-16">
@@ -124,9 +124,9 @@ const getPage: FC<Params> = async ({ params }: Params) => {
   return notFound();
 };
 
-export const generateMetadata = async ({ params }: any) => {
-  const { path = [] } = params;
-  return dynamicRouter.getPageMetadata(decodeURI(path.join('/')));
-};
+// export const generateMetadata = async ({ params }: any) => {
+//   const { path = [] } = params;
+//   return dynamicRouter.getPageMetadata(decodeURI(path.join('/')));
+// };
 
 export default getPage;
