@@ -54,6 +54,8 @@ const getContentRouter = async () => {
   const _getMarkdownFile = async (pathname = '') => {
     const normalizedPathname = normalize(pathname).replace('.', '');
     console.log('process.cwd()', process.cwd(), join(process.cwd(), 'public/content', `AI/base.md`));
+    const files = await fs.readdir(process.cwd());
+    console.log('files', files)
     const data = await readFile(join(process.cwd(), 'content', `AI/base.md`))
     console.log('文件内容:', data);
     console.log('特殊文件', existsSync(join(process.cwd(), 'public/content', `AI/base.md`)))
