@@ -33,7 +33,7 @@ const getContentRouter = async () => {
   }
   const websitePages = await getMarkdownFiles(
     process.cwd(),
-    'pages/content'
+    'public/content'
   );
   console.log('globCacheByPath', websitePages.length);
 
@@ -53,14 +53,14 @@ const getContentRouter = async () => {
 
   const _getMarkdownFile = async (pathname = '') => {
     const normalizedPathname = normalize(pathname).replace('.', '');
-    console.log('特殊文件', existsSync(join(process.cwd(), 'pages/content', `AI/base.md`)))
+    console.log('特殊文件', existsSync(join(process.cwd(), 'public/content', `AI/base.md`)))
     console.log('normalizedPathname', normalizedPathname);
     console.log('_getMarkdownFile pathnameToFilename.has(normalizedPathname)', pathnameToFilename.has(normalizedPathname))
     if (pathnameToFilename.has(normalizedPathname)) {
       const filename = pathnameToFilename.get(normalizedPathname);
       console.log('filename11111', filename)
       
-      let filePath = join(process.cwd(), 'pages/content');
+      let filePath = join(process.cwd(), 'public/content');
       console.log('_getMarkdownFile', pathname, cachedMarkdownFiles.has(pathname))
       if (cachedMarkdownFiles.has(pathname)) {
         const fileContent = cachedMarkdownFiles.get(pathname);
