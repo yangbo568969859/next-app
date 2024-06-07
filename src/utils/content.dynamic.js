@@ -1,6 +1,8 @@
-import { readFile } from 'fs/promises';
+import { readFile, readdir } from 'fs/promises';
 import { existsSync } from 'fs';
 import { cache } from 'react';
+import { VFile } from 'vfile';
+import { matter as VFileMatter } from 'vfile-matter';
 import { glob } from 'glob';
 import { normalize, join } from 'path';
 import * as matter from 'gray-matter';
@@ -8,11 +10,14 @@ import { evaluate } from '@mdx-js/mdx';
 import { Fragment, jsx, jsxs } from 'react/jsx-runtime';
 import { remark } from 'remark'
 import { visit } from 'unist-util-visit'
+import { PAGE_METADATA } from '@/src/utils/content.constants'
+import { getMenusByPath } from '@/src/utils/navigation'
+import siteConfig from '../../site.json' assert { type: 'json' };
 
 const createCachedMarkdownCache = () => {
   return new Map();
 }
-const getContentRouter = async () => {
+const getDynamicRouter = async () => {
   const cachedMarkdownFiles = createCachedMarkdownCache();
 
   const pathnameToFilename = new Map();
@@ -52,7 +57,6 @@ const getContentRouter = async () => {
           filename,
         }
       }
-
       if (existsSync(join(filePath, filename))) {
         filePath = join(filePath, filename)
         const fileContent = await readFile(filePath, 'utf-8');
@@ -64,7 +68,6 @@ const getContentRouter = async () => {
         }
       }
     }
-
     return { filename: '', source: '' };
   }
 
@@ -129,7 +132,7 @@ const getContentRouter = async () => {
 
   const reactRuntime = { Fragment, jsx, jsxs };
   const compileMDX = async (source, fileExtension) => {
-    const { data } = matter(source);
+    const { data } = VFileMatter(source, { strip: true });
 
     const { default: MDXContent } = await evaluate(source, {
       format: fileExtension,
@@ -141,12 +144,40 @@ const getContentRouter = async () => {
     return { MDXContent, headings, frontmatter, readingTime };
   }
 
+  const _getPageMetadata = async (path = '') => {
+    const pageMetadata = { ...PAGE_METADATA };
+    const { source = '' } = await getMarkdownFile(path);
+
+    const { data } = matter(source);
+    if (!data.title) {
+      // const info = await dynamicRouter.getContentInfo(source)
+    }
+    pageMetadata.title = data.title
+      ? `${siteConfig.title} — ${data.title}`
+      : siteConfig.title;
+
+    return pageMetadata;
+  }
+  const getPageMetadata = cache(async (path) => {
+    return await _getPageMetadata(path);
+  });
+
+  const _getCurrentPageMenus = async (path) => {
+    const res = await getMenusByPath(path);
+    return res;
+  }
+  const getCurrentPageMenus = cache(async (path) => {
+    return await _getCurrentPageMenus(path);
+  })
+
   return {
     getMarkdownFile,
     getPathname,
     getMDXContent,
     getContentInfo,
+    getPageMetadata,
+    getCurrentPageMenus,
   }
 }
 
-export const dynamicRouter = await getContentRouter();
+export const dynamicRouter = await getDynamicRouter();
