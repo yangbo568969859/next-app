@@ -24,7 +24,7 @@
     "algoliasearch": "^4.23.3",
     "class-variance-authority": "^0.7.0",
     "clsx": "^2.1.0",
-    "glob": "^10.3.12",
+    "glob": "~10.3.10",
     "gray-matter": "^4.0.3",
     "lucide-react": "^0.368.0",
     "mdast-util-from-markdown": "^2.0.0",
