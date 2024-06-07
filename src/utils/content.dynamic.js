@@ -1,4 +1,4 @@
-import { readFile } from 'fs/promises';
+import { readFile, readdir } from 'fs/promises';
 import { existsSync } from 'fs';
 import { cache } from 'react';
 import { VFile } from 'vfile';
@@ -54,7 +54,7 @@ const getContentRouter = async () => {
   const _getMarkdownFile = async (pathname = '') => {
     const normalizedPathname = normalize(pathname).replace('.', '');
     console.log('process.cwd()', process.cwd(), join(process.cwd(), 'public/content', `AI/base.md`));
-    const files = await fs.readdir(process.cwd());
+    const files = await readdir(process.cwd());
     console.log('files', files)
     const data = await readFile(join(process.cwd(), 'content', `AI/base.md`))
     console.log('文件内容:', data);
