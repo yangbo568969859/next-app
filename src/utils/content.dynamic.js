@@ -1,4 +1,4 @@
-import { readFile, readdir } from 'fs/promises';
+import { readFile } from 'fs/promises';
 import { existsSync } from 'fs';
 import { cache } from 'react';
 import { VFile } from 'vfile';
@@ -10,8 +10,8 @@ import { evaluate } from '@mdx-js/mdx';
 import { Fragment, jsx, jsxs } from 'react/jsx-runtime';
 import { remark } from 'remark'
 import { visit } from 'unist-util-visit'
-import { PAGE_METADATA } from '@/src/utils/content.constants'
-import siteConfig from '../../site.json' assert { type: 'json' };
+// import { PAGE_METADATA } from '@/src/utils/content.constants'
+// import siteConfig from '../../site.json' assert { type: 'json' };
 
 const createCachedMarkdownCache = () => {
   return new Map();
@@ -143,30 +143,29 @@ const getDynamicRouter = async () => {
     return { MDXContent, headings, frontmatter, readingTime };
   }
 
-  const _getPageMetadata = async (path = '') => {
-    const pageMetadata = { ...PAGE_METADATA };
-    const { source = '' } = await getMarkdownFile(path);
+  // const _getPageMetadata = async (path = '') => {
+  //   const pageMetadata = { ...PAGE_METADATA };
+  //   const { source = '' } = await getMarkdownFile(path);
 
-    const { data } = matter(source);
-    if (!data.title) {
-      // const info = await dynamicRouter.getContentInfo(source)
-    }
-    pageMetadata.title = data.title
-      ? `${siteConfig.title} — ${data.title}`
-      : siteConfig.title;
+  //   const { data } = matter(source);
+  //   if (!data.title) {
+  //   }
+  //   pageMetadata.title = data.title
+  //     ? `${siteConfig.title} — ${data.title}`
+  //     : siteConfig.title;
 
-    return pageMetadata;
-  }
-  const getPageMetadata = cache(async (path) => {
-    return await _getPageMetadata(path);
-  });
+  //   return pageMetadata;
+  // }
+  // const getPageMetadata = cache(async (path) => {
+  //   return await _getPageMetadata(path);
+  // });
 
   return {
     getMarkdownFile,
     getPathname,
     getMDXContent,
     getContentInfo,
-    getPageMetadata,
+    // getPageMetadata,
   }
 }
 

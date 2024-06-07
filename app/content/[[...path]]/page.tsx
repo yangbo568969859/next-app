@@ -123,9 +123,9 @@ const getPage: FC<Params> = async ({ params }: Params) => {
   return notFound();
 };
 
-export const generateMetadata = async ({ params }: any) => {
-  const { path = [] } = params;
-  return dynamicRouter.getPageMetadata(decodeURI(path.join('/')));
-};
+// export const generateMetadata = async ({ params }: any) => {
+//   const { path = [] } = params;
+//   return dynamicRouter.getPageMetadata(decodeURI(path.join('/')));
+// };
 
 export default getPage;
