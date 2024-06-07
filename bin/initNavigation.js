@@ -7,7 +7,7 @@ const dirInfo = require('./dirInfo');
 
 let menusTree = []
 const getNavigationMenu = () => {
-  findFileTree(path.join(process.cwd(), 'src/content'), '', menusTree)
+  findFileTree(path.join(process.cwd(), 'pages/content'), '', menusTree)
   if (menusTree.length > 0) {
     formatNavigationMenu(menusTree)
   }
@@ -50,7 +50,7 @@ function findIcon(filekey) {
 
 const destinationFolder = path.join(process.cwd(), 'public/mdAssets')
 function copyMdImage(data) {
-  const filePath = path.join(process.cwd(), 'src/content', data.link)
+  const filePath = path.join(process.cwd(), 'pages/content', data.link)
   fs.readdir(filePath, (err, files) => {
     if (err) {
       console.error('Error reading source folder:', err);
