@@ -14,22 +14,22 @@
 
 // export default MdxCode;
 
-import React from 'react';
-import { getHighlighter } from 'shiki';
-import { atomDark } from 'react-syntax-highlighter/dist/cjs/styles/prism';
+// import React from 'react';
+// import { getHighlighter } from 'shiki';
+// import { atomDark } from 'react-syntax-highlighter/dist/cjs/styles/prism';
 
-const MdxCode = async ({ className, children }) => {
-  const language = className?.replace(/language-/, '');
-  const highlighter = await getHighlighter({
-    theme: 'nord',
-  });
+// const MdxCode = async ({ className, children }) => {
+//   const language = className?.replace(/language-/, '');
+//   const highlighter = await getHighlighter({
+//     theme: 'nord',
+//   });
 
-  const code = Array.isArray(children) ? children.join('') : children;
-  console.log(code)
-  const html = highlighter.codeToHtml(code, language);
-  return (
-    <div className='dangerouslySetInnerHTML' dangerouslySetInnerHTML={{ __html: html }} />
-  );
-}
+//   const code = Array.isArray(children) ? children.join('') : children;
+//   console.log(code)
+//   const html = highlighter.codeToHtml(code, language);
+//   return (
+//     <div className='dangerouslySetInnerHTML' dangerouslySetInnerHTML={{ __html: html }} />
+//   );
+// }
 
-export default MdxCode;
+// export default MdxCode;

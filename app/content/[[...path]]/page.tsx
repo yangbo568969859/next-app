@@ -11,7 +11,7 @@ import remarkParse from 'remark-parse';
 import remarkRehype from 'remark-rehype';
 import rehypeKatex from 'rehype-katex';
 import rehypeSlug from 'rehype-slug';
-import MdxCode from '@/src/components/Mdx/MdxCode';
+// import MdxCode from '@/src/components/Mdx/MdxCode';
 import { dynamicRouter } from '@/src/utils/content.dynamic'
 import WithSiteHeader from '@/src/components/withSiteHeader'
 import WithSiteContentHeading from '@/src/components/withSiteContentHeading'
@@ -52,9 +52,9 @@ const imageHandler = (src: string, alt: string, title: string, pagePath: string)
   return src;
 }
 
-const components = {
-  pre: MdxCode,
-};
+// const components = {
+//   pre: MdxCode,
+// };
 
 const getPage: FC<Params> = async ({ params }: Params) => {
   const { path = [] } = params;
