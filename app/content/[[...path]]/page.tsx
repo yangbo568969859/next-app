@@ -72,7 +72,10 @@ const getPage: FC<Params> = async ({ params }: Params) => {
     return (
       <div className="w-full">
         <WithSiteHeader></WithSiteHeader>
-        <WithSiteMenus menus={menus} selectKey={decodeURI(pagePath)}></WithSiteMenus>
+        {
+          (decodeURI(pagePath)).indexOf('frontend/resumes') > -1 ? null :
+          <WithSiteMenus menus={menus} selectKey={decodeURI(pagePath)}></WithSiteMenus>
+        }
         <div className='max-w-8xl mx-auto px-4 sm:px-6 md:px-8'>
           <div className="lg:pl-[19.5rem]">
             <div className="max-w-3xl mx-auto pt-10 xl:max-w-none xl:ml-0 xl:mr-[15.5rem] xl:pr-16">
@@ -106,7 +109,10 @@ const getPage: FC<Params> = async ({ params }: Params) => {
                 />
               </div>
               <footer className='text-sm leading-6 mt-12 mb-12'>
-                <WithSiteMenusNav></WithSiteMenusNav>
+                {
+                  (decodeURI(pagePath)).indexOf('frontend/resumes') > -1 ? null :
+                    <WithSiteMenusNav menus={menus} selectKey={decodeURI(pagePath)}></WithSiteMenusNav>
+                }
               </footer>
             </div>
           </div>
