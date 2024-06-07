@@ -122,7 +122,7 @@ const getPage: FC<Params> = async ({ params }: Params) => {
       </div>
     );
   }
-  return notFound();
+  // return notFound();
 };
 
 export const generateMetadata = async ({ params }: any) => {
