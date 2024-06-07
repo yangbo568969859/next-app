@@ -15,7 +15,7 @@ const WithSiteMenusNav: FC<any> = ({ menus, selectKey }) => {
   //   title: '112121',
   // };
   const { prev: previous, next } = usePrevNext(menus, selectKey);
-  console.log(previous, next);
+  // console.log(previous, next);
   return (
     <div className='mb-10 text-slate-700 font-semibold flex items-center dark:text-slate-200'>
       {previous && (

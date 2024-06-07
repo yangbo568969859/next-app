@@ -47,12 +47,13 @@ const getContentRouter = async () => {
     pathname = normalize(pathname).replace('.', '');
     // console.log('pathname1', pathname)
     pathnameToFilename.set(pathname, filename);
-    pathnameToFilename.set(pathname.replaceAll('\\', '/'), filename);
+    // pathnameToFilename.set(pathname.replaceAll('\\', '/'), filename);
   })
 
 
   const _getMarkdownFile = async (pathname = '') => {
-    const normalizedPathname = normalize(pathname).replace('.', '').replaceAll('\\', '/');
+    const normalizedPathname = normalize(pathname).replace('.', '');
+    console.log('特殊文件', existsSync(join(process.cwd(), 'src/content', `AI/base.md`)))
     console.log('normalizedPathname', normalizedPathname);
     console.log('_getMarkdownFile pathnameToFilename.has(normalizedPathname)', pathnameToFilename.has(normalizedPathname))
     if (pathnameToFilename.has(normalizedPathname)) {
@@ -80,36 +81,7 @@ const getContentRouter = async () => {
           filename,
         }
       }
-    } else {
-      const filename = pathnameToFilename.get(normalizedPathname.replaceAll('/', '\\'));
-      
-      let filePath = join(process.cwd(), 'src/content');
-      for (let item of pathnameToFilename) {
-        console.log('item', item)
-      }
-      console.log('pathnameToFilename', pathnameToFilename.size);
-      console.log('_getMarkdownFile', pathname, cachedMarkdownFiles.has(pathname), filename, filePath)
-      if (cachedMarkdownFiles.has(pathname)) {
-        const fileContent = cachedMarkdownFiles.get(pathname);
-        return {
-          source: fileContent,
-          filename,
-        }
-      }
-      console.log('_getMarkdownFile existsSync', existsSync(join(filePath, filename)));
-      if (existsSync(join(filePath, filename))) {
-        filePath = join(filePath, filename)
-        console.log('_getMarkdownFile', filePath)
-        const fileContent = await readFile(filePath, 'utf-8');
-        cachedMarkdownFiles.set(pathname, fileContent);
-
-        return {
-          source: fileContent,
-          filename,
-        }
-      }
     }
-
     return { filename: '', source: '' };
   }
 

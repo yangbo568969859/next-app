@@ -40,12 +40,12 @@ const processImages = (node: any, pagePath: string) => {
   }
 }
 const imageHandler = (src: string, alt: string, title: string, pagePath: string) => {
-  console.log('imageHandler', src);
+  // console.log('imageHandler', src);
   // 检查图片路径是否为相对路径
   if (src.startsWith('./') || src.startsWith('../')) {
     // 将相对路径转换为线上图片地址
     const onlineImageUrl = `http://localhost:3000/mdAssets/${pagePath}/${src.replace(/^\.\/|\.\.\//, '')}`;
-    console.log(onlineImageUrl);
+    // console.log(onlineImageUrl);
     return onlineImageUrl;
   }
   // 如果不是相对路径,直接返回原始的图片标签
@@ -61,7 +61,7 @@ const getPage: FC<Params> = async ({ params }: Params) => {
   const pagePath = path.join('/');
   const decodePagePath = decodeURI(pagePath)
   const { source, filename } = await dynamicRouter.getMarkdownFile(decodePagePath)
-  console.log('source, filename', pagePath, filename)
+  // console.log('source, filename', pagePath, filename)
   const relativePath = path.splice(0, path.length - 1);
   const res = await dynamicRouter.getContentInfo(source);
   const menus = await dynamicRouter.getCurrentPageMenus(decodePagePath);
