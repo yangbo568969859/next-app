@@ -50,6 +50,7 @@ const getContentRouter = async () => {
       const filename = pathnameToFilename.get(normalizedPathname);
       
       let filePath = join(process.cwd(), 'src/content');
+      console.log('_getMarkdownFile', pathname, cachedMarkdownFiles.has(pathname))
       if (cachedMarkdownFiles.has(pathname)) {
         const fileContent = cachedMarkdownFiles.get(pathname);
         return {

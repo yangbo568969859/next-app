@@ -63,7 +63,7 @@ const getPage: FC<Params> = async ({ params }: Params) => {
   const { source, filename } = await dynamicRouter.getMarkdownFile(
     decodeURI(pagePath)
   )
-  console.log('source, filename', source, filename)
+  console.log('source, filename', 111, source, filename)
   const relativePath = path.splice(0, path.length - 1);
   const res = await dynamicRouter.getContentInfo(source);
   const menus = await dynamicRouter.getCurrentPageMenus(decodeURI(pagePath));
@@ -71,10 +71,57 @@ const getPage: FC<Params> = async ({ params }: Params) => {
     const { MDXContent, meta } = await dynamicRouter.getMDXContent(source, filename);
     // const mdxSource = await serialize(source);
     return (
-      <div>12121212</div>
+      <div className="w-full">
+        <WithSiteHeader></WithSiteHeader>
+        {
+          (decodeURI(pagePath)).indexOf('frontend/resumes') > -1 ? null :
+          <WithSiteMenus menus={menus} selectKey={decodeURI(pagePath)}></WithSiteMenus>
+        }
+        <div className='max-w-8xl mx-auto px-4 sm:px-6 md:px-8'>
+          <div className="lg:pl-[19.5rem]">
+            <div className="max-w-3xl mx-auto pt-10 xl:max-w-none xl:ml-0 xl:mr-[15.5rem] xl:pr-16">
+              <div className='markdown'>
+                <MDXRemote
+                  source={ MDXContent || '' }
+                  options={{
+                    parseFrontmatter: true,
+                    mdxOptions: {
+                      // @ts-ignore
+                      remarkPlugins: [remarkGfm, remarkHtml],
+                      rehypePlugins: [
+                        // Generates `id` attributes for headings (H1, ...)
+                        rehypeSlug,
+                        // @ts-ignore
+                        rehypeKatex,
+                        [
+                          // @ts-ignore
+                          rehypePrettyCode,
+                          {
+                            theme: 'material-theme-palenight',
+                          },
+                        ],
+                        () => (tree) => {
+                          processImages(tree, relativePath.join('/'));
+                        }
+                      ],
+                    },
+                  }}
+                />
+              </div>
+              <footer className='text-sm leading-6 mt-12 mb-12'>
+                {
+                  (decodeURI(pagePath)).indexOf('frontend/resumes') > -1 ? null :
+                    <WithSiteMenusNav menus={menus} selectKey={decodeURI(pagePath)}></WithSiteMenusNav>
+                }
+              </footer>
+            </div>
+          </div>
+        </div>
+        <WithSiteContentHeading contentHeads={res}></WithSiteContentHeading>
+      </div>
     );
   }
-  // return notFound();
+  return notFound();
 };
 
 export const generateMetadata = async ({ params }: any) => {
