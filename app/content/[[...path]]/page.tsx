@@ -63,6 +63,7 @@ const getPage: FC<Params> = async ({ params }: Params) => {
   const { source, filename } = await dynamicRouter.getMarkdownFile(
     decodeURI(pagePath)
   )
+  console.log('source, filename', source, filename)
   const relativePath = path.splice(0, path.length - 1);
   const res = await dynamicRouter.getContentInfo(source);
   const menus = await dynamicRouter.getCurrentPageMenus(decodeURI(pagePath));
@@ -81,7 +82,7 @@ const getPage: FC<Params> = async ({ params }: Params) => {
             <div className="max-w-3xl mx-auto pt-10 xl:max-w-none xl:ml-0 xl:mr-[15.5rem] xl:pr-16">
               <div className='markdown'>
                 {/* <MDXRenderer Component={MDXContent} /> */}
-                <MDXRemote
+                {/* <MDXRemote
                   source={ MDXContent || '' }
                   options={{
                     parseFrontmatter: true,
@@ -106,7 +107,7 @@ const getPage: FC<Params> = async ({ params }: Params) => {
                       ],
                     },
                   }}
-                />
+                /> */}
               </div>
               <footer className='text-sm leading-6 mt-12 mb-12'>
                 {
@@ -124,9 +125,9 @@ const getPage: FC<Params> = async ({ params }: Params) => {
   return notFound();
 };
 
-// export const generateMetadata = async ({ params }: any) => {
-//   const { path = [] } = params;
-//   return dynamicRouter.getPageMetadata(decodeURI(path.join('/')));
-// };
+export const generateMetadata = async ({ params }: any) => {
+  const { path = [] } = params;
+  return dynamicRouter.getPageMetadata(decodeURI(path.join('/')));
+};
 
 export default getPage;
