@@ -35,18 +35,21 @@ const getContentRouter = async () => {
   );
 
   websitePages.forEach((filename) => {
+    console.log('fileName', filename)
     let pathname = filename.replace(/((\/)?(index))?\.mdx?$/i, '');
     if (pathname.length > 1 && pathname.endsWith('\\')) {
       pathname = pathname.substring(0, pathname.length - 1);
     }
+    // console.log('pathname', pathname)
     pathname = normalize(pathname).replace('.', '');
-    console.log('pathname', pathname)
+    // console.log('pathname1', pathname)
     pathnameToFilename.set(pathname, filename);
+    pathnameToFilename.set(pathname.replaceAll('\\', '/'), filename);
   })
 
 
   const _getMarkdownFile = async (pathname = '') => {
-    const normalizedPathname = normalize(pathname).replace('.', '');
+    const normalizedPathname = normalize(pathname).replace('.', '').replaceAll('\\', '/');
     console.log('normalizedPathname', normalizedPathname);
     console.log('_getMarkdownFile pathnameToFilename.has(normalizedPathname)', pathnameToFilename.has(normalizedPathname))
     if (pathnameToFilename.has(normalizedPathname)) {
