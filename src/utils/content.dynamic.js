@@ -1,8 +1,7 @@
 import { readFile } from 'fs/promises';
 import { existsSync } from 'fs';
 import { cache } from 'react';
-import { VFile } from 'vfile';
-import { matter as VFileMatter } from 'vfile-matter';
+// import { matter as VFileMatter } from 'vfile-matter';
 import { glob } from 'glob';
 import { normalize, join } from 'path';
 import * as matter from 'gray-matter';
@@ -129,19 +128,19 @@ const getDynamicRouter = async () => {
     return data.headings || []
   })
 
-  const reactRuntime = { Fragment, jsx, jsxs };
-  const compileMDX = async (source, fileExtension) => {
-    const { data } = VFileMatter(source, { strip: true });
+  // const reactRuntime = { Fragment, jsx, jsxs };
+  // const compileMDX = async (source, fileExtension) => {
+  //   const { data } = VFileMatter(source, { strip: true });
 
-    const { default: MDXContent } = await evaluate(source, {
-      format: fileExtension,
-      ...reactRuntime
-    });
+  //   const { default: MDXContent } = await evaluate(source, {
+  //     format: fileExtension,
+  //     ...reactRuntime
+  //   });
 
-    const { headings, matter: frontmatter, readingTime } = source.data;
+  //   const { headings, matter: frontmatter, readingTime } = source.data;
 
-    return { MDXContent, headings, frontmatter, readingTime };
-  }
+  //   return { MDXContent, headings, frontmatter, readingTime };
+  // }
 
   // const _getPageMetadata = async (path = '') => {
   //   const pageMetadata = { ...PAGE_METADATA };
