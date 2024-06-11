@@ -36,7 +36,8 @@ function WithSiteContentHeading(props: any) {
       }
     }
   })
-  const [activeNavId, setActiveNavId] = useState(realList && realList.length ? realList[0].anchor : '')
+  // const [activeNavId, setActiveNavId] = useState(realList && realList.length ? realList[0].anchor : '')
+  const [activeNavId, setActiveNavId] = useState('')
   // const renderCount = useRef(0)
   useEffect(() => {
     // console.log('renderCount', renderCount.current)
@@ -52,7 +53,7 @@ function WithSiteContentHeading(props: any) {
       behavior: 'smooth'
     })
   }, [activeNavId])
-  if (contentHeads.length) {
+  if (contentHeads.length && realList.length) {
     return (
       <div className="fixed z-20 top-[3.8125rem] bottom-0 right-[max(0px,calc(50%-45rem))] w-[19.5rem] py-10 overflow-y-auto hidden xl:block">
         <div className="px-8">

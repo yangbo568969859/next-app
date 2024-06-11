@@ -36,8 +36,8 @@ const WithSiteHeader: FC = () => {
           </picture>
         </div>
       </div>
-      <header className={clsx('sticky top-0 z-40 px-4 md:px-12 w-full supports-backdrop-blur:bg-white/60 dark:bg-transparent dark:border-slate-50/[0.06] border-b', isOpaque ? 'bg-white' : 'bg-white/60')}>
-        <div className='container flex h-16 items-center px-4 sm:justify-between sm:space-x-0'>
+      <header className={clsx('sticky top-0 z-40 pl-4 pr-4 md:px-12 w-full supports-backdrop-blur:bg-white/60 dark:bg-transparent dark:border-slate-50/[0.06] border-b', isOpaque ? 'bg-white' : 'bg-white/60')}>
+        <div className='container flex h-16 items-center px-4 md:px-6 sm:justify-between sm:space-x-0'>
           <div className='flex'>
             <Link href="/" aria-label="Home">
               阿呆🐱的空间站

@@ -19,9 +19,10 @@ const WithSiteMenus: FC<any> = ({ menus, selectKey }) => {
                 menus.map((item: any) => {
                   const isActive = `/${selectKey}` == item.link
                   const title = item.meta && item.meta.title ? item.meta.title : item.title
+                  const isDir = item.isDir
                   return (
                     <li key={item.id} data-active={isActive}>
-                      <a href={`/content${item.link}`} className={clsx('block border-l pl-4 -ml-px', {
+                      <a href={ isDir ? `/blog${item.link}` : `/content${item.link}`} className={clsx('block border-l pl-4 -ml-px', {
                         'text-sky-500 border-current font-semibold dark:text-sky-400': isActive,
                         'border-transparent hover:border-slate-400 dark:hover:border-slate-500': !isActive,
                       })}>

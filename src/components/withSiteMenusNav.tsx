@@ -4,23 +4,13 @@ import Link from 'next/link'
 import { usePrevNext } from '@/src/hooks/react-client/usePrevNext'
 
 const WithSiteMenusNav: FC<any> = ({ menus, selectKey }) => {
-  // const previous = {
-  //   href: '/',
-  //   shortTitle: '112121',
-  //   title: '112121',
-  // };
-  // const next = {
-  //   href: '/',
-  //   shortTitle: '112121',
-  //   title: '112121',
-  // };
   const { prev: previous, next } = usePrevNext(menus, selectKey);
   // console.log(previous, next);
   return (
     <div className='mb-10 text-slate-700 font-semibold flex items-center dark:text-slate-200'>
       {previous && (
         <Link
-          href={`/content${previous.link}`}
+          href={previous.isDir ? `/blog${previous.link}` : `/content${previous.link}`}
           className="group flex items-center hover:text-slate-900 dark:hover:text-white"
         >
           <svg
@@ -41,7 +31,7 @@ const WithSiteMenusNav: FC<any> = ({ menus, selectKey }) => {
       )}
       { next && (
         <Link
-          href={`/content${next.link}`}
+          href={next.isDir ? `/blog${next.link}` : `/content${next.link}`}
           className="group ml-auto flex items-center hover:text-slate-900 dark:hover:text-white"
         >
           {next.shortTitle || next.title}

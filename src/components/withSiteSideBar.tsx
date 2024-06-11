@@ -24,12 +24,13 @@ function WithSiteSideBar({ className, navItems }: SidebarProps) {
   useEffect(() => {
     const ele = document.getElementById(`${activeTabId}`)
     const elePos = ele?.getBoundingClientRect().top || 0
-    const  offsetPos = elePos + window.pageYOffset - 75
+    const offsetPos = elePos + window.pageYOffset - 75
     window.scrollTo({
       top: offsetPos,
       behavior: 'smooth'
     })
-  })
+    console.log(activeTabId, 'activeTabId')
+  }, [activeTabId])
   return (
     <nav className='bg-background after:h[calc(100vh - 65px)] block min-h-screen w-60 flex-row flex-nowarp sm:px-6 sm:pb-6'>
       <div className='flex-col items-center justify-center hidden h-16 sm:flex'>logo</div>
