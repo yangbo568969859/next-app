@@ -26,7 +26,7 @@ const WithSiteMenusNav: FC<any> = ({ menus, selectKey }) => {
               strokeLinejoin="round"
             />
           </svg>
-          {previous.shortTitle || previous.title}
+          {previous.meta && previous.meta.title ? previous.meta.title : previous.title}
         </Link>
       )}
       { next && (
@@ -34,7 +34,7 @@ const WithSiteMenusNav: FC<any> = ({ menus, selectKey }) => {
           href={next.isDir ? `/blog${next.link}` : `/content${next.link}`}
           className="group ml-auto flex items-center hover:text-slate-900 dark:hover:text-white"
         >
-          {next.shortTitle || next.title}
+          {next.meta && next.meta.title ? next.meta.title : next.title}
           <svg
             viewBox="0 0 3 6"
             className="ml-3 w-auto h-1.5 text-slate-400 overflow-visible group-hover:text-slate-600 dark:group-hover:text-slate-300"

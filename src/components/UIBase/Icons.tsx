@@ -9,7 +9,9 @@ import {
   User,
   Menu,
   Search,
-  ChevronRight
+  ChevronRight,
+  Eye,
+  Calendar
 } from "lucide-react"
 
 export type Icon = LucideIcon
@@ -24,6 +26,8 @@ export const Icons = {
   user: User,
   menu: Menu,
   arrawRight: ChevronRight,
+  eye: Eye,
+  calendar: Calendar,
   logo: (props: LucideProps) => (
     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" {...props}>
       <path

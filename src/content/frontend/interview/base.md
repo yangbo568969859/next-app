@@ -566,3 +566,79 @@ class EventBus {
   }
 }
 ```
+
+## 并发请求
+
+假如有几十个请求，如何去控制并发
+
+```js
+// 使用async/await 和 Promise.all
+async function sendRequest (urls, concurrencyLimit = 6) {
+  const batchs = [];
+  for (let i = 0; i < urls.length; i++) {
+    const batch = urls.slice(i, i + concurrencyLimit);
+    batchs.push(batch);
+  }
+  for (const batch of batchs) {
+    const requests = batch.map(url => fecth(url));
+    await Promise.all(requests);
+  }
+}
+```
+
+```js
+// 使用并发控制库,如 p-limit
+import pLimit from 'p-limit';
+async function sendRequests (urls, concurrencyLimit = 6) {
+  const limit = pLimit(concurrencyLimit);
+  const requests = urls.map(url => limit(() => fetch(url)));
+  await Promise.all(requests);
+}
+```
+
+```js
+// 使用队列和计数器
+import axios from 'axios'
+
+export const handQueue = (
+  reqs // 请求总数
+) => {
+  reqs = reqs || []
+  const requestQueue = (concurrency) => {
+    concurrency = concurrency || 6 // 最大并发数
+    const queue = [] // 请求池
+    let current = 0
+    // 这个函数用于从请求池中取出请求并发送。它在一个循环中运行，直到当前并发请求数current达到最大并发数concurrency或请求池queue为空
+    // 对于每个出队的请求，它首先增加current的值，然后调用请求函数requestPromiseFactory来发送请求
+    // 当请求完成（无论成功还是失败）后，它会减少current的值并再次调用dequeue，以便处理下一个请求
+    const dequeue = () => {
+      while (current < concurrency && queue.length) {
+        current++;
+        const requestPromiseFactory = queue.shift() // 出列
+        requestPromiseFactory()
+          .then(() => { // 成功的请求逻辑
+          })
+          .catch(error => { // 失败
+            console.log(error)
+          })
+          .finally(() => {
+            current--
+            dequeue()
+          });
+      }
+
+    }
+    // 函数返回一个函数，这个函数接受一个参数requestPromiseFactory，表示一个返回Promise的请求工厂函数。
+    // 这个返回的函数将请求工厂函数加入请求池queue，并调用dequeue来尝试发送新的请求，当然也可以自定义axios，利用Promise.all统一处理返回后的结果
+    return (requestPromiseFactory) => {
+      queue.push(requestPromiseFactory) // 入队
+      dequeue()
+    }
+  }
+  // 测试
+  const enqueue = requestQueue(6)
+  for (let i = 0; i < reqs.length; i++) {
+    enqueue(() => axios.get('/api/test' + i))
+  }
+}
+```

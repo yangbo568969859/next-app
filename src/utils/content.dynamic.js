@@ -1,7 +1,9 @@
 import { readFile } from 'fs/promises';
 import { existsSync } from 'fs';
 import { cache } from 'react';
-// import { matter as VFileMatter } from 'vfile-matter';
+import { matter as VFileMatter } from 'vfile-matter';
+import { VFile } from 'vfile';
+import readingTime from 'reading-time';
 import { glob } from 'glob';
 import { normalize, join } from 'path';
 import * as matter from 'gray-matter';
@@ -82,9 +84,11 @@ const getDynamicRouter = async () => {
 
     // return compileMDX(sourceAsVirtualFile, fileExtension);
     
+    // console.log(matter(source))
+    const readingRes = readingTime(source);
     const { data, content } = matter(source);
     getContentInfo(content);
-    return { MDXContent: source, meta: data };
+    return { MDXContent: source, meta: data, readingTime: readingRes };
   }
   const getMDXContent = cache(async(source, filename) => {
     return await _getMDXContent(source, filename);

@@ -15,6 +15,7 @@ import rehypeSlug from 'rehype-slug';
 import { dynamicRouter } from '@/src/utils/content.dynamic'
 import WithSiteHeader from '@/src/components/withSiteHeader'
 import WithSiteContentHeading from '@/src/components/withSiteContentHeading'
+import WithSiteContentInfo from '@/src/components/withSiteContentInfo'
 import WithSiteMenus from '@/src/components/withSiteMenus'
 import WithSiteMenusNav from '@/src/components/withSiteMenusNav'
 import { getMenusByPath } from '@/src/utils/navigation'
@@ -67,7 +68,7 @@ const getPage: FC<Params> = async ({ params }: Params) => {
   const res = await dynamicRouter.getContentInfo(source);
   const menus = await getMenusByPath(decodePagePath);
   if (source.length && filename.length) {
-    const { MDXContent, meta } = await dynamicRouter.getMDXContent(source, filename);
+    const { MDXContent, meta, readingTime } = await dynamicRouter.getMDXContent(source, filename);
     // const mdxSource = await serialize(source);
     return (
       <div className="w-full">
@@ -79,6 +80,7 @@ const getPage: FC<Params> = async ({ params }: Params) => {
         <div className='max-w-8xl mx-auto px-4 sm:px-6 md:px-8'>
           <div className="lg:pl-[19.5rem]">
             <div className="max-w-3xl mx-auto pt-10 xl:max-w-none xl:ml-0 xl:mr-[15.5rem] xl:pr-16">
+              <WithSiteContentInfo meta={meta} readingTime={readingTime} />
               <div className='markdown'>
                 <MDXRemote
                   source={ MDXContent || '' }

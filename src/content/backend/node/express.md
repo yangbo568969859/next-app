@@ -321,3 +321,5 @@ module.exports = {
 - express-swagger-generator 自动生成 api 文档
 - crypto-js 纯 JavaScript 的加密算法类库，可以非常方便的在前端进行其所支持的加解密操作（支持的算法：MD5,SHA-1,SHA-256,AES,HMAC）
 - express-session 针对 express 框架提供的一套 session 扩展，session 是另一种记录客户状态的机制，不同的是 Cookie 保存在客户端浏览器中，而 session 保存在服务器上
+
+## 源码
