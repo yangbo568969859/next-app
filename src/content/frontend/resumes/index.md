@@ -4,7 +4,7 @@
 
 ## 职业技能
 
-JavaScript / TypeScript / React / Vue 全家桶 / Node.js / 跨端(微信小程序|Flutter|Electron)
+JavaScript / TypeScript / React / Vue 全家桶 / Node.js / 跨端(<span className="text-green">微信小程序</span>|<span className="text-blue">Flutter</span>|<span className="text-electron">Electron</span>)
 
 ## 工作经历
 
@@ -15,11 +15,11 @@ JavaScript / TypeScript / React / Vue 全家桶 / Node.js / 跨端(微信小程�
 
 ## 技术成果
 
-1. 采购系统
+1. 采购验货系统
 
-- 以负责人的身份设计/开发/推广用户操作记录回溯工具
-- 集成应用到钉钉小程序中，借助钉钉数据与采购数据打通采购流程
-- 手机快速完成QA采购流程，无需借助电脑；解决了数据延后性
+- 以负责人的身份设计/开发企业内部验货系统
+- 集成应用到钉钉小程序中，借助钉钉API与验货数据打通验货流程
+- 手机快速完成验货流程，无需借助电脑；解决了数据延后性
 
 2. 大屏虚拟数字人
 
@@ -54,9 +54,9 @@ JavaScript / TypeScript / React / Vue 全家桶 / Node.js / 跨端(微信小程�
 
 参与角色：前端 owner
 
-> 解决类似官网私有化交付定制问题
+> 解决toG官网私有化交付定制问题
 
-1. 难点：利于SEO、支持网站多样化配置
+1. 难点：SEO、网站多样化配置
 2. 工作内容
   - 基于vue的nuxt做服务端渲染
   - 实现前台页面组件式配置
@@ -68,9 +68,10 @@ JavaScript / TypeScript / React / Vue 全家桶 / Node.js / 跨端(微信小程�
 
 > 解决第三方大屏适配问题，提高用户体验
 
-1. 难点：
+1. 难点：人脸识别、智能交互
 2. 工作内容
-  - 
+  - 对接第三方供应商设备
+  - 完成自研虚拟数字人面部表情驱动和动作驱动（降低成本）
 
 ### 云境(元宇宙)
 
@@ -80,12 +81,11 @@ JavaScript / TypeScript / React / Vue 全家桶 / Node.js / 跨端(微信小程�
 
 1. 难点：
   - 将不同技术栈(涉及js、unity)结合使用
-  - 首次进入空间加载慢，webgl性能问题，unity客户端与web端交互
+  - 首次进入空间加载慢，canvas性能问题，unity客户端与web端交互
 2. 工作内容
-  - 给 iframe 通信制定规范化的通信协议，实现跨端通信减少冗余代码
-  - unity客户端与web端UI交互拆分
-  - 核心角色模块开发和优化
-  - 参与核心任务系统模块
+  - 给 unity客户端与web端 通信制定规范化的通信协议，实现跨端通信减少冗余代码
+  - unity客户端与web端UI交互拆分(活动交互h5实现，提升开发效率)
+  - 核心角色模块开发和优化 & 参与核心任务系统模块
   - 性能优化：优化游戏资源加载方式(资源检查->资源包合理分包->首次进场景资源细分) 首次进场景时间大大减少
 
 ### 脚手架+组件库
@@ -104,6 +104,18 @@ JavaScript / TypeScript / React / Vue 全家桶 / Node.js / 跨端(微信小程�
     - 推行 ESLint 代码风格检测
   - 增加组件库演示与使用API
 
+### 验货系统
+
+参与角色：Owner
+
+> 解决验货流程的优化，提高验货效率
+
+1. 难点：服务端开发、验货流程梳理以及数据整理
+2. 工作内容
+  - 钉钉企业内部小程序对接
+  - 服务端接口独立开发(nestjs完成服务端接口开发，包含：权限校验、超时处理、定时任务、错误处理、数据校验等)
+  - 前端小程序独立开发
+
 ## 其他
 
 ### vscode 插件开发
@@ -111,12 +123,12 @@ JavaScript / TypeScript / React / Vue 全家桶 / Node.js / 跨端(微信小程�
 1. 难点：vscode与webview-ui相互通信，流式对话规范设计
 2. 内容
   - 设计vscode层与webview-ui通信规范，完成vscode内代码与webview-ui层相互通信
-  - node-server 调用openAi实现基础流式对话
-  - 基础UI界面逻辑实现(React)
+  - node-server 调用openAi SDK实现基础流式对话
+  - 基础UI交互界面逻辑实现(React)
 
 ### Flutter APP开发
 
-1. 难点：dart语言开发，flutter框架使用
+1. 难点：跨语言开发，flutter框架使用
 2. 内容
   - 完成电商APP跨端开发
   - cms动态渲染页面设计开发

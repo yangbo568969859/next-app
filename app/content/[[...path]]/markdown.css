@@ -109,6 +109,10 @@
   margin-bottom: calc(1.4rem / 2);
 }
 
+/* .markdown ol li {
+  margin-bottom: calc(1.4rem / 2);
+} */
+
 .markdown li ul {
   @apply mt-2
   pl-4;
@@ -126,4 +130,18 @@
   background-color: #022a4b;
   display: block;
   padding-right: 1em;
+}
+
+/* 特殊文字颜色 */
+
+.markdown .text-green {
+  color: #2aae67;
+}
+
+.markdown .text-blue {
+  color: #5FC9F8;
+}
+
+.markdown .text-electron {
+  color: #9feaf9;
 }

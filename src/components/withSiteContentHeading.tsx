@@ -57,7 +57,7 @@ function WithSiteContentHeading(props: any) {
       <div className="fixed z-20 top-[3.8125rem] bottom-0 right-[max(0px,calc(50%-45rem))] w-[19.5rem] py-10 overflow-y-auto hidden xl:block">
         <div className="px-8">
           <h2 className="text-slate-900 font-semibold mb-4 text-sm leading-6 dark:text-slate-100">
-            On This Page
+            目录
           </h2>
           <ul className="text-slate-700 text-sm leading-6">
             {

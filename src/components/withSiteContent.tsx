@@ -35,7 +35,7 @@ function WithSiteContentItems(props: any) {
           <span className="text-xl font-bold text-primary">{ title }</span>
         </div>
         <div className="mt-2 line-clamp-1 text-sm text-primary" title={description}>
-          { description }   
+          { description }
         </div>
         {/* <div className="absolute right-2 bottom-2">
           <Button variant="ghost"
