@@ -61,13 +61,13 @@ yo code
 ### package.json 说明
 
 - activationEvents 用于定义插件何时被加载/激活
-  - onLanguage:${language} 打开特定语言文件时
-  - onCommand:${command} 调用某个 VSCode命令时
+  - onLanguage:`${language}` 打开特定语言文件时
+  - onCommand:`${command}` 调用某个 VSCode命令时
   - onDebug Debug 时
-  - onView:${viewId} 指定 id 的视图展开时
+  - onView:`${viewId}` 指定 id 的视图展开时
   - onUri 插件的系统级 URI 打开时
   - onWebviewPanel webview 触发时
-  - onFileSystem:${scheme} 以某个协议（ftp/sftp/ssh等）打开文件或文件夹时
+  - onFileSystem:`${scheme}` 以某个协议（ftp/sftp/ssh等）打开文件或文件夹时
   - `*` VSCode 启动时
 - contributes 用于定义扩展项的具体配置。常用扩展项有(通常完成命令的开发后，会将其与菜单/快捷键进行关联，以便调用)
   - 代码片段（snippets）
