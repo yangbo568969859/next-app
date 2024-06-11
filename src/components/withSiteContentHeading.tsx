@@ -23,14 +23,14 @@ function WithSiteContentHeading(props: any) {
       realList.push({
         depth: value.depth,
         title: value.value,
-        anchor: value.value.replaceAll(' ', '-').toLowerCase(),
+        anchor: value.value && value.value.replaceAll(' ', '-').toLowerCase(),
       })
       if (value.children) {
         value.children.forEach((child: any) => {
           realList.push({
             depth: child.depth,
             title: child.value,
-            anchor: child.value.replaceAll(' ', '-').toLowerCase(),
+            anchor: child.value && child.value.replaceAll(' ', '-').toLowerCase(),
           })
         })
       }

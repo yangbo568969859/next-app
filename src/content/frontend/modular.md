@@ -366,9 +366,8 @@ function test(ele) {
 
 ### 导出export和导入import
 
-export 正常导出，import 导入
-
 ```js
+// `export` 正常导出，`import` 导入
 const name = '《React进阶实践指南》' 
 const author = '我不是外星人'
 export { name, author }
@@ -382,7 +381,7 @@ export const say = function (){
 import { name, author, say } from './a.js'
 ```
 
-默认导出 export default
+默认导出 `export default`
 
 ```js
 const name = '《React进阶实践指南》'
