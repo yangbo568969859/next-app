@@ -61,6 +61,9 @@ const config: Config = {
       fontFamily: {
         sans: ["var(--font-sans)", ...fontFamily.sans],
       },
+      fontSize: {
+        xs: ['0.75rem', '1rem'],
+      },
       maxWidth: {
         '8xl': '90rem',
       },

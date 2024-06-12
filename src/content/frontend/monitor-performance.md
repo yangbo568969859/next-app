@@ -1,3 +1,9 @@
+---
+title: js 性能监控和分析
+description: 利用Google浏览器火焰分析图和Lighthouse 工具来监控和分析 JavaScript 代码的性能问题
+date: 2021-08-11
+---
+
 # js 性能监控和分析
 
 下图是 [Navigation Timing Level 1](https://www.w3.org/TR/navigation-timing/) 的处理模型，从当前浏览器窗口卸载旧页面开始，到新页面加载完成，整个过程一共分为 9 个模块：**提示卸载旧文档、重定向/卸载、应用缓存、DNS 解析、TCP 握手、HTTP 请求处理、HTTP 响应处理、DOM 处理、文档装载完成**
@@ -6,7 +12,7 @@
 [Navigation Timing Level 2](https://www.w3.org/TR/navigation-timing-2/) 给出了新的时间线，新版的时间线将描述资源加载的时间用 PerformanceResourceTiming 对象封装了起来。如下图所示：
 ![image](./image/timestamp-diagram.png)
 
-## 指标说明
+## Navigation Timing 指标说明
 
 |  指标   |  说明  |
 |  ----  | ----  |
@@ -90,7 +96,7 @@
 }());
 ```
 
-### Chrome Performance面板
+## Chrome Performance面板
 
 Performance 是 Chrome 提供给我们的开发者工具，用于记录和分析我们的应用在运行时的所有活动。它呈现的数据具有实时性、多维度的特点，可以帮助我们很好地定位性能问题。
 
@@ -103,9 +109,10 @@ Performance 是 Chrome 提供给我们的开发者工具，用于记录和分析
 | 概览面板 | 对页面表现（行为）的一个概述。  |
 | 火焰图面板 | 可视化 CPU 堆栈(stack)信息记录。  |
 | 统计面板 | 以图表的形式汇总数据。  |
+
 ![image](./image/google-performance.png)
 
-#### 概览面板
+### 面板概览
 
 | 数据类型 | 说明  |
 | ----     |  ---- |
@@ -113,21 +120,21 @@ Performance 是 Chrome 提供给我们的开发者工具，用于记录和分析
 | CPU | 表明了哪些事件在消耗 CPU 资源。  |
 | NET | 蓝色 代表 HTML 文件，黄色 代表 Script 文件，紫色 代表 Stylesheets 文件， 绿色 代表 Media 文件，灰色 代表其他资源。  |
 
-#### 火焰图面板
+### 火焰图面板
 
 - 从不同的角度分析框选区域 。例如：Network，Frames, Interactions, Main等
 - 在 Flame Chart 面板上你可以看到三条线，蓝线代表 DOMContentLoaded 事件，绿线代表渲染开始的时间( time to first paint)，红线代表 load 事件
 
-#### 统计面板
+### 统计面板
 
 - Summary面板：概括了浏览器加载的总时间。
 - Bottom-Up面板：展示事件各个阶段耗费的时间。
 - Call Tree面板：查看事件的调用栈。
 - Event Log面板：事件日志信息。
 
-#### 从用户角度分析
+### 从用户角度分析
 
-##### 页面何时开始渲染 - FP & FCP
+#### 页面何时开始渲染 - FP & FCP
 
 - FP, first paint, 表示页面开始首次绘制的时间点，值越小约好。在 FP 时间点之前，用户看到的是导航之前的页面
 - FCP, first contentful paint, lighthouse 面板的六大指标之一，表示首次绘制任何文本、图像、非空白 canvas 或者 SVG 的时间点，值越小约好
@@ -141,20 +148,20 @@ performance.getEntriesByName('first-paint'); // 获取 FP 时间
 performance.getEntriesByName('first-contentful-paint');  // 获取 FCP 时间
 // 也可以通过 performanceObserver 的方式获取
 var observer = new PerformanceObserver(function(list, obj) {
-    var entries = list.getEntries();
-    entries.forEach(item => {
-        if (item.name === 'first-paint') {
-            ...
-        }
-        if (item.name === 'first-contentful-paint') {
-            ...
-        }
-    })
+  var entries = list.getEntries();
+  entries.forEach(item => {
+    if (item.name === 'first-paint') {
+      ...
+    }
+    if (item.name === 'first-contentful-paint') {
+      ...
+    }
+  })
 });
 observer.observe({type: 'paint'});
 ```
 
-##### 页面何时渲染主要内容 - FMP & SI & LCP
+#### 页面何时渲染主要内容 - FMP & SI & LCP
 
 - FMP，first meaningful paint, 首次完成有意义内容绘制的时间点，值越小约好。官方资料: [FMP](https://web.dev/first-meaningful-paint)。
 - SI, speed index, 速度指标, lighthouse 面板中的六大指标之一，用于衡量页面加载期间内容的绘制速度，值越小约好。官方资料: SI。
@@ -174,7 +181,7 @@ new PerformanceObserver((entryList) => {
 }).observe({type: 'largest-contentful-paint', buffered: true});
 ```
 
-##### 何时可以交互 - TTI & TBT
+#### 何时可以交互 - TTI & TBT
 
 - TI, time to ineractive, 可交互时间， lighthouse 面板中的六大指标之一, 用于测量页面从开始加载到主要资源完成渲染，并能够快速、可靠地响应用户输入所需的时间, 值越小约好。 官方资料: TTI。
 - 和 FMP、SI 一样，官方并没有提供获取 TTI 的有效接口，只能通过 lighthouse 面板来查看，不会作为 Sentry 做性能分析的指标。
@@ -325,7 +332,7 @@ function observeResourceFetchingMutations() {
 let TBT = longTask.reduce((initial, item) => initial + item.durationg - 50, 0);
 ```
 
-##### 交互是否有延迟 - FID & MPFID & Long Task
+#### 交互是否有延迟 - FID & MPFID & Long Task
 
 - FID，first input delay, 首次输入延迟，测量从用户第一次与页面交互（例如当他们单击链接、点按按钮或使用由 JavaScript 驱动的自定义控件）直到浏览器对交互作出响应，并实际能够开始处理事件处理程序所经过的时间。官方资料: FID。
 - FID 指标的值越小约好。通过 performanceObserver，我们可以获取到 FID 指标数据。
@@ -352,7 +359,7 @@ new PerformanceObserver(function(list) {
 })observe({ type: 'longtask'});
 ```
 
-##### 页面视觉是否有稳定 - CLS
+#### 页面视觉是否有稳定 - CLS
 
 - CLS, Cumulative Layout Shift, 累积布局偏移，用于测量整个页面生命周期内发生的所有意外布局偏移中最大一连串的布局偏移情况。官方资料: CLS。
 CLS, 值越小，表示页面视觉越稳定。通过 performanceObserver，我们可以获取到 CLS 指标数据。
@@ -366,10 +373,53 @@ new PerformanceObserver(function(list) {
 })observe({type: 'layout-shift', buffered: true});
 ```
 
-##### 性能分析关键指标
+#### 性能分析关键指标
 
 实际在做性能分析时，上面列举的性能指标并不会全部使用。
 
 如果是本地通过 lighthouse 进行性能分析，会使用 6 大指标: FCP、LCP、SI、TTI、TBT、CLS。这些指标涵盖了页面渲染、交互和视觉稳定性情况。
 
 如果是通过 Sentry 等工具进行性能分析，会使用 4 大指标: FCP、LCP、FID、CLS。这些指标也涵盖了页面渲染、交互、视觉稳定性情况。之所以选这四个指标，这四个指标的数据可以通过 performanceObserver 获取。
+
+## Lighthouse
+
+Google的Lighthouse是一个开源的自动化工具，用于改进网页的质量。它通过对网页进行一系列的测试工作，提供关于性能、可访问性、最佳实践、SEO和渐进式Web应用程序(PWA)方面的反馈和建议
+
+- 性能评估 Performance
+  - LightHouse会分析网页的加载性能，包括首次内容绘制(FCP)、首次有意义绘制(FMO)、速度指数SI、最大内容绘制(LCP)等
+  - 它会识别影响性能的因素,如资源加载时间、渲染阻塞、未优化的图像等,并提供优化建议
+- 可访问性审计 Assessibility
+  - 评估网页的可访问性,检查是否符合Web内容无障碍指南(WCAG)
+  - 它会检测常见的可访问性问题,如缺少替代文本、键盘导航问题、颜色对比度不足等,并提供改进建议
+- 最佳实践 Best Practices
+  - 检查网页是否遵循Web开发的最佳实践,如使用HTTPS、避免使用过时的库、正确设置HTTP缓存等
+  - 提供有关安全性、性能和用户体验方面的建议
+- SEO优化建议
+  - 分析网页的搜索引擎优化(SEO)状况,检查网页结构、元数据、移动友好性等方面
+  - 提供SEO优化建议,如使用描述性标题、提供有意义的元描述、确保网页可被索引等
+- 渐进式Web应用程序(PWA)
+  - 评估网页是否符合渐进式Web应用程序(PWA)的标准
+  - 检查网页的离线可用性、响应式设计、Web应用程序清单、服务工作者等方面,并提供改进建议
+
+### 建议
+
+- Use HTPP/2
+- Remove unused CSS / Remove unused JavaScript
+- Serve static assets with an efficient cache policy（为静态资源提供缓存）
+- Minimize main-thread work 最小化主线程工作
+- Ensure text remains visible during webfont load确保文本在Webfont加载期间保持可见
+- Reduce JavaScript execution time 减少js的执行时间
+- Avoid enormous network payloads 避免大量的网络负载
+  - 减少网络负载方法
+  - 将请求推迟到需要时再发送。有关的方法，请参阅PRPL模式
+  - 最小化和压缩网络负载
+  - 对图像使用WebP而不是JPEG或PNG（图片要求不严格，可以压缩体积，常用的在线压缩网站tinypng.com/）
+  - 将JPEG图像的压缩级别设置为85
+  - 缓存请求，以使页面在重复访问时不会重新下载资源
+- Eliminate render-blocking resources消除渲染阻止资源
+  - 在浏览器可以呈现任何内容之前，它需要将HTML标记解析为DOM树。如果遇到任何外部样式表（<link rel="stylesheet" />）或同步JavaScript标记（<script src="main.js"></script>），HTML解析器将暂停。
+  - 脚本和样式表都是渲染阻塞资源，这些资源会延迟FCP，从而延迟LCP。推迟使用任何非关键的JavaScript和CSS来加快网页主要内容的加载。
+  - 缩小CSS: 对于Webpack：optimize-css-assets-webpack-plugin
+  - 推迟非关键CSS/内联关键CSS
+- Defer offscreen images 延迟加载具有lazysizes的屏幕外图像
+- Image elements do not have explicit width and height 图片设置宽高

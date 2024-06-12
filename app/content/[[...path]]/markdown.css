@@ -146,6 +146,26 @@
   color: #9feaf9;
 }
 
+/* 表格 */
+.markdown table {
+  @apply text-sm;
+}
+.markdown table thead tr {
+  @apply border-b transition-colors hover:bg-muted/50 data-[state=selected]:bg-muted;
+}
+.markdown table thead tr th {
+  @apply font-medium align-middle text-left px-4 h-12;
+  color: hsl(var(--muted-foreground));
+}
+
+.markdown table tbody tr {
+  @apply border-b transition-colors hover:bg-muted/50 data-[state=selected]:bg-muted;
+}
+
+.markdown table tbody tr td {
+  @apply p-3 align-middle [&:has([role=checkbox])]:pr-0;
+}
+
 
 .cus-linear-bg {
   background: linear-gradient(
