@@ -9,10 +9,25 @@ let menusTree = []
 const getNavigationMenu = () => {
   findFileTree(path.join(process.cwd(), 'src/content'), '', menusTree)
   if (menusTree.length > 0) {
-    formatNavigationMenu(menusTree)
+    // formatNavigationMenu(menusTree)
+    menusTree = filterImagesDir(menusTree)
   }
 }
 
+const filterImagesDir = (data) => {
+  return data.filter(item => {
+    const filterValue = ['images', 'image', 'img'].includes(item.title);
+    if (filterValue) {
+      copyMdImage(item)
+    }
+    return !filterValue
+  }).map(item => {
+    if (item.children) {
+      item.children = filterImagesDir(item.children);
+    }
+    return item;
+  })
+}
 const formatNavigationMenu = (menusTree) => {
   for (let i = 0; i < menusTree.length; i++) {
     if (['images', 'image', 'img'].includes(menusTree[i].title.toLowerCase())) {
