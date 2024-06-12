@@ -1,7 +1,7 @@
 ---
 title: 基于 Next.js 的前端工程创建和模板化
-description: [Next.js 14] 基于 Next.js 的前端工程创建和模板化
-date: 2023-12-05
+description: Next.js 14 基于 Next.js 的前端工程创建和模板化
+date: 2023-12-06
 ---
 
 # [Next.js 14] 基于 Next.js 的前端工程创建和模板化

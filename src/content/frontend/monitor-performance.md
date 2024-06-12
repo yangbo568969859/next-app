@@ -385,6 +385,8 @@ new PerformanceObserver(function(list) {
 
 Google的Lighthouse是一个开源的自动化工具，用于改进网页的质量。它通过对网页进行一系列的测试工作，提供关于性能、可访问性、最佳实践、SEO和渐进式Web应用程序(PWA)方面的反馈和建议
 
+### 五大指标
+
 - 性能评估 Performance
   - LightHouse会分析网页的加载性能，包括首次内容绘制(FCP)、首次有意义绘制(FMO)、速度指数SI、最大内容绘制(LCP)等
   - 它会识别影响性能的因素,如资源加载时间、渲染阻塞、未优化的图像等,并提供优化建议

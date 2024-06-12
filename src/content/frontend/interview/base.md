@@ -410,27 +410,8 @@ Function.prototype.MyBind = function(context) {
 - typeof 只能识别基础类型和引用类型 (注意 null, NaN, document.all 的判断)
 - constructor 指向创建该实例对象的构造函数 (注意 null 和 undefined 没有 constructor，以及 constructor 可以被改写，不太可靠)
 - instanceof
-- Object.prototype.toString.call ("[object Number]", "[object Undefined]" 等等类型)
+- Object.prototype.toString.call("[object Number]", "[object Undefined]" 等等类型)
 - isArray
-
-### 实现 instanceof
-
-```js
-function myInstanceOf(L, R) {
-  var LeftValue = L.__proto__;
-  var RightValue = R.prototype;
-
-  while (true) {
-    if (LeftValue === null) {
-      return false;
-    }
-    if (LeftValue === RightValue) {
-      return true;
-    }
-    LeftValue = LeftValue.__proto__;
-  }
-}
-```
 
 ## new 本质
 
@@ -642,3 +623,127 @@ export const handQueue = (
   }
 }
 ```
+
+## Map 和 WeakMap
+
+WeakMap 是 Map 的弱版本，它只接受对象作为键名（null 除外），不接受其他类型的值。它的行为类似于其他数据结构，但是没有 size 属性。
+
+举个例子
+
+如果我们使用Map的话，那么对象间是存在强引用关系的
+
+```js
+let obj = { name : 'vcplugin'}
+const target = new Map();
+target.set(obj,'vcplugin Value');
+obj = null;
+```
+
+虽然我们手动将obj，进行释放，然是target依然对obj存在强引用关系，所以这部分内存依然无法被释放
+
+再来看WeakMap：
+
+```js
+let obj = { name : 'vcplugin'}
+const target = new WeakMap();
+target.set(obj,'vcplugin Value');
+obj = null;
+```
+
+如果是WeakMap的话，target和obj存在的就是弱引用关系，当下一次垃圾回收机制执行时，这块内存就会被释放掉
+
+## es5怎么实现继承的，讲讲对原型链的理解
+
+在es5中实现继承的方式有以下几种
+
+- 原型链继承：原型链继承是通过将子类的原型对象设置为父类的实例来实现的。这样,子类的实例就可以通过原型链访问到父类的属性和方法
+- 构造函数继承：构造函数继承是通过在子类的构造函数中调用父类的构造函数,并将子类的 this 绑定到父类构造函数的调用结果上来实现的
+- 组合继承
+- 原型式继承：原型式继承是通过创建一个临时的构造函数,将其原型设置为要继承的对象,然后返回这个临时构造函数的实例来实现的
+- 寄生式继承：寄生式继承是在原型式继承的基础上,通过封装一个函数来增强对象,返回这个增强后的对象
+- 寄生组合式继承：寄生组合式继承是组合继承的优化版本,通过寄生式继承来继承父类的原型,避免了父类构造函数的多次调用
+
+```js
+// 原型链继承
+function Parent() {
+  this.name = 'Parent';
+}
+function Child() {
+  this.age = 18;
+}
+Child.prototype = new Parent();
+var child = new Child();
+console.log(child.name);
+console.log(child.age);
+```
+
+```js
+// 构造函数继承
+function Parent(name) {
+  this.name = name;
+}
+function Child(name, age) {
+  Parent.call(this, name);
+  this.age = age;
+}
+var child = new Child('vcplugin', 18);
+```
+
+```js
+// 组合继承
+function Parent(name) {
+  this.name = name;
+}
+Parent.prototype.sayHello = function() {
+  console.log('Hello from ' + this.name);
+};
+function Child(name, age) {
+  Parent.call(this, name);
+  this.age = age;
+}
+Child.prototype = new Parent();
+Child.prototype.constructor = Child;
+var child = new Child('Child', 10);
+```
+
+```js
+// 原型式继承
+function createObject(proto) {
+  function F() {}
+  F.prototype = proto;
+  return new F();
+}
+
+var parent = {
+  name: 'Parent'
+};
+
+var child = createObject(parent);
+console.log(child.name); // 输出: 'Parent'
+```
+
+```js
+// 寄生式继承
+function createObject(proto) {
+  function F() {}
+  F.prototype = proto;
+  return new F();
+}
+function createEnhancedObject(proto) {
+  var obj = createObject(proto);
+  obj.sayHello = function() {
+    console.log('Hello from ' + this.name);
+  };
+  return obj;
+}
+var parent = {
+  name: 'Parent'
+};
+var child = createEnhancedObject(parent);
+console.log(child.name); // 输出: 'Parent'
+child.sayHello(); // 输出: 'Hello from Parent'
+```
+
+原型链的理解：原型链是js中实现继承的主要方式，每个对象都有一个内部指针[[Prototype]]，指向它的原型对象。当访问一个对象的属性或方法时，如果这个对象本身没有这个属性或方法，就会沿着原型链向上查找，直到找到为止或者到达原型链末尾(Object.prototype)。
+
+## 中间页携带cookie
