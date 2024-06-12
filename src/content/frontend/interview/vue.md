@@ -1,3 +1,9 @@
+---
+title: Vue生命周期&Vue3
+description: 生命周期、状态管理、Composition、响应式升级等
+date: 2020-07-11
+---
+
 # Vue
 
 ## 生命周期
