@@ -19,6 +19,9 @@ import WithSiteContentInfo from '@/src/components/withSiteContentInfo'
 import WithSiteMenus from '@/src/components/withSiteMenus'
 import WithSiteMenusNav from '@/src/components/withSiteMenusNav'
 import { getMenusByPath } from '@/src/utils/navigation'
+import {
+  NEXT_PUBLIC_HOST
+} from '@/src/utils/content.constants'
 import './markdown.css';
 
 interface Params {
@@ -35,6 +38,12 @@ const processImages = (node: any, pagePath: string) => {
     const alt = node.properties.alt || '';
     const title = node.properties.title || '';
     node.properties.src = imageHandler(src, alt, title, pagePath);
+  } else if (node.type === 'element' && node.tagName === 'a') {
+    if (node.properties.href && (node.properties.href.indexOf('./') > -1 || node.properties.href.indexOf('../') )) {
+      // console.log('processImages', 'a链接1111');
+      // node.properties.href = '/content/';
+      node.properties.href = '/content/';
+    }
   } else if (node.children) {
     node.children.forEach((item: any) => {
       processImages(item, pagePath)
@@ -42,11 +51,11 @@ const processImages = (node: any, pagePath: string) => {
   }
 }
 const imageHandler = (src: string, alt: string, title: string, pagePath: string) => {
-  // console.log('imageHandler', src);
+  console.log('imageHandler', NEXT_PUBLIC_HOST);
   // 检查图片路径是否为相对路径
   if (src.startsWith('./') || src.startsWith('../')) {
     // 将相对路径转换为线上图片地址
-    const onlineImageUrl = `http://localhost:3000/mdAssets/${pagePath}/${src.replace(/^\.\/|\.\.\//, '')}`;
+    const onlineImageUrl = `${NEXT_PUBLIC_HOST}/mdAssets/${pagePath}/${src.replace(/^\.\/|\.\.\//, '')}`;
     // console.log(onlineImageUrl);
     return onlineImageUrl;
   }
@@ -71,7 +80,7 @@ const getPage: FC<Params> = async ({ params }: Params) => {
     const { MDXContent, meta, readingTime } = await dynamicRouter.getMDXContent(source, filename);
     // const mdxSource = await serialize(source);
     return (
-      <div className="w-full">
+      <div className="w-full relative">
         <WithSiteHeader></WithSiteHeader>
         {
           (decodePagePath).indexOf('frontend/resumes') > -1 ? null :
@@ -119,6 +128,7 @@ const getPage: FC<Params> = async ({ params }: Params) => {
           </div>
         </div>
         <WithSiteContentHeading contentHeads={res}></WithSiteContentHeading>
+        {/* <div className='absolute -bottom-12 left-0 right-0 h-20 cus-linear-bg'></div> */}
       </div>
     );
   }
