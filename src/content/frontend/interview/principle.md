@@ -215,7 +215,7 @@ function myInstanceof (obj, constructorObj) {
 }
 ```
 
-### 浅拷贝
+## 浅拷贝
 
 在js中，浅拷贝是指创建一个新的对象，并将原始对象的属性值复制到新对象中，但是如果属性值是引用类型(如对象，数组)，则只复制引用，而不是创建一个新的对象。这意味着原始对象和新对象共享相同的引用类型属性
 
@@ -247,7 +247,7 @@ function shallowCopy(originObj) {
 }
 ```
 
-### 深拷贝
+## 深拷贝
 
 在js中，深拷贝是指创建一个新的对象，并递归地复制原始对象的所有属性，包括嵌套的对象和数组，使得新对象和原始对象完全独立，互不影响
 
@@ -345,5 +345,187 @@ function myForeach (obj, fn) {
     fn(obj[index], index);
   }
   return obj;
+}
+```
+
+## bind、call、apply
+
+## EventBus
+
+```js
+function EventEmitter() {
+  this.events = Object.create(null);
+}
+
+EventEmitter.prototype.on = function (type, listener, flag = false) {
+  if (this.events[type]) {
+    if (flag) {
+      this.events[type].unshift(listener);
+    } else {
+      this.events[type].push(listener);
+    }
+  } else {
+    this.events[type] = [listener];
+  }
+}
+EventEmitter.prototype.emit = function (type, ...args) {
+  if (this.events[type]) {
+    this.events[type].forEach(fn => {
+      fn.call(this, ...args);
+    })
+  }
+}
+EventEmitter.prototype.once = function (type, listener) {
+  const wrapper = (...args) => {
+    listener.call(this, ...args);
+    this.off(type, wrapper);
+  }
+
+  wrapper.origin = listener;
+  this.on(type, wrapper);
+}
+EventEmitter.prototype.off = function (type, listener) {
+  if (this.events[type]) {
+    this.events[type] = this.events[type].filter(fn => {
+      return fn !== listener && fn.origin !== listener;
+    })
+  }
+}
+EventEmitter.prototype.removeAllListeners = function () {
+  this.events = Object.create(null);
+}
+```
+
+```js
+class EventBus {
+  constructor() {
+    this.event = Object.create(null);
+  }
+
+  on (type, listener, flag = false) {
+    if (this.event[type]) {
+      if (flag) {
+        this.event[type].unshift(listener);
+      } else {
+        this.event[type].push(listener);
+      }
+    } else {
+      this.event[type] = [listener];
+    }
+  }
+
+  once (type, listener) {
+    const warpper = (...args) => {
+      listener.call(this, ...args);
+      this.off(type, warpper);
+    }
+    this.on(type, warpper);
+  }
+
+  emit (type, ...args) {
+    if (this.event[type]) {
+      this.event[type].forEach(fn => {
+        fn.call(this, ...args);
+      })
+    }
+  }
+
+  off (type, listener) {
+    if (this.event[type]) {
+      this.event[type] = this.event[type].filter(fn => {
+        return fn !== listener;
+      });
+    }
+  }
+
+  removeAllListeners () {
+    this.event = Object.create(null);
+  }
+}
+```
+
+## 防抖和节流
+
+```js
+function debounce(fn, delay) {
+  let timer;
+
+  return function (..args) {
+    let context = this;
+    if (timer) {
+      clearTimeout(timer);
+      timer = null;
+    }
+    timer = setTimeout(() => {
+      fn.apply(context, args);
+    })
+  }
+}
+
+function throttle (fn, delay) {
+  let flag = true;
+
+  return function (...args) {
+    let context = this;
+    if (!flag) {
+      return;
+    }
+    flag = false;
+    setTimeout(() => {
+      fn.apply(context, args);
+      flag = true;
+    }, delay)
+  }
+}
+function throttle2 (fn, delay) {
+  let last = 0;
+
+  return function (...args) {
+    let context = this;
+    let now = new Date().getTime();
+
+    if (now - last < delay) {
+      return;
+    }
+    last = now;
+    fn.apply(context, args);
+  }
+}
+```
+
+## Promise A+
+
+## Object.create
+
+```js
+function createObject(obj) {
+  function F() {}
+  F.prototype = obj;
+  return new F();
+}
+```
+
+## 函数柯里化
+
+函数柯里化是一种将接受多个参数的函数转换为接受一个单一参数的函数,并且返回接受余下参数且返回结果的新函数的技术
+
+- 这个curry函数接受一个函数fn作为参数,并返回一个新的函数curried
+  - 当调用curried函数时,它会接收一些参数args
+  - 如果接收到的参数数量(args.length)大于等于原始函数fn所需的参数数量(fn.length),则使用apply方法将args传递给原始函数fn并返回结果
+  - 如果接收到的参数数量小于原始函数所需的参数数量,则返回一个新的函数
+  - 这个新的函数接受额外的参数newArgs,并通过递归调用curried函数,将之前的参数args和新的参数newArgs合并后传递给curried函数
+  - 这个过程会一直递归,直到接收到的参数数量满足原始函数所需的参数数量,然后返回最终的结果
+
+```js
+function currey (fn) {
+  return function curried (...args) {
+    if (args.length >= fn.length) {
+      return fn.apply(this, args);
+    } else {
+      return function (...args2) {
+        return curried.apply(this, args.concat(args2));
+      }
+    }
+  }
 }
 ```

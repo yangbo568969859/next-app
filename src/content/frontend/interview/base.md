@@ -32,7 +32,7 @@ function thorttle1(fn, delay) {
   return function (...args) {
     let context = this;
     let now = new Date().getTime();
-    if (now - last > delay) {
+    if (now - last < delay) {
       return;
     }
     last = now;
@@ -453,105 +453,6 @@ function create(obj) {
 ## Promise
 
 ```js
-```
-
-## EventBus
-
-```js
-function EventEmitter() {
-  this.events = Object.create(null);
-}
-
-EventEmitter.defaultMaxListeners = 10;
-
-EventEmitter.prototype.on = function(type, listener, flag) {
-  if (!this.events) {
-    this.events = Object.create(null);
-  }
-  if (this.events[type]) {
-    if (flag) {
-      this.events[type].push(listener);
-    } else {
-      this.events[type].unshift(listener);
-    }
-  } else {
-    this.events[type] = [listener];
-  }
-};
-EventEmitter.prototype.emit = function(type, ...args) {
-  if (this.events[type]) {
-    this.events[type].forEach(fn => {
-      fn.call(this, ...args);
-    });
-  }
-};
-EventEmitter.prototype.once = function(type, listener) {
-  let _this = this;
-  function only() {
-    listener();
-    _this.removeListener(type, only);
-  }
-
-  only.origin = listener;
-  this.on(type, only);
-};
-EventEmitter.prototype.off = function(type, listener) {
-  if (this._enents[type]) {
-    this._events[type] = this._events[type].filter(fn => {
-      return fn !== listener && fn.origin !== listener;
-    });
-  }
-};
-EventEmitter.prototype.removeListener = function(type, listener) {
-  this.events = Object.create(null);
-};
-```
-
-```js
-class EventBus {
-  constructor() {
-    this.event = Object.create(null);
-  }
-
-  on(type, listener, flag) {
-    if (this.event[type]) {
-      if (flag) {
-        this.event[type].unshift(listener);
-      } else {
-        this.event[type].push(listener);
-      }
-    } else {
-      this.event[type] = [listener];
-    }
-  }
-
-  emit(type, ...args) {
-    if (this.event[type]) {
-      this.event[type].forEach(fn => {
-        fn.call(this, ...args);
-      });
-    }
-  }
-  once(type, listener) {
-    const warpper = (...args) => {
-      listener.call(this, ...args);
-      this.off(type, warpper);
-    };
-    this.on(type, warpper);
-  }
-  off(type, listener) {
-    if (this.event[type]) {
-      // delete this.event[type]
-      this.event[type] = this.event[type].filter(fn => {
-        return fn !== listener;
-      });
-    }
-  }
-
-  removeAllListener() {
-    this.event = Object.create(null);
-  }
-}
 ```
 
 ## 并发请求
