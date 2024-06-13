@@ -7,10 +7,10 @@ date: 2021-08-11
 # js 性能监控和分析
 
 下图是 [Navigation Timing Level 1](https://www.w3.org/TR/navigation-timing/) 的处理模型，从当前浏览器窗口卸载旧页面开始，到新页面加载完成，整个过程一共分为 9 个模块：**提示卸载旧文档、重定向/卸载、应用缓存、DNS 解析、TCP 握手、HTTP 请求处理、HTTP 响应处理、DOM 处理、文档装载完成**
-![image](./image/timing-overview.png)
+![image](../image/timing-overview.png)
 
 [Navigation Timing Level 2](https://www.w3.org/TR/navigation-timing-2/) 给出了新的时间线，新版的时间线将描述资源加载的时间用 PerformanceResourceTiming 对象封装了起来。如下图所示：
-![image](./image/timestamp-diagram.png)
+![image](../image/timestamp-diagram.png)
 
 ## Navigation Timing 指标说明
 
@@ -110,7 +110,7 @@ Performance 是 Chrome 提供给我们的开发者工具，用于记录和分析
 | 火焰图面板 | 可视化 CPU 堆栈(stack)信息记录。  |
 | 统计面板 | 以图表的形式汇总数据。  |
 
-![image](./image/google-performance.png)
+![image](../image/google-performance.png)
 
 ### 面板概览
 

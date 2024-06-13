@@ -70,5 +70,9 @@ module.exports = supportedIcons = {
   "webgl": {
     title: 'webgl 相关知识',
     description: 'webgl、three.js、unity输出webgl等相关知识',
+  },
+  "monitor": {
+    title: '前端监控相关',
+    description: '性能监控和分析、异常的捕获与处理、异常错误上报、PV等介绍',
   }
 }

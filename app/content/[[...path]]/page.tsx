@@ -54,6 +54,9 @@ const imageHandler = (src: string, alt: string, title: string, pagePath: string)
   console.log('imageHandler', NEXT_PUBLIC_HOST);
   // 检查图片路径是否为相对路径
   if (src.startsWith('./') || src.startsWith('../')) {
+    if (src.startsWith('../')) {
+      pagePath = pagePath.split('/').splice(0, pagePath.split('/').length - 1).join('/');
+    }
     // 将相对路径转换为线上图片地址
     const onlineImageUrl = `${NEXT_PUBLIC_HOST}/mdAssets/${pagePath}/${src.replace(/^\.\/|\.\.\//, '')}`;
     // console.log(onlineImageUrl);

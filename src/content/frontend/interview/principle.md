@@ -312,7 +312,7 @@ function deepCopyComplete (obj, cache = new WeakMap()) {
   } else if (obj instanceof Set) {
     newObj = new Set();
     obj.forEach(value => {
-      newObj.add(deepCopyComplete(value), cache);
+      newObj.add(deepCopyComplete(value, cache));
     })
   } else if (obj instanceof Map) {
     newObj = new Map();

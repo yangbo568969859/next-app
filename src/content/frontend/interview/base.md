@@ -753,3 +753,30 @@ child.sayHello(); // 输出: 'Hello from Parent'
 原型链的理解：原型链是js中实现继承的主要方式，每个对象都有一个内部指针[[Prototype]]，指向它的原型对象。当访问一个对象的属性或方法时，如果这个对象本身没有这个属性或方法，就会沿着原型链向上查找，直到找到为止或者到达原型链末尾(Object.prototype)。
 
 ## 中间页携带cookie
+
+- 服务器端设置Cookie的域名：在服务端设置Cookie时，可以通过设置Cookie的域名属性来实现跨域共享的Cookie，将 Cookie 的域名设置为顶级域名,这样在子域名之间跳转时,Cookie 就可以被携带
+- 使用window.location.href跳转，将Cookie值作为URL参数传递给目标页面
+- 使用 AJAX 请求: 如果目标页面与中间页面属于同一个域名,可以在中间页面中使用 AJAX 请求将 Cookie 的值发送给服务器,然后在服务器端将 Cookie 值设置到响应头中,再进行页面跳转
+
+```js
+// 发送 AJAX 请求
+var xhr = new XMLHttpRequest();
+xhr.open('POST', '/set-cookie', true);
+xhr.setRequestHeader('Content-Type', 'application/json');
+xhr.onreadystatechange = function() {
+  if (xhr.readyState === 4 && xhr.status === 200) {
+    // 跳转到目标页面
+    window.location.href = 'https://www.example.com/target-page';
+  }
+};
+xhr.send(JSON.stringify({ username: getCookie('username') }));
+```
+
+```js
+// 在服务器端 (Node.js),可以接收 AJAX 请求,并将 Cookie 值设置到响应头中
+app.post('/set-cookie', function(req, res) {
+  var username = req.body.username;
+  res.cookie('username', username, { domain: '.example.com', path: '/' });
+  res.sendStatus(200);
+});
+```
