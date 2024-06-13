@@ -1,5 +1,5 @@
 ---
-title: 基础CSS面试题
+title: CSS基础
 description: 盒模型、BFC、层叠上下文、布局等
 date: 2020-08-11
 ---
