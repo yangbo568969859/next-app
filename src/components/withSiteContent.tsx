@@ -6,7 +6,7 @@ import { Button } from '@/src/components/UIBase/Button'
 
 function WithSiteContentItems(props: any) {
   const { link } = props;
-  let title, description = '';
+  let title, description = link.description;
   if (link.meta && link.meta.title) {
     title = link.meta.title;
     description = link.meta.description;

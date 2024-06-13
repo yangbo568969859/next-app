@@ -1,4 +1,4 @@
-module.exports = supportedIcons = {
+module.exports = dirInfo = {
   "ai": {
     title: 'AI',
     description: 'AI相关知识'
