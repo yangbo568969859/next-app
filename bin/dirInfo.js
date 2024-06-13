@@ -33,11 +33,11 @@ module.exports = dirInfo = {
   },
   "frontend": {
     title: '前端知识库',
-    description: 'vue、react、css、面试等前端知识',
+    description: 'vue、react、css等前端知识',
   },
   "interview": {
-    title: '前端面试相关',
-    description: '前端面试知识汇总',
+    title: '前端知识汇总',
+    description: '前端知识相关',
   },
   "git": {
     title: 'git操作手册',
