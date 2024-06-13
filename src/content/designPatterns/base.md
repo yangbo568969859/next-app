@@ -1,6 +1,6 @@
 ---
 title: 设计模式概念
-description: 设计原则等
+description: 设计模式基础概念介绍、设计原则等
 date: 2021-04-14
 ---
 

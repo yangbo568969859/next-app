@@ -23,8 +23,8 @@ module.exports = dirInfo = {
     title: 'C# 知识',
     description: 'C# 基础入门，设计模式等',
   },
-  "designPatterns": {
-    title: '编程设计模式',
+  "designpatterns": {
+    title: '编程设计模式、软件工程与技术',
     description: '编程设计模式',
   },
   "english": {

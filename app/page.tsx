@@ -18,7 +18,7 @@ export default async function Home() {
     }
   })
   return (
-    <div className='relative'>
+    <div className='container relative'>
       <div className='flex'>
         <div className='sm:pl-[0rem] w-full'>
           <WithSiteHeader></WithSiteHeader>
