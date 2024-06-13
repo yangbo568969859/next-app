@@ -1,7 +1,7 @@
 ---
 title: vscode 插件开发
 description: VSCode 插件，让你的开发效率突飞猛进
-date: 2024-05-05
+date: 2024-02-05
 ---
 
 # vscode 插件开发

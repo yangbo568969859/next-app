@@ -1,3 +1,9 @@
+---
+title: AudioBuffer转为wav并下载
+description: 将AudioBuffer转为wav并下载
+date: 2019-02-05
+---
+
 ### 将AudioBuffer转为wav并下载
 
 AudioBuffer 包含每个解码音频通道的非交错Float32ArrayPCM 样本。对于立体声 AudioBuffer，它将包含 2 个通道。这些通道需要首先交错，然后交错的 PCM 必须附加一个 WAV 标头，以便您可以下载和播放 WAV

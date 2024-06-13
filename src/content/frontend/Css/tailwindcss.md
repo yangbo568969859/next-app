@@ -283,7 +283,9 @@ module.exports = {
 </div>
 ```
 
-## 如果想继续使用 嵌套语法
+## 嵌套语法
+
+TailwindCSS旨在消除样式代码，推荐在项目中移除预处理器，但是如果你还想像之前一样使用预处理器来写嵌套语法，可以使用一些插件实现
 
 TailwindCSS封装了[postcss-nested](https://www.npmjs.com/package/postcss-nested)与[postcss-nesting](https://www.npmjs.com/package/postcss-nesting)插件，抛出了一个新的postcss插件，你只需要在postcss.config.js文件中加入以下代码，即可在css文件中使用嵌套语法了
 
