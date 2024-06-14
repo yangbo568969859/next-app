@@ -17,7 +17,7 @@ date: 2022-08-11
   - Webpack 调试和构建
   - Webpack 热更新(HMR)原理
   - tree-shaking
-  - Bable
+  - Babel
 - 其它
   - Rollup
   - Vite

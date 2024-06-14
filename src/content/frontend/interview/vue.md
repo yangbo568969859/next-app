@@ -8,25 +8,277 @@ date: 2020-07-11
 
 ## 生命周期
 
+vue2 的生命周期
+
+- beforeCreate
+- created
+- beforeMount
+- mounted
+- beforeUpdate
+- updated
+- beforeDestroy
+- destroyed
+
+vue3 的生命周期
+
+- beforeCreate
+  - 在实例初始化之后，数据观测(data observer)和 event/watcher 事件配置之前被调用
+  - 在组合API中，setup 函数取代了 beforeCreate 钩子函数的功能
+- created
+  - 在实例创建完成后被立即调用
+  - 这一步：实例已完成以下配置：数据观测(date observer)、property和方法的运算，watch/event事件回调
+  - 然而，挂载阶段还没有开始 $el property目前尚不可用。在组合API中，setup函数取代了created钩子函数的功能
+- mounted
+  - 实例被挂载后调用，这时app.mount()被新创建的 vm.$el 替换
+  - 如果跟实例挂载到了一个文档内的元素上，当mounted被调用时， vm.$el 也在文档内
+- beforeUpdate
+  - 数据更新时调用,发生在虚拟 DOM 打补丁之前
+  - 这里适合在更新之前访问现有的 DOM,比如手动移除已添加的事件监听器
+- updated
+  - 由于数据更改导致的虚拟DOM重新渲染和打补丁，在这之后会调用该钩子
+  - 当这个钩子被调用时，组件DOM已经更新，所以你现在可以执行依赖于DOM的操作
+- beforeUnmount
+  - 在卸载组件实例之前调用，这个阶段实例依然可以正常访问
+- unmounted
+  - 在卸载组件实例之后调用，调用此钩子，组件实例的所有指令都被解除绑定，所有事件监听器都被移除，所有子组件实例被销毁
+- errorCaptured
+- activated
+  - 被 keep-alive 缓存的组件激活时调用
+- deactivated
+  - 被 keep-alive 缓存的组件失活时调用
+
+## 计算属性computed和侦听器watch
+
+- 计算属性是基于他们的依赖进行缓存的，只有在它的相关依赖发生变化时才会重新求值（适用于计算较为复杂的逻辑）
+- 监听器允许你执行异步操作，如访问API和修改其他数据（适用于观察某个值的变化并执行相应的操作）
+
+## 插槽
+
+插槽允许你在组件的模板中定义占位符，并在使用组件时填充这些占位符，它提供了一种将内容分发到组件的方式
+
 ## 状态管理
+
+- vuex 解决了组件之间共享状态的问题，提供了一种集中式的状态管理方案，Vuex使用单一状态树，通过定义状态、突变和动作来管理应用的状态
+
+## 组件通信
+
+- 父组件通过props向子组件传递数据
+- 子组件通过$emit触发事件，父组件监听事件并处理
+- 使用$refs直接访问子组件实例
+- 使用EventBus实现跨组件通信
+- 使用vuex管理全局状态，实现组件之间的数据共享
+
+## 路由原理
+
+基于前端路由的概念，通过拦截浏览器URL变化，动态加载和渲染对应的组件,从而实现页面的无刷新切换。它利用了浏览器的 History API 或 hash 来管理 URL 的变化,并通过 Vue.js 的响应式系统和组件化机制,将路由与组件进行了深度集成
 
 ## vue3
 
 ### Composition API
 
+组合式API，提供了一种新的方式来组织组件的逻辑。在组合API中，生命周期钩子函数以on开头，如onMounted，onUpdated等，这些钩子函数可以在setup函数中直接使用
+
+选项API和组合API可以混合使用，建议使用组合API，提供了更好的逻辑复用和代码组织方式
+
+- setup 函数
+- 响应式系统
+  - reactive
+  - ref
+  - computed
+- 生命周期钩子
+  - 常用的生命周期钩子包括 onMounted、onUpdated、onUnmounted 等,它们与 Options API 中的生命周期钩子对应
+- 依赖注入
+  - 提供了 provide 和 inject 函数,用于在组件之间共享数据
+  - provide 函数用于在父组件中提供数据,inject 函数用于在子组件中注入和使用数据
+- 逻辑复用
+  - 将组件的逻辑提取到独立的函数中,并在多个组件之间共享和复用这些函数
+  - 通过组合不同的函数,我们可以灵活地组织和重用组件的逻辑,提高代码的可维护性和可读性
+
 ### 自定义 hooks
+
+优势
+
+- 代码复用：通过将可复用的逻辑提取到自定义 hooks 中,我们可以在多个组件之间共享和重用这些逻辑,避免了代码的重复
+- 逻辑封装：自定义 hooks 将特定的逻辑封装到独立的函数中,使得组件的代码更加简洁和易于理解
+- 可组合性：自定义 hooks 可以相互组合和嵌套,通过组合不同的 hooks,我们可以构建出复杂的功能
+- 响应式数据：自定义 hooks 内部可以使用 Vue 3 的响应式 API,如 ref 和 reactive,创建和管理响应式数据
+- 生命周期钩子：自定义 hooks 可以访问 Vue 3 的生命周期钩子,如 onMounted、onUnmounted 等,允许我们在 hooks 内部执行一些初始化和清理的逻辑
+
+```js
+import { ref, onMounted, onUnmounted } from 'vue'
+export function useMouse () {
+  const x = ref(0)
+  const y = ref(0)
+
+  function update (e) {
+    x.value = e.pageX
+    y.value = e.pageY
+  }
+
+  onMounted(() => {
+    window.addEventListener('mousemove', update)
+  })
+
+  onUnmounted(() => {
+    window.removeEventListener('mousemove', update);
+  })
+
+  return { x, y }
+}
+```
+
+```js
+import { ref } from 'vue'
+export function useAsyncData(url) {
+  const data = ref(null)
+  const error = ref(null)
+
+  fetch(url).then(response => response.json()).then(json => (data.value = json)).catch(err => (error.value = err))
+
+  return {
+    data,
+    error
+  }
+}
+```
 
 ### 响应式升级
 
+在vue2中，响应式系统是基于Object.defineProperty实现的，它通过递归地遍历数据对象，为每个属性添加getter和setter，以实现数据的响应式，然而这种方式用一些局限性，例如无法检测对象属性的添加或删除，以及数组索引的变化
+
+vue3中，采用一种全新的响应式系统，基于ES6的 Proxy和Reflect API，提供更加灵活和高效的响应式机制
+
+- Proxy 和 Reflect
+  - vue3中使用Proxy对象来拦截对数据对象的访问和修改操作，Proxy可以监听对象的任意属性的访问和修改，包括属性的添加和删除
+  - 通过 Proxy,Vue 3 可以实现更细粒度的响应式控制,不再需要递归遍历数据对象
+  - Reflect API 提供了一组方法,用于在 Proxy 中对原始对象进行操作,如获取属性值、设置属性值等
+- 响应式API
+  - reactive：用于创建一个响应式对象，返回一个Proxy对象，可以直接修改其属性，触发响应式更新
+  - ref：用于创建一个响应式的值，返回一个带有value属性的对象，通过.value可以访问和修改值，触发响应式更新
+  - computed：计算属性，根据其依赖的响应式数据自动计算并返回结果
+  - watch：监听一个或多个响应式数据变化
+- 响应式工具函数
+  - isRef：函数用于判断一个值是否是 ref 类型的响应式值
+  - toRef：函数用于为一个响应式对象的属性创建一个 ref,使其能够独立触发响应式更新
+  - toRefs：函数用于将一个响应式对象转换为一个普通对象,其中每个属性都是对应的 ref
+- 响应式效果
+  - Vue 3 引入了响应式效果的概念,它是一个函数,当其依赖的响应式数据发生变化时,会自动重新执行
+  - 响应式效果通过 watchEffect 函数创建,它接收一个回调函数作为参数,并自动追踪其中使用的响应式数据
+  - 当响应式数据发生变化时,响应式效果会自动重新执行,更新相关的副作用
+
 ### diff 算法升级
+
+Vue 3 对虚拟 DOM 的 diff 算法进行了重大改进和优化,以提高性能并支持更多的场景。以下是 Vue 3 diff 算法升级的主要变化
+
+- 静态提升
+- 预字符串化
+- 块级别的diff
+- 更智能的列表diff
+- 更好的组件diff
 
 ### Teleport
 
+Teleport 是 Vue 3 引入的一个新特性,它允许我们将组件的一部分模板"传送"到 DOM 中的其他位置,而不受组件层级的限制。这在处理模态框、弹出框、通知等场景时非常有用,因为这些元素通常需要放置在 DOM 结构的特定位置,以确保正确的样式和行为
+
+```vue
+<template>
+  <div>
+    <h1>组件内容</h1>
+    <Teleport to="body">
+      <div class="modal">
+        <h2>模态框内容</h2>
+        <button @click="closeModal">关闭</button>
+      </div>
+    </Teleport>
+  </div>
+</template>
+
+<script>
+export default {
+  methods: {
+    closeModal() {
+      // 关闭模态框的逻辑
+    }
+  }
+}
+</script>
+```
+
+在上面的示例中,我们使用了 <Teleport> 组件,并通过 to 属性指定了目标位置为 "body"。这意味着 <Teleport> 内部的模板内容将被传送到 <body> 标签下,而不是在当前组件的 DOM 结构中
+
+特点和优势
+
+- 灵活的目标位置：通过 to 属性,我们可以指定 Teleport 的目标位置,可以是一个 CSS 选择器或者一个 DOM 元素
+- 保持组件的逻辑和状态：
+  - 虽然 Teleport 将模板内容传送到了其他位置,但它仍然保持了组件的逻辑和状态
+  - 可以在组件中正常地定义数据、方法、计算属性等,并在 Teleport 内部的模板中使用它们
+- 解决 CSS 样式和 z-index 问题
+  - 使用传统的方式处理模态框或弹出框时,常常会遇到 CSS 样式和 z-index 的问题,因为它们被限制在组件的 DOM 结构中
+  - 通过 Teleport,我们可以将这些元素传送到 DOM 的更高层级,避免了样式和 z-index 的限制
+- 支持多个 Teleport
+  - 在一个组件中,我们可以使用多个 Teleport 将不同的模板内容传送到不同的目标位置。
+  - 每个 Teleport 都有自己的目标位置和独立的 DOM 结构,互不影响
+
 ### Suspense
+
+Suspense 是 Vue 3 引入的一个新特性,它允许在组件树中协调对异步依赖的处理,并在等待异步组件时渲染一个加载状态
+
+Suspense 组件有两个插槽:default 和 fallback。default 插槽用于渲染主要内容,而 fallback 插槽用于在主要内容加载完成之前渲染一个加载状态。
+
+使用场景：
+
+- 异步组件加载（注意的是,使用 Suspense 组件时,异步组件应该使用 defineAsyncComponent 函数来定义,以便 Vue 能够正确地处理异步加载过程）
+- 条件性渲染
+- 嵌套的异步依赖
+
+```vue
+<template>
+  <Suspense>
+    <template #default>
+      <async-component />
+    </template>
+    <template #fallback>
+      <loading-spinner />
+    </template>
+  </Suspense>
+</template>
+
+<script>
+import AsyncComponent from './AsyncComponent.vue';
+import LoadingSpinner from './LoadingSpinner.vue';
+
+export default {
+  components: {
+    AsyncComponent,
+    LoadingSpinner,
+  },
+};
+</script>
+```
 
 ### Fragment
 
+在vue2中，每个组件都必须有一个根元素，即template中只能有一个根节点，这就会导致：有时候我们可能不需要一个额外的根节点，但为了满足根节点要求，不得不添加一个无意义的根节点。为了解决这个问题：Vue3引入了Fragment概念，Fragment 允许组件的 template 中包含多个根级别的节点,而不需要将它们包裹在一个单独的元素中
+
 ### Tree-Shaking
+
+Tree-Shaking 是一种在打包过程中移除未使用代码的技术，它通过静态分析代码的导入和导出语句，确定哪些代码是实际使用的，并将未使用的代码从最终的打包文件中剔除，从而减小打包体积
+
+vue3 通过采用ES6 Module语法优化打包策略
+
+- 基于 ES6 模块的设计
+  - 采用了 ES6 模块语法,每个功能模块都通过 export 关键字导出,而不是将所有内容都挂载到全局的 Vue 对象上
+  - 使用 ES6 模块,打包工具可以更容易地分析代码的依赖关系,识别未使用的代码并将其移除
+- 细粒度的导入和导出
+  - 更细粒度的导入和导出方式,允许开发者按需导入所需的功能模块
+  - 通过 import { ref, computed } from 'vue' 的方式,只导入 ref 和 computed 这两个响应式 API
+- 优化的打包策略
+  - 通过使用现代的打包工具和配置,如 Webpack、Rollup 等,实现了更高效的 Tree-Shaking
+  - 打包工具会分析代码的依赖关系,并使用 Dead Code Elimination (DCE) 技术移除未使用的代码
+- 更小的运行时体积
+- 按需加载组件和插件
+  - Vue 3 支持按需加载组件和插件,通过动态导入的方式,只在需要时才加载相应的代码
+  - 可以使用 import('./MyComponent.vue') 的方式动态导入组件,而不是一次性导入所有组件
 
 ### 其他
 
