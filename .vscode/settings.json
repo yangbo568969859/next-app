@@ -5,5 +5,9 @@
     // "source.fixAll": "explicit",
     // "source.organizeImports": "explicit"
   },
-  "editor.tabSize": 2
+  "editor.tabSize": 2,
+  "markdownlint.config": {
+    "blanks-around-lists": false,
+    "ol-prefix": false
+  }
 }
