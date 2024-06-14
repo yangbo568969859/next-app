@@ -58,7 +58,7 @@ JavaScript / TypeScript / React / Vue 全家桶 / Node.js / 跨端(<span classNa
 
 1. 难点：SEO、网站多样化配置、Saas交付问题
 2. 工作内容
-  - 基于vue的nuxt做服务端渲染
+  - 基于<span className="text-vue">vue</span>的nuxt做服务端渲染
   - 实现前台页面组件式配置
   - 优化官网页面性能(日志+图片压缩+资源压缩)
 
@@ -114,8 +114,8 @@ JavaScript / TypeScript / React / Vue 全家桶 / Node.js / 跨端(<span classNa
 1. 难点：服务端开发、验货流程梳理以及数据整理
 2. 工作内容
   - 钉钉企业内部小程序对接
-  - 服务端接口独立开发(nestjs完成服务端接口开发，包含：权限校验、超时处理、定时任务、错误处理、数据校验等)
-  - 前端小程序独立开发
+  - 服务端接口独立开发(<span className="text-nestjs">nestjs</span>完成服务端接口开发，包含：权限校验、超时处理、定时任务、错误处理、数据校验等)
+  - 前端小程序独立开发(<span className="text-taro">taro</span>)
 
 ## 其他
 
@@ -125,11 +125,11 @@ JavaScript / TypeScript / React / Vue 全家桶 / Node.js / 跨端(<span classNa
 2. 内容
   - 设计vscode层与webview-ui通信规范，完成vscode内代码与webview-ui层相互通信
   - node-server 调用openAi SDK实现基础流式对话
-  - 基础UI交互界面逻辑实现(React)
+  - 基础UI交互界面逻辑实现(<span className="text-react">React</span>)
 
 ### Flutter APP开发
 
-1. 难点：跨语言开发，flutter框架使用
+1. 难点：跨语言开发，<span className="text-blue">flutter</span>框架使用
 2. 内容
   - 完成电商APP跨端开发
   - cms动态渲染页面设计开发

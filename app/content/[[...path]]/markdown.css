@@ -146,6 +146,27 @@
   color: #9feaf9;
 }
 
+.markdown .text-vue {
+  color: #42B883;
+}
+
+.markdown .text-react {
+  color: #087ea4;
+}
+
+.markdown .text-node {
+  color: #417E38;
+}
+
+.markdown .text-nestjs {
+  color: #EA2857;
+}
+
+.markdown .text-taro {
+  color: #0000c2;
+}
+
+
 /* 表格 */
 .markdown table {
   @apply text-sm;
