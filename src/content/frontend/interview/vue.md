@@ -10,14 +10,14 @@ date: 2020-07-11
 
 vue2 的生命周期
 
-- beforeCreate
-- created
-- beforeMount
-- mounted
-- beforeUpdate
-- updated
-- beforeDestroy
-- destroyed
+- beforeCreate 是`new Vue()` 之后触发的第一个钩子，当前阶段 data、methods等都无法访问
+- created 实例创建完成后发生，当前阶段完成了数据检测、事件等，也就是可以使用数据、更改数据。在这里更改数据不会触发updated函数，可以在这里做一些初始化的工作，当前阶段也无法访问DOM
+- beforeMount 发生在挂载前，当前阶段虚拟DOM已经创建完成，即将开始渲染
+- mounted 在挂载完成后触发。当前阶段DOM节点挂载完成，数据完成双向绑定，可以访问到DOM节点，可以使用$refs属性对DOM进行操作
+- beforeUpdate 在更新之前触发，也就是响应式数据发生更新前，虚拟dom重新渲染之前触发，可以在当前阶段进行数据更改，不会造成重渲染
+- updated 在更新完成后触发，当前阶段组件DOM已完成更新。要注意的是避免在此期间更改数据，可能会导致无限循环更新
+- beforeDestroy 实例销毁之前，当前阶段实例可以继续使用，可以在这里清除计时器、移除事件监听等
+- destroyed 实例销毁后，组件已被销毁、数据绑定被移除、监听被移除、子组件也被销毁
 
 vue3 的生命周期
 
@@ -108,6 +108,117 @@ vue-router路由工作流程
   - 当组件渲染完成后,导航就算完成了
   - Vue Router 会更新浏览器的 URL,并将当前路由对象保存到浏览器的历史记录中
   - 如果使用了 History 模式,Vue Router 会利用 HTML5 History API 来修改浏览器的 URL
+
+### vue2 如何检测数组变化
+
+vue2中通过拦截数组的原型方法来实现数组变化的检测和响应式更新(push、pop、shift、unshift、splice、sort、reverse)，当你调用这些方法时，vue2会拦截这些方法的调用，并在方法执行前进行额外操作，以实现数组变化的检测和响应式更新
+
+### vue2 双向绑定原理
+
+```js
+// 1. 创建一个用于存储订阅者的类  
+class Dep {  
+    constructor() {  
+        this.subs = [];  
+    }  
+  
+    // 添加订阅者  
+    addSub(sub) {  
+        this.subs.push(sub);  
+    }  
+  
+    // 通知订阅者更新  
+    notify() {  
+        this.subs.forEach(sub => sub.update());  
+    }  
+}  
+  
+// 2. 创建一个Watcher类，用于观察数据变化并更新视图  
+class Watcher {  
+    constructor(vm, exp, cb) {  
+        this.cb = cb;  
+        this.vm = vm;  
+        this.exp = exp;  
+        this.value = this.get(); // 初始化时获取一次值  
+    }  
+  
+    // 获取当前属性的值  
+    get() {  
+        Dep.target = this; // 将当前watcher设为Dep的target  
+        let value = this.vm[this.exp]; // 触发getter，添加订阅者  
+        Dep.target = null; // 清除target  
+        return value;  
+    }  
+  
+    // 更新视图  
+    update() {  
+        let newValue = this.vm[this.exp];  
+        if (newValue !== this.value) {  
+            this.value = newValue;  
+            this.cb(newValue);  
+        }  
+    }  
+}  
+  
+// 3. 创建一个Vue实例类  
+class Vue {  
+    constructor(data) {  
+        this.data = data;  
+        Object.keys(data).forEach(key => {  
+            this[key] = this._proxyData(key);  
+        });  
+        this._initWatch();  
+    }  
+  
+    // 初始化watcher  
+    _initWatch() {  
+        this._watchers = [];  
+        let updateComponent = () => {  
+            console.log('组件更新');  
+        };  
+        Object.keys(this.data).forEach(key => {  
+            new Watcher(this, key, updateComponent);  
+        });  
+    }  
+  
+    // 数据代理，用于实现双向绑定  
+    _proxyData(key) {  
+        let self = this;  
+        return new Proxy(this.data[key], {  
+            get(target, prop) {  
+                if (Dep.target) {  
+                    let dep = target.__dep__ || (target.__dep__ = new Dep());  
+                    dep.addSub(Dep.target);  
+                }  
+                return Reflect.get(target, prop);  
+            },  
+            set(target, prop, value) {  
+                let result = Reflect.set(target, prop, value);  
+                let dep = target.__dep__;  
+                if (dep) {  
+                    dep.notify();  
+                }  
+                return result;  
+            }  
+        });  
+    }  
+}  
+  
+// 使用示例  
+let vm = new Vue({  
+    data: {  
+        message: 'Hello, Vue!'  
+    }  
+});  
+  
+// 在控制台输出message属性的变化  
+vm.$watch('message', (newVal, oldVal) => {  
+    console.log(`Message changed from ${oldVal} to ${newVal}`);  
+});  
+  
+// 修改message属性，视图和模型都会自动更新  
+vm.message = 'Hello, World!';
+```
 
 ## vue3
 
@@ -202,6 +313,15 @@ vue3中，采用一种全新的响应式系统，基于ES6的 Proxy和Reflect AP
   - Vue 3 引入了响应式效果的概念,它是一个函数,当其依赖的响应式数据发生变化时,会自动重新执行
   - 响应式效果通过 watchEffect 函数创建,它接收一个回调函数作为参数,并自动追踪其中使用的响应式数据
   - 当响应式数据发生变化时,响应式效果会自动重新执行,更新相关的副作用
+
+Proxy 只会代理对象第一层，vue3如何处理这个问题的
+
+对于嵌套的对象属性，Vue3采用了一种称为 深度响应式 机制，处理这个问题。也就是当一个响应式对象的属性也是一个对象，vue3会递归的将该对象转为响应式对象。这意味着只有在实际访问嵌套对象的属性时，才会对该嵌套对象进行代理
+
+- 当你访问一个响应式对象的属性时,Vue 3 会拦截该属性的访问操作
+- 如果该属性的值是一个对象,Vue 3 会检查该对象是否已经是一个响应式对象
+- 如果该对象还不是响应式对象,Vue 3 会将其转换为响应式对象,并将其存储在一个缓存中,以便后续访问时可以直接使用
+- 当你修改响应式对象的嵌套属性时,Vue 3 会自动追踪该属性的变化,并触发相应的更新
 
 ### diff 算法升级
 
@@ -396,9 +516,48 @@ count.value++;
 
 ## 源码分析
 
+### vue Complier实现原理
+
+vue complier 是将模板字符串编译成渲染函数的工具，他的组要作用是将模板template编译为渲染函数render function，以便在运行时通过渲染函数生成DOM树，并最终映射到真实的DOM元素上
+
+- 解析Parse：将模板字符串解析成抽象语法树AST
+- 优化 Optimize：遍历 AST，找出其中的静态节点和静态根节点，并打上标记
+  - 静态节点：在渲染过程中内容不会发生变化的节点，例如纯文本节点
+  - 静态根节点：所有子节点都是静态节点的节点
+  - 标记静态节点的目的是为了在后续的 patch 过程中跳过对它们的比较，从而提升性能
+- 生成 Generate：将优化后的 AST 转换成渲染函数的代码字符串
+  - 生成渲染函数的代码字符串，包括创建 VNode、处理指令和事件等逻辑
+  - 生成的代码字符串可以通过 new Function() 构造函数创建为渲染函数
+
+```js
+function compile(template) {
+  // 1. 解析模板字符串，生成 AST
+  const ast = parse(template);
+  // 2. 优化 AST，标记静态节点
+  optimize(ast);
+  // 3. 生成渲染函数的代码字符串
+  const code = generate(ast);
+  // 4. 创建渲染函数
+  const render = new Function(`with(this){return ${code}}`);
+  return render;
+}
+function parse(template) {
+  // 实现解析逻辑，将模板字符串转换成 AST
+  // ...
+}
+function optimize(ast) {
+  // 实现优化逻辑，标记静态节点
+  // ...
+}
+function generate(ast) {
+  // 实现生成逻辑，将 AST 转换成渲染函数的代码字符串
+  // ...
+}
+```
+
 ### diff
 
-vue2 Diff 算法(采用了双端 Diff 算法)
+vue2 Diff 算法(采用了双端 Diff 算法：同时从新旧children的两端进行比较，借助key值找到可以复用的节点)
 
 - 对比头头、尾尾、头尾、尾头是否可以复用，如果可以复用，就进行节点的更新和移动操作
 - 如果经过四个端点的比较，都没有可复用的节点，则将
@@ -422,7 +581,70 @@ vue3 Diff 算法(在 vue2 的基础上进行了优化，主要改进在于引入
 
 ### nextTick
 
-在下次 DOM 更新循环结束之后执行延迟回调，在修改数据之后立即使用这个方法，获取更新后的 DOM
+在下次 DOM 更新循环结束之后执行延迟回调，它可以用来获取更新后的 DOM 状态，或者在数据变化之后等待 DOM 更新完成后执行某些操作
+
+原理是利用了浏览器的事件循环机制和任务队列，当vue检测到数据变化时，他会开启一个异步更新队列，并缓冲在同一事件循环中所有数据变更，如果同一个watcher出发多次，只会被推入到队列中一次
+
+```js
+let callbacks = []
+let pending = []
+
+function flushCallbacks () {
+  pending = false
+  const copied = callbacks.slice(0)
+  callbacks.length = 0
+  for (let i = 0; i < copied.length; i++) {
+    copied[i]()
+  }
+}
+let timerFunc;
+
+if (typeof Promise !== 'undefined' && isNative(Promise)) {
+  const p = Promise.resolve()
+  timerFunc = () => {
+    p.then(flushCallbacks)
+  }
+} else if (typeof MutationObserver !== 'undefined' && isNative(MutationObserver)) {
+  let counter = 1
+  const observer = new MutationObserver(flushCallbacks)
+  const textNode = document.createTextNode(String(counter))
+  observer.observe(textNode, {
+    characterData: true
+  })
+  timerFunc = () => {
+    counter = (counter + 1) % 2
+    textNode.data = String(counter)
+  }
+} else if (typeof setImmediate !== 'undefined' && isNative(setImmediate)) {
+  timerFunc = () => {
+    setImmediate(flushCallbacks)
+  }
+} else {
+  timerFunc = () => {
+    setTimeout(flushCallbacks, 0)
+  }
+}
+
+export function nextTick(cb, ctx) {
+  let _resolve;
+  callbacks.push(() => {
+    if (cb) {
+      cb.call(ctx);
+    } else if (_resolve) {
+      _resolve(ctx);
+    }
+  });
+  if (!pending) {
+    pending = true;
+    timerFunc();
+  }
+  if (!cb && typeof Promise !== 'undefined') {
+    return new Promise(resolve => {
+      _resolve = resolve;
+    });
+  }
+}
+```
 
 ### keep-alive
 
@@ -743,3 +965,5 @@ h("div", [h("span", "hello")]);
 // children 数组可以同时包含 vnodes 与字符串
 h("div", ["hello", h("span", "hello")]);
 ```
+
+### vue-router

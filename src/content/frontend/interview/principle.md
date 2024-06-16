@@ -290,6 +290,7 @@ function deepCopy (originObj) {
 }
 // 方法3 更全面的实现
 function deepCopyComplete (obj, cache = new WeakMap()) {
+  // 使用了WeakMap来存储已经复制过的对象，以避免无限递归和循环引用的问题。如果对象中存在循环引用，即某个对象的属性直接或间接地引用了该对象本身，使用WeakMap可以有效地避免这个问题
   if (typeof obj !== 'object' || obj === null) {
     return obj;
   }
@@ -527,5 +528,141 @@ function currey (fn) {
       }
     }
   }
+}
+```
+
+## Promise
+
+```js
+function myPromise (exector) {
+  this.status = 'pending'
+  this.value = undefined
+  this.reason = undefined
+  this.onFulfilledCallbacks = []
+  this.onRejectedCallbacks = []
+
+  const resolve = (value) => {
+    if (this.status !== 'pending') {
+      return
+    }
+    this.status = 'fulfilled'
+    this.value = value
+    this.onFulfilledCallbacks.forEach(callback => callback())
+  }
+
+  const reject = (reason) => {
+    if (this.status !== 'pending') {
+      return
+    }
+    this.status = 'rejected'
+    this.reason = reason
+    this.onRejectedCallbacks.forEach(callback => callback())
+  }
+
+  try {
+    exector(resolve, reject)
+  } catch (error) {
+    reject(error)
+  }
+}
+myPromise.prototype.then = function (onFulfilled, onRejected) {
+  const promise2 = new myPromise((resolve, reject) => {
+    if (this.status == 'fulfilled') {
+      setTimeout(() => {
+        try {
+          const result = onFulfilled(this.value);
+          resolve(result)
+        } catch (error) {
+          reject(error)
+        }
+      }, 0)
+    } else if (this.status == 'rejected') {
+      setTimeout(() => {
+        try {
+          const result = onRejected(this.reason);
+          resolve(result)
+        } catch (error) {
+          reject(error)
+        }
+      }, 0)
+    } else {
+      this.onFulfilledCallbacks.push(() => {  
+        setTimeout(() => {  
+          try {  
+            const result = onFulfilled(this.value);  
+            resolve(result);  
+          } catch (error) {  
+            reject(error);  
+          }  
+        }, 0);  
+      });  
+      this.onRejectedCallbacks.push(() => {  
+        setTimeout(() => {  
+          try {  
+            const result = onRejected(this.reason);  
+            resolve(result);  
+          } catch (error) {  
+            reject(error);  
+          }  
+        }, 0);  
+      });
+    }
+  })
+  return promise2
+}
+```
+
+## new 操作符实现
+
+```js
+function myNew (fn, ...args) {
+  const obj = Object.create(fn.prototype)
+  // obj.__proto__ = fn.prototype
+  const res = fn.apply(obj, args)
+  if (res && (typeof res === 'object')) {
+    return res;
+  }
+  return obj;
+}
+```
+
+## 数组扁平化
+
+```js
+function flattenArray (arr) {
+  let res = []
+  for (let i = 0; i < arr.length; i++) {
+    if (Array.isArray(arr[i])) {
+      result = result.concat(flattenArray(arr[i]))
+    } else {
+      result.push(arr[i])
+    }
+  }
+  return res;
+}
+
+function flattenArray2 (arr) {
+  return arr.reduce((acc, cur) => {
+    if (Array.isArray(cur)) {
+      return [...acc, ...flattenArray2(cur)]
+    } else {
+      return [...acc, cur]
+    }
+  }, [])
+}
+
+function flattenArray3 (arr) {
+  const result = []
+  const stack = [...arr]
+
+  while (stack.length) {
+    const item = stack.pop();
+    if (Array.isArray(item)) {
+      stack.push(...item)
+    } else {
+      result.push(item)
+    }
+  }
+  return result;
 }
 ```
