@@ -2,6 +2,7 @@
 import { Icons } from '@/src/components/UIBase/Icons'
 import { useState, useEffect, useRef } from 'react'
 import clsx from 'clsx'
+import GithubSlugger from 'github-slugger'
 
 type SiteContentHeadingProps = {
   depth: number;
@@ -16,6 +17,7 @@ type RealHeadingProp = Omit<SiteContentHeadingProps, 'children'> & {
 function WithSiteContentHeading(props: any) {
   const { contentHeads } = props;
   const realList: Array<RealHeadingProp> = []
+  const slugger = new GithubSlugger() 
   contentHeads.forEach((value: any) => {
     if (value.value.indexOf('title') > -1 && value.value.indexOf('description') > -1 && value.value.indexOf('date') > -1) {
       
@@ -23,14 +25,15 @@ function WithSiteContentHeading(props: any) {
       realList.push({
         depth: value.depth,
         title: value.value,
-        anchor: value.value && value.value.replaceAll(' ', '-').toLowerCase(),
+        anchor: value.value && slugger.slug(value.value),
       })
+      // console.log(slugger.slug(value.value))
       if (value.children) {
         value.children.forEach((child: any) => {
           realList.push({
             depth: child.depth,
             title: child.value,
-            anchor: child.value && child.value.replaceAll(' ', '-').toLowerCase(),
+            anchor: child.value && slugger.slug(value.value),
           })
         })
       }

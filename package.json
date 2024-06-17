@@ -24,6 +24,7 @@
     "algoliasearch": "^4.23.3",
     "class-variance-authority": "^0.7.0",
     "clsx": "^2.1.0",
+    "github-slugger": "^2.0.0",
     "glob": "~10.3.10",
     "gray-matter": "^4.0.3",
     "lucide-react": "^0.368.0",
