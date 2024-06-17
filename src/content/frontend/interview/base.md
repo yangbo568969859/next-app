@@ -286,6 +286,7 @@ app.listen(8002);
 - Proxy
 - 类 Class
 - 默认参数
+- ES6 Module
 
 ## for...in 和 for...of 和 foreach 区别
 
