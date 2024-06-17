@@ -49,3 +49,18 @@ nodejs通过其独特的设计和事件驱动的非阻塞I/O模型，实现了�
   - 异步编程允许 Node.js 在等待 I/O 操作完成的同时处理其他请求，提高了并发性能
 - 负载均衡
 - 垃圾回收
+
+### express 和 koa 的区别
+
+- 中间件模型
+  - express使用传统的回调函数作为中间件，中间件接收request、response 和 next 函数作为参数
+  - koa使用洋葱模型，基于 Promise 的中间件模型，中间件接收 context 对象作为参数,通过 await next() 来控制中间件的流程
+- 请求和响应
+  - Express 的中间件直接操作 request 和 response 对象,可以通过修改这些对象来处理请求和响应
+  - Koa 将 request 和 response 对象封装到 context 对象中,中间件通过操作 context 对象来处理请求和响应
+- 错误处理
+- 路由
+  - Express 内置了路由功能,可以直接使用 app.get()、app.post() 等方法定义路由
+  - Koa 没有内置路由功能,需要使用第三方中间件如 koa-router 来实现路由功能
+- 生态系统
+- 性能
