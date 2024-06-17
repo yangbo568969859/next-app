@@ -14,17 +14,22 @@ date: 2022-05-14
 ## 重绘、重排、合成
 
 重绘：样式计算-绘制
+
 重排：生成DOM树-样式计算-生成布局树-构建图层-绘制
 
 - 重绘：当页面上的元素样式改变并不影响它在文档流中的位置时(color,backgroundColor,visibility等)，浏览器会将新样式赋予给元素并重新绘制它
+  - 元素的背景色更改
+  - 文字颜色、边框颜色变化
+- 重排：对页面元素结构的修改引发了DOM几何尺寸的变化（当元素的布局发生变化时,浏览器重新计算元素的位置和尺寸,并重新绘制的过程）
   - 调整窗口大小
   - 改变字体或字体大小
-- 重排：对页面元素结构的修改引发了DOM几何尺寸的变化
   - 一个元素的几何属性发生变化(width、height、padding、margin、left、top、border等)
   - 使DOM节点发生增减或移动
   - 读写offset、scroll、client等属性
   - 调用window.getComputedStyle方法
 - 合成：更改了一个既不需要布局也不需要绘制的属性，渲染引擎会跳过布局和绘制，直接执行后续的合成操作
+  - 一些 CSS 属性,如 transform、opacity、filter 等,可以触发 GPU 加速,将图层提升为合成层
+  - 合成层的变化不会触发重排和重绘,因为它们是独立于主线程的,可以在 GPU 上快速完成
 
 ### 如何避免
 
@@ -32,7 +37,7 @@ date: 2022-05-14
 - 使用 visibility 替换 display: none
 - 避免使用 table 布局
 - 优化CSS选择器：CSS 选择符从右往左匹配查找，避免使用深层次的或复杂的CSS选择器
-- 集中更改样式
+- 集中更改样式：将多次样式修改合并为一次,减少重排和重绘的次数
 - 避免频繁访问布局属性 (offset, scroll, client)
 - 使用 DocumentFragment 或 display: none; 对元素进行批量修改，修改完后将他们一次性添加回DOM
 - 提升为合成层
@@ -42,7 +47,7 @@ date: 2022-05-14
 
 ### GPU加速的原因
 
-利用CSS3的 transform，opacity，filter等属性就可以实现合成效果，也就是GPU加速
+利用CSS3的 transform，opacity，filter 等属性就可以实现合成效果，也就是GPU加速
 
 - 在合成的情况下，直接跳过布局和绘制阶段，进入非主线程处理部分，即直接交给合成线程处理
 - 充分发挥GPU优势，合成线程生成位图的过程中会调用线程池，并在其中使用GPU进行加速生成，GPU是非常擅长处理位图数据的
@@ -327,7 +332,6 @@ func.apply(this, [par1, par2]);
 - constructor 指向创建该实例对象的构造函数 (注意 null 和 undefined 没有 constructor，以及 constructor 可以被改写，不太可靠)
 - instanceof
 - Object.prototype.toString.call("[object Number]", "[object Undefined]" 等等类型)
-- isArray
 
 ## new 本质
 
