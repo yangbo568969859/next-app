@@ -28,14 +28,15 @@ date: 2022-08-11
 
 - 初始化参数：从配置文件、配置对象、Shell 中读取参数，与默认配置参数合并得到最终参数
 - 创建编译器对象：用上一步得到的参数创建 Cpmpiler 对象
-- 初始化编译环境：包括注入内置插件、注册各种工厂模块、初始化 RuleSet 集合、加载配置的插件
+- 初始化编译环境：包括注入内置插件、注册各种模块工厂、初始化RuleSet 集合、加载配置的插件等
+  - RuleSet 是 Webpack 内部的一个规则集合,它定义了如何处理不同类型的模块文件。每个规则包含了一个或多个条件,用于匹配模块文件,以及一组应用于匹配到的模块的加载器 (Loaders) 和选项
 - 开始编译：执行 Complier 的 run 方法
-- 确定入口：根据配置中的 entry 找出所有文件的入口，调用 compilition.addEntry 将入口文件转换为 dependence 对象
+- 确定入口：根据配置中的 entry 找出所有文件的入口，调用 Compilation.addEntry 将入口文件转换为 dependence 对象
 
 构建阶段
 
 - 编译模块(make)：根据 entry 对应的 dependence 创建 module 对象，调用 loader 将模块转译为标准 js 内容，调用 js 解释器将内容转换为 AST 对象，从中找出该模块的依赖模块，再递归本步骤直到所有入口依赖的文件都经过本步骤的处理
-- 完成模块编译：上一步递归处理所能触达到的模块后，得到了每个模块被翻译后的内容以及他们之间的依赖关系图
+- 完成模块编译：上一步递归处理所能触达到的模块后，得到了每个模块被编译后的内容以及他们之间的依赖关系图
 
 生成阶段
 
@@ -150,6 +151,22 @@ module.exports = {
 
 ## 配置及参数
 
+- entry 入口，指定应用程序的入口文件,可以是单个文件或多个文件
+- output 输出，指定打包后的文件输出位置和文件名
+- mode 模式，指定打包模式,可以是 development、production 或 none
+- module Loaders，用于处理不同类型的文件,如 JavaScript、CSS、图片等。
+- plugin 插件: 用于扩展 Webpack 的功能,如优化、资源管理等
+- devServer 提供了一个开发服务器,用于实时重新加载和热模块替换
+- resolve 解析，配置模块解析的规则,如文件扩展名、别名等
+- optimization 代码拆分、压缩
+- externals 外部依赖（指定哪些模块应该作为外部依赖,不被打包到输出文件中）
+- Performance 配置性能相关的选项,如资源大小限制、性能提示等
+- watch 监视，启用监视模式,当文件发生变化时自动重新编译
+- cache 配置缓存选项,以提高构建性能
+- Source Maps 源映射，生成源映射文件,以便在调试时定位原始代码
+- Environment Variables 环境变量 使用 webpack.DefinePlugin 插件定义环境变量
+- Multi-Page Application 多页面应用，配置多个入口点和输出文件,以支持多页面应用
+
 ### hash
 
 例如 filename: "[name][hash:8][ext]"
@@ -160,8 +177,8 @@ module.exports = {
 
 ## Loader
 
-loader 本质上就是一个函数，这个函数会在我们在我们加载一些文件时执行；在 webpack 的定义中，loader 导出一个函数，loader 会在转换源模块(resource)的时候调用该函数。
-这个函数中，我们可以通过传入 this 上下文给 Loader API 来使用他们
+loader 本质上就是一个函数，这个函数会在我们在我们加载一些文件时执行；
+在 webpack 的定义中，loader 导出一个函数，loader 会在转换源模块(resource)的时候调用该函数。这个函数中，我们可以通过传入 this 上下文给 Loader API 来使用他们
 
 设计原则
 
@@ -179,6 +196,7 @@ module.exports = function(source) {
 
 ## Plugin
 
+Plugin它是一个插件，用于增强webpack功能，webpack在运行的生命周期中会广播出许多事件，Plugin 可以监听这些事件，在合适的时机通过 webpack 提供的 API 改变输出结果
 plugin 通常是在 webpack 打包的某个时间节点做一些操作，一般使用 new Plugin() 的形式使用
 
 ```js
@@ -401,3 +419,7 @@ module.exports = {
 [热更新原理](../webpack/hotModuleReplacement.md)
 
 [Tapable](../webpack/tapable.md)
+
+### 热更新原理简单说明
+
+HRM的原理实际上是 webpack-dev-server（WDS）和浏览器之间维护了一个websocket服务。当本地资源发生变化后，webpack会先将打包生成新的模块代码放入内存中，然后WDS向浏览器推送更新，并附带上构建时的hash，让客户端和上一次资源进行对比

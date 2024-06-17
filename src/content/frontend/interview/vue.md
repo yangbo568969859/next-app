@@ -52,6 +52,16 @@ vue3 的生命周期
 - 计算属性是基于他们的依赖进行缓存的，只有在它的相关依赖发生变化时才会重新求值（适用于计算较为复杂的逻辑）
 - 监听器允许你执行异步操作，如访问API和修改其他数据（适用于观察某个值的变化并执行相应的操作）
 
+区别
+
+- computed有缓存，只有依赖值变了才会重新计算，watch没有
+- watch支持异步（发送ajax请求）
+- computed以函数的形式声明，watch是以对象的形式声明
+
+comouted
+
+vue 初次运行会对 computed 属性做初始化处理（initComputed），初始化的时候会对每一个 computed 属性用 watcher 包装起来 ，这里面会生成一个 dirty 属性值为 true；然后执行 defineComputed 函数来计算，计算之后会将 dirty 值变为 false，这里会根据 dirty 值来判断是否需要重新计算；如果属性依赖的数据发生变化，computed 的 watcher 会把 dirty 变为 true，这样就会重新计算 computed 属性的值
+
 ## 插槽
 
 插槽允许你在组件的模板中定义占位符，并在使用组件时填充这些占位符，它提供了一种将内容分发到组件的方式
@@ -514,11 +524,19 @@ watchEffect(() => {
 count.value++;
 ```
 
+### vue3 computed实现原理
+
+- 通过computed函数创建计算属性，内部会创建一个ComputedRefImpl实例
+- ComputedRefImpl（包装器对象） 包装了计算属性的getter函数，并跟踪计算属性的依赖关系
+- 当访问计算属性的值时，实际上是调用ComputedRefImpl的value属性的getter函数
+- 当计算属性的依赖发生变化时,Vue 3 的响应式系统会自动触发计算属性的重新计算
+- 计算属性的缓存机制通过 ComputedRefImpl 内部的缓存标志和缓存值实现
+
 ## 源码分析
 
 ### vue Complier实现原理
 
-vue complier 是将模板字符串编译成渲染函数的工具，他的组要作用是将模板template编译为渲染函数render function，以便在运行时通过渲染函数生成DOM树，并最终映射到真实的DOM元素上
+vue complier 是将模板字符串编译成渲染函数的工具，他的主要作用是将模板template编译为渲染函数render function，以便在运行时通过渲染函数生成DOM树，并最终映射到真实的DOM元素上
 
 - 解析Parse：将模板字符串解析成抽象语法树AST
 - 优化 Optimize：遍历 AST，找出其中的静态节点和静态根节点，并打上标记
@@ -758,7 +776,7 @@ export default {
 表单修饰符
 
 - lazy 在我们填完信息，光标离开标签的时候，才会将值赋予给value，也就是在change事件之后再进行信息同步
-- trim 自动过滤用户输入的首空格字符，而中间的空格不会过滤
+- trim 自动过滤用户输入的首尾空格字符，而中间的空格不会过滤
 - number 自动将用户的输入值转为数值类型，但如果这个值无法被parseFloat解析，则会返回原来的值
 
 事件修饰符
