@@ -351,6 +351,65 @@ function myForeach (obj, fn) {
 
 ## bind、call、apply
 
+```js
+Function.prototype.MyCall = function(context, arr) {
+  var context = Object(context) || window;
+  context.fn = this;
+
+  let result;
+  if (arr) {
+    result = context.fn(...arr);
+  } else {
+    result = context.fn();
+  }
+
+  delete context.fn;
+  return result;
+};
+```
+
+```js
+Function.prototype.MyCall = function(context) {
+  context = context || window;
+  context.fn = this;
+  let args = [];
+  for (let i = 1; i < arguments.length; i++) {
+    args.push(arguments[i]);
+  }
+  context.fn(...args);
+  let result = context.fn(...args);
+  delete context.fn;
+  return result;
+};
+```
+
+```js
+Function.prototype.MyBind = function(context) {
+  if (typeof this !== "function") {
+    throw new TypeError(
+      "Function.prototype.bind - what is trying to be bound is not callable"
+    );
+  }
+
+  var args = Array.prototype.slice.call(arguments, 1);
+  var fToBind = this;
+  var fNop = function() {};
+  var fBound = function() {
+    // this instanceof fBound === true时,说明返回的fBound被当做new的构造函数调用
+    return fToBind.apply(
+      this instanceof fNop ? this : context,
+      args.concat(Array.prototype.slice.call(arguments))
+    );
+  };
+  // 维护原型关系
+  if (this.prototype) {
+    fNop.prototype = this.prototype;
+  }
+  fBound.prototype = new fNop();
+  return fBound;
+};
+```
+
 ## EventBus
 
 ```js
@@ -493,8 +552,6 @@ function throttle2 (fn, delay) {
   }
 }
 ```
-
-## Promise A+
 
 ## Object.create
 

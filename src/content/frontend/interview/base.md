@@ -11,47 +11,6 @@ date: 2022-05-14
 - 防抖：在事件触发n秒后执行函数，如果在n秒内再次触发事件，则重新计时
 - 节流：如果在定时器的时间范围内再次触发，不予执行，等到当前定时器完成，才能开启下一个定时器任务
 
-```js
-// throttle
-function thorttle(fn, delay) {
-  let flag = true;
-
-  return function (...args) {
-    let context = this;
-    if (!flag) return;
-    flag = false;
-    setTimeout(() => {
-      fn.apply(context, args);
-      flag = true;
-    }, delay);
-  }
-}
-function thorttle1(fn, delay) {
-  let last = 0;
-
-  return function (...args) {
-    let context = this;
-    let now = new Date().getTime();
-    if (now - last < delay) {
-      return;
-    }
-    last = now;
-    fn.apply(context, args);
-  }
-}
-// debounce
-function debounce(fn, delay) {
-  let timer;
-  return function (...args) {
-    let context = this;
-    if (timer) clearTimeout(timer);
-    timer = setTimeout(() => {
-      fn.apply(context, args);
-    }, delay)
-  }
-}
-```
-
 ## 重绘、重排、合成
 
 重绘：样式计算-绘制
@@ -108,7 +67,7 @@ function debounce(fn, delay) {
 
 当某个宏任务执行完后，会查看是否有微任务队列，如果有，先执行微任务队列中的所有任务，如果没有，会读取宏任务队列中排在最前面的任务，执行宏任务的过程中没要到微任务，一次加入微任务队列。栈空后，再次读取微任务队列里的任务，依次类推
 
-![image](./images/node_eventlop.png)
+![image](./images/browser_eventloop.png)
 
 ### node 事件循环
 
@@ -347,22 +306,9 @@ func.apply(this, [par1, par2]);
 
 ### 实现 apply
 
-```js
-Function.prototype.MyCall = function(context, arr) {
-  var context = Object(context) || window;
-  context.fn = this;
-
-  let result;
-  if (arr) {
-    result = context.fn(...arr);
-  } else {
-    result = context.fn();
-  }
-
-  delete context.fn;
-  return result;
-};
-```
+- 将函数设为对象的属性
+- 执行&删除这个函数
+- 指定 this 到函数并传入给定参数执行函数
 
 ### 实现 call
 
@@ -370,52 +316,10 @@ Function.prototype.MyCall = function(context, arr) {
 - 执行&删除这个函数
 - 指定 this 到函数并传入给定参数执行函数
 
-```js
-Function.prototype.MyCall = function(context) {
-  context = context || window;
-  context.fn = this;
-  let args = [];
-  for (let i = 1; i < arguments.length; i++) {
-    args.push(arguments[i]);
-  }
-  context.fn(...args);
-  let result = context.fn(...args);
-  delete context.fn;
-  return result;
-};
-```
-
 ### 实现 bind
 
 - 返回一个函数，绑定 this，传递预置参数
 - bind 返回的函数可以作为构造函数使用，作为构造函数时应使得 this 失效，但是传入的参数依然有效
-
-```js
-Function.prototype.MyBind = function(context) {
-  if (typeof this !== "function") {
-    throw new TypeError(
-      "Function.prototype.bind - what is trying to be bound is not callable"
-    );
-  }
-
-  var args = Array.prototype.slice.call(arguments, 1);
-  var fToBind = this;
-  var fNop = function() {};
-  var fBound = function() {
-    // this instanceof fBound === true时,说明返回的fBound被当做new的构造函数调用
-    return fToBind.apply(
-      this instanceof fNop ? this : context,
-      args.concat(Array.prototype.slice.call(arguments))
-    );
-  };
-  // 维护原型关系
-  if (this.prototype) {
-    fNop.prototype = this.prototype;
-  }
-  fBound.prototype = new fNop();
-  return fBound;
-};
-```
 
 ## 类型判断
 
