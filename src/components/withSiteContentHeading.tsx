@@ -39,7 +39,6 @@ function WithSiteContentHeading(props: any) {
       }
     }
   })
-  console.log(realList)
   // const [activeNavId, setActiveNavId] = useState(realList && realList.length ? realList[0].anchor : '')
   const [activeNavId, setActiveNavId] = useState('')
   // const renderCount = useRef(0)
