@@ -33,12 +33,13 @@ function WithSiteContentHeading(props: any) {
           realList.push({
             depth: child.depth,
             title: child.value,
-            anchor: child.value && slugger.slug(value.value),
+            anchor: child.value && slugger.slug(child.value),
           })
         })
       }
     }
   })
+  console.log(realList)
   // const [activeNavId, setActiveNavId] = useState(realList && realList.length ? realList[0].anchor : '')
   const [activeNavId, setActiveNavId] = useState('')
   // const renderCount = useRef(0)
