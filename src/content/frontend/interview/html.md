@@ -21,18 +21,19 @@ Doctype 是HTML5的文档声明，通过它可以告诉浏览器，使用哪一�
 ## 什么是严格模式与混杂模式
 
 严格模式：是浏览器支持的最高标准运行，不允许出现一些过时或非标准用法
+
 混杂模式：页面以宽松向下兼容的方式显示，模拟了早期浏览器的行为，浏览器对 HTML 的语法和结构要求相对宽松,允许一些非标准的用法
 
 ## 行级元素和块级元素
 
-块级元素：p、div、form、ul、li、ol、table、h1、h2、h3、h4、h5、h6、dl、dt、dd
+块级元素(Block-level)：p、div、form、ul、li、ol、table、h1、h2、h3、h4、h5、h6、dl、dt、dd
 
 - 总是在新行上开始，每个块级元素独占一行，默认从上到下排列
 - 宽度未设置时，默认是它的容器宽度的100%
 - 高度、行高以及外边距内边距都是可以设置的
 - 块级元素可以容纳其他行级元素和块级元素
 
-行级元素：span、a、img、button、input、select
+行级元素(Inline)：span、a、img、button、input、select
 
 - 和其它元素都会在一行显示
 - 高、行高以及外边距和内边距可以设置
@@ -41,9 +42,15 @@ Doctype 是HTML5的文档声明，通过它可以告诉浏览器，使用哪一�
 
 行内元素设置width无效；设置height无效，可以设置line-height；设置margin，padding只有左右有效，上下无效
 
+通过css的display可以改变元素的显示类型
+
+- display:inline 将元素转换为行级元素
+- display:block 将元素转换为块级元素
+- display:inline-block 将元素设置为行级块元素,具有行级元素和块级元素的特点
+
 ## HTML5有哪些新元素和新特性
 
-- 新的语义元素额：header、nav、footer、article、section、main
+- 新的语义元素：header、nav、footer、article、section、main
 - 新的表单元素和属性：
   - input 新增 type 属性值:date、time、email、url、number、range 等
   - datalist 与 `<input>` 配合使用,提供输入建议

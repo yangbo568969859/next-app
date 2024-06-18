@@ -8,24 +8,55 @@ date: 2021-04-05
 
 ## node 是什么
 
+Node.js 是一种后端技术，允许开发人员在其应用的服务器端使用JavaScript
+
 ## node 事件循环机制
+
+Node.js的事件循环(Event Loop)是其处理非阻塞I/O操作和事件驱动编程的核心机制。它允许Node.js在单线程中高效地处理大量的并发请求和I/O操作
 
 外部输入数据 -> 轮循阶段(poll) -> 检查阶段(check) -> 关闭阶段(close callbacks) -> 定时器检查阶段(timer) -> I/O 阶段(I/O callbacks) -> 闲置阶段(idle, prepare) -> 轮询阶段(poll)
 
-- timer 阶段： 执行到期的 setTimeout/setInterval 队列回调
-- I/O 阶段：执行上轮循环循环中的少数未执行的 I/O 回调
-- idle，prepare (仅 node 内部使用)
-- poll
+每次循环称为一个"Tick",每个Tick处理一批事件和回调
+
+- timers阶段： 执行到期的 setTimeout/setInterval 队列回调
+- I/O阶段：执行上轮循环循环中的少数未执行的 I/O 回调
+- idle, prepare (仅 node 内部使用)
+- poll阶段
   - 执行回调
   - 执行定时器
     - 如有到期的 setTimeout/setInterval，则返回 timer 阶段
     - 如有 setImmediate，则前往 check 阶段
-- check 阶段 执行 setImmediate
-- close callbacks
+- check阶段 处理由setImmediate()注册的回调
+- close callbacks阶段 处理一些关闭的回调,如socket.on('close', ...)
 
-process.nextTick 独立于 EventLoop 之外的，它有一个自己的队列，当每个阶段完成后，如果存在 nextTick 队列，就会清空队列中的所有回调函数，并且优先于其它 microtask 执行
+### 事件循环的运行机制
+
+- 事件循环从Timers阶段开始,依次经过每个阶段,处理相应的事件和回调；
+- 当一个阶段完成后,事件循环会检查是否有任何需要处理的process.nextTick()回调,如果有,会立即执行这些回调。然后,事件循环进入下一个阶段,重复上述过程
+- 当所有阶段完成后,事件循环会检查是否有任何setImmediate()回调需要处理,如果有,会返回到Check阶段处理这些回调
+- 如果没有更多的事件和回调需要处理,事件循环会退出
+
+### 特殊的API和回调
+
+- process.nextTick():在当前阶段完成后立即执行回调,优先于其他阶段的回调
+- setImmediate():在Check阶段执行回调,类似于setTimeout(callback, 0)
+- Promise的回调:在当前阶段完成后处理,优先于setTimeout()和setImmediate()
+
+### 事件循环的阻塞和非阻塞
+
+- Node.js的事件循环是非阻塞的，意味着I/O操作不会阻塞事件循环的执行
+- 当遇到I/O操作时，Node.js会将其交给底层的系统线程处理，而事件循环则继续执行其他任务
+- 当I/O操作完成后，对应的回调函数会被添加到事件队列中,等待事件循环的处理
 
 ![image](./images/node_eventlop.png)
+
+## node的构架
+
+- Node API(核心模块http、fs、stream等)
+- 中间层(Node.js Bindings) 主要是使 js 和 C/C++ 进行通信
+- 支撑 nodejs 运行的关键(v8、libuv、c-ares 等模块组成，向上一层提供 api 服务)
+
+![node_frame](./images/node_frame.png)
 
 ## 其他
 
@@ -64,3 +95,35 @@ nodejs通过其独特的设计和事件驱动的非阻塞I/O模型，实现了�
   - Koa 没有内置路由功能,需要使用第三方中间件如 koa-router 来实现路由功能
 - 生态系统
 - 性能
+
+### 什么是线程池，Node.js 中哪个库处理它
+
+线程池由 libuv 库处理
+
+libuv 是一个多平台的 C 库，它支持基于异步 I/O 的操作，例如文件系统、网络和并发。
+
+libuv：因为各个系统的 I/O 库都不一样，windows 系统有 IOCP，Linux 系统有 epoll。Node.js 的作者Ryan 为了将其整合在一起实现一个跨平台的异步 I/O 库，开始写 libuv
+
+### Node.js 中的事件发射器是什么
+
+EventEmitter是一个 Node.js 类，它包含所有基本上能够发出事件的对象
+
+这可以通过使用 eventEmitter.on()函数附加由对象发出的命名事件来完成
+
+### Node.js 缓冲区
+
+通常，缓冲区是一个临时内存，流主要使用它来保存一些数据，直到被消耗为止
+
+- 与 JavaScript 的 Unit8Array 相比，缓冲区还引入了其他用例，主要用于表示固定长度的字节序列
+- 它还支持 ASCII、utf-8 等传统编码。它是 v8 之外的固定（不可调整大小）分配内存
+
+### Node.js 流streams
+
+stream是基于事件EventEmitter的数据管理模式．由各种不同的抽象接口组成，主要包括可写，可读，可读写，可转换等几种类型
+
+可用于处理和操作网络上的流式大文件（视频、mp3 等）。他们使用缓冲区作为临时存储
+
+- Writable：可以写入数据的流（例如，fs.createWriteStream()）
+- Readable：可以从中读取数据的流（例如，fs.createReadStream()）
+- Duplex：既可读又可写的流（例如，net.Socket）
+- Transform：可以在写入和读取数据时修改或转换数据的双工流（例如，zlib.createDeflate()）
