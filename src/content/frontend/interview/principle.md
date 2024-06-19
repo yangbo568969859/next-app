@@ -11,7 +11,7 @@ date: 2022-08-11
 async和await的实现依赖js的promise机制和生成器函数，当遇到await表达式时，js引擎会暂停函数的执行，将控制权交给调用者。
 在后台，js引擎会监视await等待的Promise对象的状态变化，当Promise状态变为已解决或已拒绝时，引擎会恢复函数的执行，并根据Promise的状态返回解决值或抛出异常
 
-实现原理：async/await是一种语法糖，原理是利用ES6里的 迭代函数-generator函数
+实现原理：async/await是一种语法糖，原理是利用ES6里的迭代函数generator函数
 
 generator函数说明：generator函数跟普通函数在写法上的区别就是：多了一个星号*，并且只有在generator函数中才能使用yield关键字，yield相当于generator函数执行的中途暂停点，如果需要暂停点继续执行后面函数，就需要用到next方法，next方法执行后返回一个对象(value和done)
 
@@ -352,8 +352,8 @@ function myForeach (obj, fn) {
 ## bind、call、apply
 
 ```js
-Function.prototype.MyCall = function(context, arr) {
-  var context = Object(context) || window;
+Function.prototype.MyApply = function(context, arr) {
+  context = context || window;
   context.fn = this;
 
   let result;
@@ -369,14 +369,9 @@ Function.prototype.MyCall = function(context, arr) {
 ```
 
 ```js
-Function.prototype.MyCall = function(context) {
+Function.prototype.MyCall = function(context, ...args) {
   context = context || window;
   context.fn = this;
-  let args = [];
-  for (let i = 1; i < arguments.length; i++) {
-    args.push(arguments[i]);
-  }
-  context.fn(...args);
   let result = context.fn(...args);
   delete context.fn;
   return result;
@@ -384,29 +379,38 @@ Function.prototype.MyCall = function(context) {
 ```
 
 ```js
-Function.prototype.MyBind = function(context) {
-  if (typeof this !== "function") {
-    throw new TypeError(
-      "Function.prototype.bind - what is trying to be bound is not callable"
-    );
+Function.prototype.MyBind = function(context, ...args) {
+  const fn = this;
+  return function (...args1) {
+    const allArgs = [...args, ...args1];
+    if (new.target) { // 判断是否为new的构造函数
+      return new fn(...allArgs);
+    } else {
+      return fn.call(context, ...allArgs);
+    }
   }
+  // if (typeof this !== "function") {
+  //   throw new TypeError(
+  //     "Function.prototype.bind - what is trying to be bound is not callable"
+  //   );
+  // }
 
-  var args = Array.prototype.slice.call(arguments, 1);
-  var fToBind = this;
-  var fNop = function() {};
-  var fBound = function() {
-    // this instanceof fBound === true时,说明返回的fBound被当做new的构造函数调用
-    return fToBind.apply(
-      this instanceof fNop ? this : context,
-      args.concat(Array.prototype.slice.call(arguments))
-    );
-  };
-  // 维护原型关系
-  if (this.prototype) {
-    fNop.prototype = this.prototype;
-  }
-  fBound.prototype = new fNop();
-  return fBound;
+  // var args = Array.prototype.slice.call(arguments, 1);
+  // var fToBind = this;
+  // var fNop = function() {};
+  // var fBound = function() {
+  //   // this instanceof fBound === true时,说明返回的fBound被当做new的构造函数调用
+  //   return fToBind.apply(
+  //     this instanceof fNop ? this : context,
+  //     args.concat(Array.prototype.slice.call(arguments))
+  //   );
+  // };
+  // // 维护原型关系
+  // if (this.prototype) {
+  //   fNop.prototype = this.prototype;
+  // }
+  // fBound.prototype = new fNop();
+  // return fBound;
 };
 ```
 
@@ -557,9 +561,9 @@ function throttle2 (fn, delay) {
 
 ```js
 function createObject(obj) {
-  function F() {}
-  F.prototype = obj;
-  return new F();
+  function F() {} // 定义一个空的构造函数 F
+  F.prototype = obj; // 将传入的对象 obj 设置为构造函数 F 的原型，F 的实例对象将以 obj 为原型
+  return new F(); // 返回一个新的对象，该对象是通过构造函数 F 创建的，新对象将以 obj 为原型
 }
 ```
 
@@ -575,7 +579,7 @@ function createObject(obj) {
   - 这个过程会一直递归,直到接收到的参数数量满足原始函数所需的参数数量,然后返回最终的结果
 
 ```js
-function currey (fn) {
+function curry (fn) {
   return function curried (...args) {
     if (args.length >= fn.length) {
       return fn.apply(this, args);
