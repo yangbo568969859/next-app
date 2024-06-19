@@ -590,12 +590,21 @@ function currey (fn) {
 
 ## Promise
 
+Promise标准解读:
+
+- 只有一个then方法，没有catch、race、all等方法
+- then方法返回一个新的Promise
+- 不同Promise可以相互调用（interoperable）
+- Promise初始状态为pending，它可以由此状态转为fulfilled或者rejected，一旦状态确定，就不可以再次转换为其他状态、状态确认的过程称为settle
+
 ```js
-function myPromise (exector) {
-  this.status = 'pending'
-  this.value = undefined
-  this.reason = undefined
-  this.onFulfilledCallbacks = []
+// Promise构造函数接收一个executor函数，executor函数执行完同步或异步操作后，调用它的两个参数resolve和reject
+// var promise = new Promise((resolve, reject) => {})
+function myPromise (executor) {
+  this.status = 'pending' // promise当前状态
+  this.value = undefined // promise的值
+  this.reason = undefined // promise的失败原因
+  this.onFulfilledCallbacks = [] // promise resolve时的回调函数集，因为promise结束之前有可能有多个回调添加到它上面
   this.onRejectedCallbacks = []
 
   const resolve = (value) => {
@@ -616,13 +625,19 @@ function myPromise (exector) {
     this.onRejectedCallbacks.forEach(callback => callback())
   }
 
+  // 考虑到执行executor的过程中有可能出错，所以我们用try/catch块给包起来，并且在出错后以catch到的值reject掉这个Promise
   try {
-    exector(resolve, reject)
+    executor(resolve, reject) // 执行executor并传入相应的参数
   } catch (error) {
     reject(error)
   }
 }
+// Promise对象有一个then方法，用来注册在这个Promise状态确定后的回调，很明显，then方法需要写在原型链上
+// then方法会返回一个Promise
 myPromise.prototype.then = function (onFulfilled, onRejected) {
+  // 根据标准，如果then的参数不是function，则我们需要忽略它，此处以如下方式处理
+  onFulfilled = typeof onFulfilled === 'function' ? onFulfilled : value => value;
+  onRejected = typeof onRejected === 'function' ? onRejected : reason => throw reason;
   const promise2 = new myPromise((resolve, reject) => {
     if (this.status == 'fulfilled') {
       setTimeout(() => {
@@ -644,28 +659,75 @@ myPromise.prototype.then = function (onFulfilled, onRejected) {
       }, 0)
     } else {
       this.onFulfilledCallbacks.push(() => {  
-        setTimeout(() => {  
-          try {  
-            const result = onFulfilled(this.value);  
-            resolve(result);  
-          } catch (error) {  
-            reject(error);  
-          }  
-        }, 0);  
-      });  
-      this.onRejectedCallbacks.push(() => {  
-        setTimeout(() => {  
-          try {  
-            const result = onRejected(this.reason);  
-            resolve(result);  
-          } catch (error) {  
-            reject(error);  
-          }  
-        }, 0);  
+        setTimeout(() => {
+          try {
+            const result = onFulfilled(this.value);
+            resolve(result)
+          } catch (error) {
+            reject(error)
+          }
+        }, 0)
+      });  
+      this.onRejectedCallbacks.push(() => {  
+        setTimeout(() => {
+          try {
+            const result = onRejected(this.reason);
+            resolve(result)
+          } catch (error) {
+            reject(error)
+          }
+        }, 0)
       });
     }
   })
   return promise2
+}
+
+myPromise.prototype.catch = (onRejected) => {
+  return this.then(null, onRejected)
+}
+
+function resolvePromise (primise2, x, resolve, reject) {
+  var then;
+  var thenCalledOrThrow = false;
+
+  if (promise2 === x) {
+    return reject(new TypeError('Chaining cycle detected for promise!'))
+  }
+  if (x instanceof myPromise) {
+    if (x.status === 'pending') {
+      x.then(function (value) {
+        resolvePromise(promise2, x.value, resolve, reject)
+      }, reject)
+    } else {
+      x.then(resolve, reject)
+    }
+    return
+  }
+  if (x !== null && (typeof x === 'object' || typeof x === 'function')) {
+    try {
+      then = x.then
+      if (typeof then === 'function') {
+        then.call(x, function rs(y) { // 2.3.3.3.1
+          if (thenCalledOrThrow) return // 2.3.3.3.3 即这三处谁选执行就以谁的结果为准
+          thenCalledOrThrow = true
+          return resolvePromise(promise2, y, resolve, reject) // 2.3.3.3.1
+        }, function rj(r) { // 2.3.3.3.2
+          if (thenCalledOrThrow) return // 2.3.3.3.3 即这三处谁选执行就以谁的结果为准
+          thenCalledOrThrow = true
+          return reject(r)
+        })
+      } else {
+        resolve(x)
+      }
+    } catch (e) {
+      if (thenCalledOrThrow) return // 2.3.3.3.3 即这三处谁选执行就以谁的结果为准
+      thenCalledOrThrow = true
+      return reject(e)
+    }
+  } else {
+    resolve(x)
+  }
 }
 ```
 
