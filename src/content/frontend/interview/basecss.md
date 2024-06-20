@@ -41,6 +41,23 @@ date: 2020-08-11
 - 自适应两栏布局
 - 可以阻止元素被浮动元素覆盖
 
+```css
+.container {
+  overflow: hidden;
+}
+.left {
+  float: left;
+  width: 200px;
+  background-color: #f1f1f1;
+  padding: 20px;
+}
+.right {
+  overflow: hidden;
+  background-color: #e9e9e9;
+  padding: 20px;
+}
+```
+
 ## 层叠上下文
 
 元素提升为一个比较特殊的图层，在三维空间中(Z轴)高出普通元素一等

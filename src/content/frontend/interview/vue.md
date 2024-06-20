@@ -936,13 +936,13 @@ Object.difineProperty 和 Proxy
 
 vue2 双向绑定原理
 
-- 对需要 observe 的数据进行递归遍历，包括子属性对象的属性，都加上 getter 和 setter，这样给这个对象某个属性赋值，就会触发 setter，监听数据变化
-- compile 解析模板指令，将模板中的变量替换成数据，然后初始化渲染页面，并将每个指令对应的节点绑定更新函数，添加监听数据的订阅者，一旦数据变动，收到通知，更新视图
+- 对需要 observer 的数据进行递归遍历，包括子属性对象的属性，都加上 getter 和 setter，这样给这个对象某个属性赋值，就会触发 setter，监听数据变化
+- compiler 解析模板指令，将模板中的变量替换成数据，然后初始化渲染页面，并将每个指令对应的节点绑定更新函数，添加监听数据的订阅者，一旦数据变动，收到通知，更新视图
 - Watcher 订阅者是 Observer 和 Compiler 之间通信的桥梁，主要做的事情
   - 在自身实例化时往属性订阅器 dep 里面添加自己
   - 自身必须有一个 update 方法
-  - 待属性变动 dep.notice 通知时，会调用自身的 update 方法并处罚 Compile 中绑定的回调
-- 通过 Observer 来监听自己的 model 数据变化，通过 Compile 来解析编译模板指令，最终利用 Watcher 搭起 Observer 和 Compile 之间的通信桥梁，达到数据变化 -> 视图更新；视图交互变化(input) -> 数据 model 变更的双向绑定效果
+  - 待属性变动 dep.notice 通知时，会调用自身的 update 方法并触发 Compiler 中绑定的回调
+- 通过 Observer 来监听自己的 model 数据变化，通过 Compiler 来解析编译模板指令，最终利用 Watcher 搭起 Observer 和 Compiler 之间的通信桥梁，达到数据变化 -> 视图更新；视图交互变化(input) -> 数据 model 变更的双向绑定效果
 
 ### h 函数
 

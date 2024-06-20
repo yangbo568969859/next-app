@@ -691,49 +691,84 @@ myPromise.prototype.catch = (onRejected) => {
   return this.then(null, onRejected)
 }
 
-function resolvePromise (primise2, x, resolve, reject) {
-  var then;
-  var thenCalledOrThrow = false;
-
+// 2.3. Promise 处理程序
+// Promise 处理程序是一个将 promise 和 value 作为输入的抽象操作，我们将其表示为 [[Resolve]](promise, x)。
+// 补充说明：这里我们将 resolve 和 reject 也传入进来，因为后续要根据不同的逻辑对 promise 执行 fulfill 或 reject 操作。
+function promiseResolutionProcedure(promise2, x, resolve, reject) {
+  // 2.3.1. 如果 promise 和 x 引用的是同一个对象，promise 将以一个 TypeError 作为 reason 来进行 reject。
   if (promise2 === x) {
-    return reject(new TypeError('Chaining cycle detected for promise!'))
+    return reject(new TypeError("Chaining cycle detected for promise"));
   }
-  if (x instanceof myPromise) {
-    if (x.status === 'pending') {
+
+  // 2.3.2. 如果 x 是一个 promise，根据它的状态：
+  if (x instanceof Promise) {
+    // 2.3.2.1. 如果 x 的状态为 pending，promise 必须保持 pending 状态直到 x 的状态变为 fulfilled 或 rejected。
+    if (x.state === "pending") {
       x.then(function (value) {
-        resolvePromise(promise2, x.value, resolve, reject)
-      }, reject)
-    } else {
-      x.then(resolve, reject)
+        promiseResolutionProcedure(promise2, value, resolve, reject);
+      }, reject);
     }
-    return
+    // 2.3.2.2. 如果 x 的状态为 fulfilled，那么 promise 也用同样的值来执行 fulfill 操作。
+    else if (x.state === "fulfilled") {
+      resolve(x.data);
+    }
+    // 2.3.2.3. 如果 x 的状态为 rejected，那么 promise 也用同样的 reason 来执行 reject 操作。
+    else if (x.state === "rejected") {
+      reject(x.data);
+    }
+    return;
   }
-  if (x !== null && (typeof x === 'object' || typeof x === 'function')) {
+
+  // 2.3.3. 除此之外，如果 x 是一个对象或者函数，
+  if (x && (typeof x === "object" || typeof x === "function")) {
+    // 2.3.3.3.3. 如果 resolvePromise 和 rejectPromise 都被调用，或者多次调用同样的参数，则第一次调用优先，任何之后的调用都将被忽略。
+    let isCalled = false;
+
     try {
-      then = x.then
-      if (typeof then === 'function') {
-        then.call(x, function rs(y) { // 2.3.3.3.1
-          if (thenCalledOrThrow) return // 2.3.3.3.3 即这三处谁选执行就以谁的结果为准
-          thenCalledOrThrow = true
-          return resolvePromise(promise2, y, resolve, reject) // 2.3.3.3.1
-        }, function rj(r) { // 2.3.3.3.2
-          if (thenCalledOrThrow) return // 2.3.3.3.3 即这三处谁选执行就以谁的结果为准
-          thenCalledOrThrow = true
-          return reject(r)
-        })
-      } else {
-        resolve(x)
+      // 2.3.3.1. 声明一个 then 变量来保存 then
+      let then = x.then;
+      // 2.3.3.3. 如果 then 是一个函数，将 x 作为 this 来调用它，第一个参数为 resolvePromise，第二个参数为 rejectPromise，其中：
+      if (typeof then === "function") {
+        then.call(
+          x,
+          // 2.3.3.3.1. 假设 resolvePromise 使用一个名为 y 的值来调用，运行 promise 处理程序 [[Resolve]](promise, y)。
+          function resolvePromise(y) {
+            // 2.3.3.3.3. 如果 resolvePromise 和 rejectPromise 都被调用，或者多次调用同样的参数，则第一次调用优先，任何之后的调用都将被忽略。
+            if (isCalled) return;
+            isCalled = true;
+            return promiseResolutionProcedure(promise2, y, resolve, reject);
+          },
+          // 2.3.3.3.2. 假设 rejectPromise 使用一个名为 r 的 reason 来调用，则用 r 作为 reason 对 promise 执行 reject 操作。
+          function rejectPromise(r) {
+            // 2.3.3.3.3. 如果 resolvePromise 和 rejectPromise 都被调用，或者多次调用同样的参数，则第一次调用优先，任何之后的调用都将被忽略。
+            if (isCalled) return;
+            isCalled = true;
+            return reject(r);
+          }
+        );
+      }
+      // 2.3.3.4. 如果 then 不是一个函数，使用 x 作为值对 promise 执行 fulfill 操作。
+      else {
+        resolve(x);
       }
     } catch (e) {
-      if (thenCalledOrThrow) return // 2.3.3.3.3 即这三处谁选执行就以谁的结果为准
-      thenCalledOrThrow = true
-      return reject(e)
+      // 2.3.3.2. 如果检索 x.then 的结果抛出异常 e，使用 e 作为 reason 对 promise 执行 reject 操作。
+      // 2.3.3.3.4. 如果调用 then 时抛出一个异常 e，
+      // 2.3.3.3.4.1. 如果 resolvePromise 或 rejectPromise 已经被调用过了，则忽略异常。
+      if (isCalled) return;
+      isCalled = true;
+      // 2.3.3.3.4.2. 否则，使用 e 作为 reason 对 promise 执行 reject 操作。
+      reject(e);
     }
-  } else {
-    resolve(x)
+  }
+  // 2.3.4. 如果 x 不是一个对象或者函数，使用 x 作为值对 promise 执行 fulfill 操作。
+  else {
+    resolve(x);
   }
 }
 ```
+
+![promiseA+](./images/promiseA+.jpg)
 
 ## new 操作符实现
 

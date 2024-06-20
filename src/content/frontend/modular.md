@@ -8,6 +8,12 @@ date: 2021-05-10
 
 模块化的开发方式可以提高代码复用率，方便进行代码的管理。通常一个文件就是一个模块，有自己的作用域，只向外暴露特定的变量和函数。目前流行的js模块化规范有CommonJS、AMD、CMD以及ES6的模块系统
 
+- CommonJS[1]: 主要是 Node.js 使用，通过 require 同步加载模块，exports 导出内容。
+- AMD[2]: 主要是浏览器端使用，通过 define 定义模块和依赖，require 异步加载模块，推崇依赖前置。
+- CMD[3]: 和 AMD 比较类似，主要是浏览器端使用，通过 require 异步加载模块，exports 导出内容，推崇依赖就近。
+- UMD[4]: 通用模块规范，是 CommonJS、AMD 两个规范的大融合，是跨平台的解决方案。
+- ESM[5]: 官方模块化规范，现代浏览器原生支持，通过 import 异步加载模块，export 导出内容
+
 ## CommonJS
 
 Node.js 是commonJS规范的主要实践者，他有4个重要的环境变量为模块化的实现提供支持：module、exports、require、global。实际使用时，用module.exports定义当前模块对外输出的接口（不推荐直接用exports），用require加载模块
