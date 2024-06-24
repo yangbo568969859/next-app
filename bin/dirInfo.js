@@ -74,5 +74,9 @@ module.exports = dirInfo = {
   "monitor": {
     title: '前端监控相关',
     description: '性能监控和分析、异常的捕获与处理、异常错误上报、PV等介绍',
+  },
+  "algorithms": {
+    title: '算法专题',
+    description: '算法训练营、算法题、算法知识',
   }
 }
