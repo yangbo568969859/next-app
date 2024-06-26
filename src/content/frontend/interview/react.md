@@ -76,11 +76,33 @@ date: 2022-08-11
 - componentWillUnmount
   - 这个函数是在组件卸载前执行的，可以在这里做一些清理工作，比如取消订阅、清除定时器、取消异步请求或者移除事件监听
 
+### 哪些方法会触发 React 重新渲染？重新渲染 render 会做些什么
+
+触发 React 重新渲染
+
+- setState（）方法被调用
+- 父组件重新渲染
+
+重新渲染 render 会做些什么
+
+- 新旧VNode比较，Diff算法
+
+### React中如何避免不必要的render
+
+- shouldComponentUpdate 和 PureComponent
+  - 在 React 类组件中，可以利用 shouldComponentUpdate或者 PureComponent 来减少因父组件更新而触发子组件的 render，从而达到目的。shouldComponentUpdate 来决定是否组件是否重新渲染，如果不希望组件重新渲染，返回 false 即可
+- 利用高阶组件
+  - 在函数组件中，并没有 shouldComponentUpdate 这个生命周期，可以利用高阶组件，封装一个类似 PureComponet 的功能
+- 使用 React.memo
+  - React.memo 是 React 16.6 新的一个 API，用来缓存组件的渲染，避免不必要的更新，其实也是一个高阶组件，与 PureComponent 十分类似，但不同的是， React.memo只能用于函数组件
+
 ## React 事件机制
 
 React并不是将click事件绑定到了div的真实dom上，而是在document处监听了所有事件，当事件发生并且冒泡到document处的时候，React将事件内容封装并交由真正的处理函数运行。这样不仅减少了内存的消耗，还能在组件挂载销毁时统一订阅和移除事件
 
 除此之外，冒泡到document的事件也不是原生的浏览器事件，而是由react自己实现的合成事件(SyntheticEvent),因此如果不想要事件冒泡的话应该调用 event.preventDefault 方法，而不是 event.stopProppagation 方法
+
+![react-event](./images/react-event.png)
 
 目的
 
@@ -99,6 +121,12 @@ React并不是将click事件绑定到了div的真实dom上，而是在document�
 
 - 事件委派：React会把所有事件绑定到结构的最外层，使用统一的事件监听器，这个事件监听器上维持了一个映射来保存所有组件内部事件监听和处理函数
 - 自动绑定：React组件中，每个方法的上下文都会指向该组件的实例，即自动绑定this为当前组件
+
+## React 高阶组件、Render Props、hooks
+
+- HOC是react中用于复用组件的一种高级技巧。是一种设计模式。高阶组件是参数为组件，返回值为新组件的函数
+- RenderProps 是一种在React组件之间使用一个值为函数的prop共享代码的简单技术，是一个用于告知组件需要渲染什么内容的函数prop
+- hooks：hooks 是 react 16.8 中引入的新的 API，它可以让你在不编写 class 的情况下使用 state 和 lifecycle
 
 ## React 组件通讯
 
@@ -134,6 +162,12 @@ Redux 的灵感来源于 Flux 架构和函数式编程原理，状态更新可�
 - 状态量多的情况，性能较差
 - reducer 需要返回新的对象，如果更新的值层级较深，更新成本也很高
 - 更多的内存占用，由于采用单一数据源，所有状态存储在一个 state 中，当某些状态不在需要使用时，也不会被垃圾回收器释放资源
+
+### Redux Middleware
+
+所谓中间件，我们可以理解为拦截器，用于对某些过程进行拦截和处理，且中间件之间能够串联使用；在redux中，我们中间件拦截的是dispath提交到reducer的这个过程，从而增强dispatch的功能
+
+中间件的设计遵循了洋葱模型(Onion Model),即每个Middleware都可以在action被dispatch之前或之后对其进行处理，并且可以选择是否将action传递给下一个middleware，middleware的执行顺序是按照其注册的顺序依次执行的
 
 ### zustand
 
@@ -505,6 +539,30 @@ function FriendListItem(props) {
 
 ## React-Fiber
 
+主要原理是将渲染过程分成小的工作单元fiber，可以随时中断和恢复，实现可中断的渲染
+
+在React16以前，React更新是通过树的深度优先遍历完成的，遍历是不能中断的，当树的层级深就会产生栈的层级过深，页面渲染速度变慢的问题，为了解决这个问题，引入了fiber
+
+fiber 是一种新的数据结构，是一个链表结构，有三个指针：分别是当前节点的下一个兄弟节点，子节点和兄弟节点
+
+核心概念
+
+- Fiber节点：每个组件实例对应一个Fiber节点，它包含了组件的状态、props、对应的DOM节点等信息
+- 工作单元：每个Fiber节点的更新过程被拆分成多个小的工作单元、每个工作单元执行完可以中断，让出主线程
+- 优先级调度：引入了优先级概念、高优先级的任务可以中断低优先级的任务
+- 双缓存机制：在内存中构建并直接替换原有的fiber树，减少了对DOM的直接操作
+
+更新机制流程
+
+- 初始化：构建Fiber树，从根元素出发，递归地构建一颗新地Fiber树，每个Fiber节点对应一个组件实例
+- 更新：当组件state或props发生变化时，React会调度一次更新操作
+- 协调子节点:对于每个 Fiber 节点,React 会根据组件的 render 方法返回的 JSX 对象,协调其子节点,判断是否需要新建、删除或移动子节点
+- 标记副作用:在协调过程中,React 会标记出需要执行的副作用,例如插入、更新或删除 DOM 节点
+- 提交更新:在构建完 Fiber 树后,React 会将标记的副作用提交到 DOM 中,完成更新
+- 中断与恢复:在构建 Fiber 树的过程中,如果有更高优先级的任务需要执行,React 可以中断当前的工作,让出主线程。等高优先级任务执行完毕后,再恢复之前的工作
+
+### requestIdleCallback
+
 ## 其他
 
 ### 受控组件和非受控组件区别（表单数据的控制方式）
@@ -566,3 +624,77 @@ function UncontrolledForm() {
   );
 }
 ```
+
+### React context 的理解
+
+- 在React中，数据传递一般使用props传递数据，维持单向数据流，这样可以让组件之间的关系变得简单且可预测，但是单项数据流在某些场景中并不适用。单纯一对的父子组件传递并无问题，但要是组件之间层层依赖深入，props就需要层层传递显然，这样做太繁琐了。
+- Context 提供了一种在组件之间共享此类值的方式，而不必显式地通过组件树的逐层传递 props。
+- 可以把context当做是特定一个组件树内共享的store，用来做数据传递。简单说就是，当你不想在组件树中通过逐层传递props或者state的方式来传递数据时，可以使用Context来实现跨层级的组件数据传递
+
+### React中refs的作用是什么？有哪些应用场景
+
+在React中，refs是React提供给开发者用来访问DOM元素的特殊属性。它允许我们在React组件中直接引用DOM元素或组件实例，并对其进行操作
+
+- 访问 DOM 元素：通过 refs,我们可以获取到组件中的 DOM 元素,并对其进行直接操作,如获取输入框的值、设置焦点等
+- 访问组件实例：通过 refs,我们可以获取到组件的实例,并调用组件的方法或访问组件的属性
+- 集成第三方库：有些第三方库需要直接操作 DOM 元素,通过 refs 可以方便地获取到相应的 DOM 元素并传递给第三方库使用
+
+应用场景
+
+- 处理焦点、文本选择
+- 触发强制动画
+- 获取DOM元素的属性
+- 调用子组件的方法
+
+### React.forwardRef是什么？它有什么作用
+
+React.forwardRef 会创建一个React组件，这个组件能够将其接收的ref属性转发到其组件树下的另一个组件
+
+- 转发refs到DOM组件
+- 在高阶组件中转发refs
+
+```jsx
+import React from 'react';
+const MyInput = React.forwardRef((props, ref) => (
+  <input type="text" ref={ref} {...props} />
+));
+class MyComponent extends React.Component {
+  constructor(props) {
+    super(props);
+    this.inputRef = React.createRef();
+  }
+  componentDidMount() {
+    this.inputRef.current.focus();
+  }
+  render() {
+    return (
+      <div>
+        <MyInput ref={this.inputRef} />
+      </div>
+    );
+  }
+}
+export default MyComponent;
+```
+
+### setState调用之后发生了什么 同步还是异步 批量更新 第二个参数
+
+调用setState函数之后，会将传入的对象合并到当前组件的状态中，并触发组件的重新渲染
+
+- 在合成事件和生命周期中，setState是异步的
+  - 当在合成事件(如 onClick、onChange 等)或生命周期方法(如 componentDidMount、componentDidUpdate 等)中调用 setState 时,React 会将多个 setState 调用合并为一个批量更新,以提高性能
+  - 这意味着在调用 setState 后,状态并不会立即更新,而是在事件处理函数或生命周期方法执行完毕后,React 会进行批量更新,并触发组件的重新渲染
+- 在异步回调函数和原生事件中,setState 是同步的
+  - 当在异步回调函数(如 setTimeout、Promise 的 then 方法等)或原生事件(如 addEventListener 绑定的事件)中调用 setState 时,setState 会立即执行,状态会立即更新,并触发组件的重新渲染
+
+在合成事件和生命周期方法中,setState 是异步的,多个 setState 调用会合并为一次批量更新(出于性能原因，多次setState状态变更合并为一次)
+
+第二个参数是一个可选的回调函数，这个回调函数将在组件重新渲染后执行，这个回调函数中你可以拿到更新后的state值
+
+### React-Router 4的Switch有什么用
+
+Switch 通常被用来包裹 Route，用于渲染与路径匹配的第一个子 `<Route> 或 <Redirect>`，它里面不能放其他元素
+
+- Switch 组件用于渲染与路径匹配的第一个子路由
+- 它可以避免重复渲染,提高性能,并且可以处理 404 Not Found 的情况
+- 在 Switch 组件中,路由的顺序很重要,更具体的路由应该放在前面

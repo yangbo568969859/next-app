@@ -18,6 +18,40 @@ PureComponent 是 React 提供的一个基类,用于定义纯组件；继承自P
 - 当组件的 props 和 state 是不可变的,且渲染结果只依赖于 props 和 state 时,可以使用 PureComponent
 - 适用于需要优化性能的组件,避免不必要的重新渲染
 
+```jsx
+import React, { PureComponent } from 'react';
+class MyComponent extends PureComponent {
+  render() {
+    return (
+      <div>
+        <h1>Hello, {this.props.name}!</h1>
+        <p>Count: {this.props.count}</p>
+      </div>
+    );
+  }
+}
+class App extends PureComponent {
+  state = {
+    name: 'John',
+    count: 0,
+  };
+  incrementCount = () => {
+    this.setState((prevState) => ({
+      count: prevState.count + 1,
+    }));
+  };
+  render() {
+    return (
+      <div>
+        <MyComponent name={this.state.name} count={this.state.count} />
+        <button onClick={this.incrementCount}>Increment Count</button>
+      </div>
+    );
+  }
+}
+export default App;
+```
+
 ## memo
 
 React.memo 是React提供的一个高阶组件(Higher-Order Component),用于优化函数组件的性能。它的作用是对函数组件进行浅比较（Shallow comparison），如果props没有变化则不重新渲染。
