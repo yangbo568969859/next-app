@@ -70,6 +70,12 @@ date: 2022-05-14
 - 宏任务 (包含整体代码 script，setTimeout，setInterval，setImmediate，MessageChannel， I/O 操作、UI 渲染)
 - 微任务 (Promise，process.nextTick、Object.observe、MutationObserver)
 
+- 事件循环会不断地从任务队列中取出任务并执行
+- 当调用栈为空时,事件循环会先检查微任务队列,如果有微任务,会依次执行微任务直到微任务队列为空
+- 然后,事件循环会从宏任务队列中取出一个宏任务并执行
+- 执行完一个宏任务后,事件循环会再次检查并执行所有的微任务
+- 重复上述过程,直到任务队列为空
+
 当某个宏任务执行完后，会查看是否有微任务队列，如果有，先执行微任务队列中的所有任务，如果没有，会读取宏任务队列中排在最前面的任务；执行宏任务的过程中，遇到微任务，依次加入微任务队列。栈空后，再次读取微任务队列里的任务
 
 ![image](./images/browser_eventloop.png)

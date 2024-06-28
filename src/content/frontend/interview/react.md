@@ -199,6 +199,12 @@ function Counter() {
 
 Hooks 通常指：系统运行到某一时期时，会调用被注册到该时机的回调函数
 
+### Hooks在平时开发中需要注意的问题和原因
+
+- 不要在循环，条件或嵌套函数中调用Hook，必须始终在 React函数的顶层使用Hook
+- useEffect 清理副作用
+- useEffect 依赖于外部变量，如果依赖的变量发生变化，则会重新执行 useEffect（避免在useEffect中直接修改状态）
+
 ### Hooks 解决的问题
 
 - 类组件的不足
@@ -276,6 +282,10 @@ useState 是 react 自带的一个 hook 函数，他的作用就是用来声明�
 
 - 类组件：使用 PureComponent
 - 函数组件：使用 useMemo，将函数组件传递给 mono 之后，就会返回一个新的组件，新组件的功能：如果接收到的属性没发生变化，则不重新渲染函数
+
+异步更新行为
+
+这个问题的方法是使用 useEffect Hook。useEffect 会在组件渲染后执行，并在组件卸载之前执行清理操作。我们可以使用 useEffect 在组件重新渲染时打印 count 的新值
 
 ```js
 import React, { useState } from "react";

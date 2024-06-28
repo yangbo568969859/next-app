@@ -287,7 +287,7 @@ function App () {
 
 ## Zustand
 
-- 状态共享：状态管理最必要的一点就是状态共享。这也是 context 出来以后，大部分文章说不需要 redux 的根本原因。因为context 可以实现最最基础的状态共享。但这种方法（包括 redux 在内），都需要在最外层包一个 Provider。 Context 中的值都在 Provider 的作用域下有效
+- 状态共享：状态管理最必要的一点就是状态共享。这也是 context 出来以后，大部分文章说不需要 redux 的根本原因。因为context 可以实现最最基础的状态共享。但这种方法（包括 redux 在内），都需要在最外层包一个 Provider。 Context 中的值在 Provider 的作用域下有效
 - 状态变更：
 - 状态派生
 - 性能优化
