@@ -122,9 +122,32 @@ const compose = (...funcs) => {
     return funcs[0];
   }
   return (arg) => {
+    console.log(arg);
     return funcs.reduce((promise, curr) => {
       return promise.then((res) => curr(res));
     }, Promise.resolve(arg));
+  }
+}
+
+const compose1 = (...funcs) => {
+  // write your code here
+  if (funcs.length === 0) {
+    return (arg) => arg;
+  }
+  if (funcs.length === 1) {
+    return funcs[0];
+  }
+  return (arg, callback) => {
+    let isFunction = callback && typeof callback === 'function';
+    const promiseRes = funcs.reduce((promise, curr) => {
+      return promise.then(curr)
+    }, Promise.resolve(arg));
+
+    if (isFunction) {
+      promise.then(res => callback(null, result), error => callback(error))
+    } else {
+      return promise;
+    }
   }
 }
 
@@ -133,4 +156,20 @@ const minus2 = (n) => new Promise((resolve) => resolve(n - 2));
 const multiply3 = (n) => { return n * 3 };
 const actionFunc = compose(plus1, minus2, multiply3);
 actionFunc(0).then(res => console.log(res)); // -3
+
+actionFunc(0, (error, result) => !error && console.log(result)); // -3
+```
+
+```js
+const compose = (...funcs) => {
+  // write your code here
+}
+
+const plus1 = (n) => n + 1;
+const minus2 = (n) => new Promise((resolve) => resolve(n - 2));
+const multiply3 = (n) => { return n * 3 };
+const actionFunc = compose(plus1, minus2, multiply3);
+actionFunc(0).then(res => console.log(res)); // -3
+
+actionFunc(0, (error, result) => !error && console.log(result)); // -3
 ```
