@@ -1,0 +1,302 @@
+基本实现原理（待整理）
+
+功能
+1、更换部件（发型，头，手臂，腿，上半身，下半身，鞋子）
+2、支持肤色变更
+3、支持贴花
+
+性能问题
+1、DrawCall
+2、内存
+3、面数影响
+
+优化
+
+参考技术文章
+https://edu.uwa4d.com/lesson-detail/128/503/0?isPreview=false
+https://kms.netease.com/article/50791
+http://www.luzexi.com/2018/08/03/Unity3D%E9%AB%98%E7%BA%A7%E7%BC%96%E7%A8%8B%E4%B9%8B%E8%BF%9B%E9%98%B6%E4%B8%BB%E7%A8%8B-3D%E6%A8%A1%E5%9E%8B%E4%B8%8E%E5%8A%A8%E7%94%BB2
+https://github.com/zouchunyi
+https://gwb.tencent.com/community/detail/126729
+渲染知识的学习和进阶
+https://games-cn.org/games104/
+https://github.com/frideal/AvatarClothes
+
+什么是submesh，submesh和单独mesh的优缺点
+内存共享，灵活度
+https://games-1312234642.cos.ap-guangzhou.myqcloud.com/course/GAMES104/GAMES104_Lecture04.pdf
+https://docs.unity3d.com/ScriptReference/Rendering.SubMeshDescriptor.html
+
+可能出现的方案，兜底方案
+直接随机几个预设模型，不做换装，只提供用户选择
+贴图全部4 * 4 * 4做Bake
+动态合并对贴图的尺寸要求较高，1024 * 1024，游戏中角色贴图和模型需要做更强的压缩
+换装的角色精细度和贴图可以比较大
+40个角色同时在线，最大的可能性，就是存在40个纹理，40个模型，这个需要看下怎么优化
+
+目前的配置是一个维度
+后续demo出来过后，还需要做命名规范的资产管理
+
+使用scriptableobjec需要注意的问题
+加载场景，加载prefab，加载scriptableobject，所有引用的资源都会被加载到内存中，我们更希望的是动态的加载和卸载
+
+资产管理
+加载AssetBundle循环依赖
+加载所有的part，自动化测试
+
+一个id对应的服装对应的资源文件
+model
+texture
+mat
+icon
+每一种部件可能有都有穿上去和脱下来的逻辑
+    // 如何表达一个Avatar装配，通过Avatar数据能够创建一个GameObject表现层对象
+    // ID和资源如何建立联系
+    // ResID
+    // 每个ID对应不同的处理方式，可以定制化的你内容和如何实现相应的定制化
+    // - 更换模型+贴图类
+    // - 更换主贴图，更换自发光贴图等
+    // - 更换颜色
+    // - 添加部件，挂载点
+    // - 更换其他shader贴图素材
+    // - 修改blendshape
+    // - UI上如何展示
+
+可定制化的纬度和资源整理
+定制化的纬度
+实现方式
+素材整理
+
+Part类型
+更换模型
+更换贴图
+设置颜色
+
+Skin类型
+更换贴图
+设置颜色
+
+
+// 如何表达一个Avatar装配，通过Avatar数据能够创建一个GameObject表现层对象
+// PartID和资源如何建立联系
+// ResID
+// 策略ID
+// 每个ID对应不同的处理方式，可以定制化的你内容和如何实现相应的定制化
+// - 更换模型+贴图类
+// - 更换主贴图，更换自发光贴图等
+// - 更换颜色
+// - 添加部件，挂载点
+// - 更换其他shader贴图素材
+// - 修改blendshape
+// - UI上如何展示
+
+
+// Material Change
+// Change Part
+
+// 有配置 选择策略 执行换装
+
+// 网络传递的网
+TODO
+进入换装场景
+退出换装场景
+换装角色part回收
+换装角色状态机创建和动画动态加载
+当前Avatar状态机
+加载资源和配置表的时机需要确定下
+特殊情况的保护，临界情况保护，检查
+切场景生命周期的管理问题，
+异步，异步，异步
+动态创建角色的问题，是否合并的问题
+角色换装+创建模块
+骨架数据定义
+Head骨骼节点
+Attachment相关节点
+男女骨骼定义，比如特殊的节点定义，如何更高效更方便的定义
+骨骼和游戏的逻辑挂钩，怎么处理
+角色拼接创建的逻辑
+骨架选择（表现层）
+衣服组装（表现层）
+动画状态机加载（表现层）
+Animator
+RuntimeController
+AnimationClip加载
+角色逻辑相关组件创建
+NPC的Nav寻路的组建如何添加的？
+CharacterController创建？（center new Vector(0.0.9f,0)）（radius）（height）走配置
+出生点和初始化的朝向
+Animator Override Controllers这个对性能有影响吗，是否不许需要该功能
+角色相关逻辑处理
+TAG，Layer设置
+相关Transform，节点获取和动态创建
+设置模型父节点
+Top?用来做什么的
+Bottom？用来做什么的
+NickName UIPos等等
+荧光棒？有逻辑适配
+小板凳？有逻辑适配
+主相机设置，参数读取string str = "1.5|25|25.5|110|0"; //摄像机的Y轴、默认摄像头远近、斜角、照射角度、延迟时间（S）应该走配置，可以动态更新
+代码的问题
+角色创建相关配置硬编码，没有走配置或者在一个ConstConfig文件中
+角色状态机依赖AnimtionClip文件导致，AB包有依赖
+角色创建没有统一的收口
+角色组装流程不合理
+表现层和数据层分离不彻底或者逻辑不清晰
+Layer设置应该只设置Skinnedmeshrenderer和相关需要设置的节点，其他的节点不应该设置Layer
+基础知识
+SharedMesh和Mesh
+https://docs.unity3d.com/ScriptReference/MeshFilter-mesh.html
+If no mesh is assigned to the mesh filter a new mesh will be created and assigned.If a mesh is assigned to the mesh filter already, then the first query of mesh property will create a duplicate of it, and this copy will be returned. Further queries of mesh property will return this duplicated mesh instance. Once mesh property is queried, link to the original shared mesh is lost and MeshFilter.sharedMesh property becomes an alias to mesh. If you want to avoid this automatic mesh duplication, use MeshFilter.sharedMesh instead.
+By using mesh property you can modify the mesh for a single object only. The other objects that used the same mesh will not be modified.
+如果meshfliter已经有mesh，第一次调用会返回mesh的副本，后续的几次访问mesh，都会返回第一次创建的mesh，如果调用了mesh，则meshfilter和之前的sharedmesh的引用将会丢失，访问sharedmesh访问的就是新创建的mesh，而不是共享的mesh
+
+Mesh占用的内存和Editor显示的大小会“Double”有出入
+20210316的Editor截图和运行时的内存占用截图
+
+
+
+SharedMaterial和Material
+https://docs.unity3d.com/ScriptReference/Renderer-material.html
+
+什么情况下必须打开Read/Write Enable的选项
+Mesh的Read/Write Enabled打开和关闭问题
+https://support.unity.com/hc/en-us/articles/115000326666-Why-am-I-seeing-two-references-of-a-Mesh-in-memory-
+
+无论标识是否启用（但它始终保持在视频内存中的引用），Unity在系统内存中保存额外副本的其他原因：
+如果网格被用作Skinned Mesh（经过实际测试，SkinnedMesh勾选和不勾选在内存中都会占用两份内存，Native+GPU Memory，不过关闭Read/Write会稍微小几个KB的大小）
+如果网格是动态批处理的候选对象。
+粒子系统选择网格作为发射器。
+在如下特定情况的时候，当网格被用作网格碰撞器，这个选项也需要被激活。
+负缩放（例如（-1, 1, 1））
+剪切变换（例如当旋转的网格具有缩放的父变换时）。
+
+Mesh运行时修改读写状态
+If you only want to update a Mesh once or don’t want to modify it any more you can call Mesh.UploadMeshData(true), which makes the Mesh data unreadable from the script and frees up the system memory copy of the data.
+
+什么时候需要激活
+有读写mesh的需求，比如获取uv，顶点信息，不开启Read/Write将会报错
+如果需要动态合并Mesh这个时候必须得打开Mesh的Read/Write选项
+新的发现：同一样一段代码，在Editor中点击Get Uvs不会报错，但是在Update中调用GetUV会提示，无法访问mesh，因为Read/Write未开启，可能是因为Editor相关的操作默认Mesh都是能拿到信息的，运行时却不行
+public SkinnedMeshRenderer targetSkinnedRender = null;
+
+    [ContextMenu("Get UVs")]
+    public void GetUV()
+    {
+        if (targetSkinnedRender == null)
+            return;
+        Vector2[] uvs = targetSkinnedRender.sharedMesh.uv;
+        Debug.Log("-----------------------:" + uvs.Length + "," + targetSkinnedRender.sharedMesh.name + "," + targetSkinnedRender.sharedMesh.GetInstanceID() + "," + targetSkinnedRender.GetInstanceID());
+    }
+
+Texture运行时修改读写状态
+https://docs.unity3d.com/ScriptReference/Texture-isReadable.html
+Note: Readable textures use more memory than non-readable textures. You should only make a texture readable when you need to, and you should make textures non-readable when you are done working with the data on the CPU.To make a texture non-readable at runtime, call the Apply method for your type of texture, for example Texture2D.Apply or Cubemap.Apply and set the makeNoLongerReadable parameter to true.
+什么时候需要激活
+在CPU侧需要修改Texture内容或者访问Texture内容， Texture2D.GetPixels or ImageConversion.EncodeToPNG
+动态创建的Texture默认是开启读写，处理完毕需要Apply to true
+ It is not required for methods that perform all their work on the GPU, such as Graphics.CopyTexture or Graphics.Blit.在GPU操作Texture的API不用开启读写选项
+
+SkinnedMesh开启Read/Write Enabled开关
+A：勾选上Sara FBX的Read/Write Enabled
+B：不勾选Sara FBX的Read/Write Enabled
+主要的区别在Graphic Memory的区别，CPU侧的内存大小没变动，例如Body都是0.6MB的大小
+
+
+
+Mesh开启Read/Write Enabled开关
+A：勾选上OutDoors FBX的Read/Write Enabled
+B：不勾选OutDoors FBX的Read/Write Enabled
+如果不开启Enabled，Mesh内存占用降低一半，开启过后会占用近似两份内存
+
+
+不勾选Read/Write Enabled四个Mesh的输出，CPU中只有0.8KB占用，GPU中是正常Mesh的内存大小
+
+
+Outdoors_DJ_001a，Outdoors_DJ_001b勾选Enabled，CPU和GPU中都占用了相同的内存大小
+
+
+Texture开启和关闭Enabled选项
+为何在MAC机器上：关闭和打开了Read/Write都会占用双份内存
+NativeMemory：
+001开启读写
+005未开启读写
+
+GPU Graphic Memory：
+
+
+图集打包，PackTexureAPI使用
+Rect[] atlasUvs = newTextureAtlas.PackTextures(_cacheTexList.ToArray(), 0);有关PackTexturesAPI使用的问题，在PC平台，如果textures都被压缩在EncodeToPng的时候会报错，但是在WebGL不会报错，ASTC格式支持EncodeToPng，所以如果要在PC离线生成Texture直接重新拷贝Texture到RGBA使用通用的SetPixel32
+https://www.xuanyusong.com/archives/4535
+https://www.xuanyusong.com/archives/4531
+https://docs.unity3d.com/ScriptReference/Texture2D.PackTextures.html
+
+SkinnedMesh 合并
+单独部件
+
+SubMesh-Cloth衣服
+
+SubMesh-Skin
+
+
+合并过后的UV展开
+
+工具自动化
+
+
+
+自动归类和创建Prefab预设
+
+虽然设置了不可读写，但是还是使用到double内存，需要看下为何是双份内存占用
+
+纹理压缩设置
+Skin贴图512，因为256会有中间的接缝Normal Quality部件贴图256Normal QualityAllInOne离线Bake完整贴图1024 * 512Low Quality图标Icon256
+
+待解决的问题
+切换到PC平台，工具无法使用，提示EncodeToPng需要贴图不能是压缩格式，这块需要处理下
+Normal，Tangents，UV2这三个Mesh通道清空过后对内存真的有影响吗，对包体大小有影响吗
+在Editor显示的是419 KB，但是运行时显示的感觉像是double，不确定是怎么计算的
+为何PC平台，Graphic的Mesh没看到内存占用呢？WebGL是有这些Mesh占用的？
+2022版本显示Mesh对比2021好像是没用到通道都直接给删除了，做了优化？
+
+
+运行时打包2022.2.1Standard ShaderNormal，Tangent，UV2开启Memory Profiler携带了Normal，Tangent，UV2信息2022.2.1Unlit/Texture ShaderNormal，Tangent，UV2开启Memory Profiler过滤了没用到的Normal，Tangent，UV2（应该是做了优化，运行时）20210316Unlit/Texture ShaderNormal，Tangent，UV2未开启0.5MB5.5MB20210316Unlit/Texture ShaderNormal，Tangent，UV2开启0.9MB6.4MB20210316Standard ShaderNormal，Tangent，UV2开启0.9MB20210316Standard ShaderNormal，Tangent，UV2未开启0.5MB
+
+Normal，Tangent，UV2存在的情况，在20210316LTS版本
+
+
+
+Normal，Tangent，UV2不存在的情况，在20210316LTS版本
+
+
+
+
+Skin：在面板上显示的117Bones和显示65个bone大小的性能会有差别吗？
+
+
+这块需要做一个专门的测试场景用来确定是否有区别，做到最方便测试性能的场景
+整个换装逻辑可以拆分出去
+目前认定：少量的Bones是有利于性能的，但是按照少量的Bone进行处理
+这块可以看下Unity的源码是如何处理的
+
+
+
+
+
+
+
+针对Unity提供的方式，经过测试基本没性能的提升
+
+我们做了一个类似的AvatarConfig，引用到对应的Transform
+DPI到底是一个什么概念呢？对性能有什么影响
+https://forum.unity.com/threads/tips-and-tricks-for-using-webgl-on-desktop-and-mobile-tested-up-to-2021-3-11f1.666121/
+
+蒙皮动画的基本原理
+
+
+
+骨骼重定向和Combine操作
+开发中间过程
+
+
+
+
