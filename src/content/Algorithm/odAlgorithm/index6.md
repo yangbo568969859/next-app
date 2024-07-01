@@ -427,19 +427,112 @@ rl.on('line', (line) => {
 })
 ```
 
-## 测试
+## 生成哈夫曼树
+
+给定长度为 n 的无序的数字数组，每个数字代表二叉树的叶子节点的权值，数字数组的值均大于等于 1 。
+
+请完成一个函数，根据输入的数字数组，生成哈夫曼树，并将哈夫曼树按照中序遍历输出。
+
+为了保证输出的二叉树中序遍历结果统一，增加以下限制:
+
+- 在树节点中，左节点权值小于等于右节点权值，根节点权值为左右节点权值之和。
+- 当左右节点权值相同时，左子树高度高度小于等于右子树。
+
+注意: 所有用例保证有效，并能生成哈夫曼树提醒:哈夫曼树又称最优二叉树，是一种带权路径长度最短的一叉树。
+
+所谓树的带权路径长度，就是树中所有的叶结点的权值乘上其到根结点的路径长度(若根结点为 0 层，叶结点到根结点的路径长度为叶结点的层数)
+
+输入描述：
+
+例如：由叶子节点 5 15 40 30 10 生成的最优二叉树如下图所示，该树的最短带权路径长度为 40∗1+30∗2+15∗3+5∗4+10∗4=205。
+
+![huffman](./image/huffman.png)
+
+输出描述：输出一个哈夫曼的中序遍历数组，数值间以空格分隔
+
+```yaml
+输入：
+5
+5 15 40 30 10
+
+输出：
+40 100 30 60 15 30 5 15 10
+
+说明：
+根据输入，生成哈夫曼树，按照中序遍历返回。所有节点中，左节点权值小于等于右节点权值之和。当左右节点权值相同时左子树高度小于右子树。结果如上图
+```
+
+```js
+class Node {
+	constructor (value) {
+		this.value = value;
+		this.left = null;
+		this.right = null;
+	}
+}
+class MinPriorityQueue {
+	constructor () {
+		this.elements = []
+	}
+	enqueue(element) {
+		this.elements.push(element);
+		this.elements.sort((a, b) => a.value - b.value);
+	}
+	dequeue() {
+		return this.elements.shift(); // 移除并返回数组第一个元素
+	}
+	isEmpty() {
+		return this.elements.length === 0;
+	}
+}
+function buildHuffmanTree (values) {
+	const pq = new MinPriorityQueue();
+	values.forEach(value => {
+		pq.enqueue(new Node(value))
+	})
+
+	while (pq.elements.length > 1) {
+		let left = pq.dequeue();
+		let right = pq.dequeue();
+		const parent = new Node(left.value + right.value);
+		parent.left = left;
+		parent.right = right;
+		pq.enqueue(parent);
+	}
+
+	return pq.dequeue();
+}
+function inorderTraversal(root) {
+	if (root) {
+		inorderTraversal(root.left);
+		console.log(root.value)
+		inorderTraversal(root.right);
+	}
+}
+
+const readline = require('readline')
+const rl = readline.createInterface({
+	input: process.stdin,
+	output: process.stdout
+})
+rl.on('line', (n) => {
+	rl.on('line', (line) > {
+		const values = line.split(' ').map(Number)
+		const root = buildHuffmanTree(values);
+		const result = ''
+		console.log(reslut);
+		rl.close();
+	})
+})
+```
+
+## 核酸检测
 
 输入描述：
 
 输出描述：
 
-## 测试
-
-输入描述：
-
-输出描述：
-
-## 测试
+## 贪吃的猴子
 
 输入描述：
 

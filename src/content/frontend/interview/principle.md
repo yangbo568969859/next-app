@@ -590,6 +590,21 @@ function curry (fn) {
     }
   }
 }
+
+function currying(fn, ...args) {
+  const fnLen = fn.length;
+  let allArgs = [...args]
+
+  const res = (...newArgs) => {
+    allArgs = [...allArgs, ...newArgs];
+    if (allArgs.length === fnLen) {
+      return fn(...allArgs);
+    } else {
+      return res;
+    }
+  }
+  return res;
+}
 ```
 
 ## Promise
@@ -777,23 +792,23 @@ function myNew (fn, ...args) {
   const obj = Object.create(fn.prototype)
   // obj.__proto__ = fn.prototype
   const res = fn.apply(obj, args)
-  if (res && (typeof res === 'object')) {
+  if (res && (typeof res === 'object' || typeof res === 'function')) {
     return res;
   }
   return obj;
 }
 ```
 
-## 数组扁平化
+## 数组/对象扁平化
 
 ```js
 function flattenArray (arr) {
   let res = []
   for (let i = 0; i < arr.length; i++) {
     if (Array.isArray(arr[i])) {
-      result = result.concat(flattenArray(arr[i]))
+      res = res.concat(flattenArray(arr[i]))
     } else {
-      result.push(arr[i])
+      res.push(arr[i])
     }
   }
   return res;
@@ -822,5 +837,34 @@ function flattenArray3 (arr) {
     }
   }
   return result;
+}
+```
+
+```js
+// 对象扁平化
+function flattenObj (obj) {
+  if (typeof obj !== 'object' || obj === null) {
+    return obj;
+  }
+  let res = {};
+  const dfs = (curr, prefix) => {
+    if (typeof curr === 'object' && curr !== null) {
+      if (Array.isArray(curr)) {
+        curr.forEach((value, index) => {
+          dfs(value, `${prefix}[${index}]`)
+        })
+      } else {
+        for (let key in curr) {
+          dfs(curr[key], `${prefix}${prefix ? '.' : ''}${key}`);
+        }
+      }
+    } else {
+      res[prefix] = curr;
+    }
+  }
+
+  dfs(obj, '');
+
+  return res;
 }
 ```

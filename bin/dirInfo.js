@@ -78,5 +78,9 @@ module.exports = dirInfo = {
   "algorithms": {
     title: '算法专题',
     description: '算法训练营、算法题、算法知识',
+  },
+  "odalgorithm": {
+    title: 'od算法专题',
+    description: '算法训练营、算法题、算法知识',
   }
 }
