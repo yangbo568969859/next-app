@@ -159,7 +159,8 @@ rl.on('line', (line) => {
 
 ```yaml
 输入：
-abcdef
+abcdeff
+fafbcde
 
 输出：
 abcdef
@@ -360,9 +361,40 @@ rl.on('line', (line) => {
 - 第一行：输入已排成队列的小朋友的学号（正整数），以空格隔开。
 - 第二行：小明的学号；
 - 算法复杂度要求不高于 nlog(n)。
-- 学号为整数类型，队列规模 ≤ 10000。
+- 学号为整数类型，队列规模 `≤ 10000`。
 
 输出描述：输出一个数字，代表队列位置（从 1 开始）。
+
+```yaml
+输入：
+93 95 97 100 102 123 155
+110
+
+输出：
+6
+
+说明：
+小明排在 102 和 123 之间位于第六位。
+```
+
+```js
+function findPosition(nums, target) {
+  nums.sort((a, b) => a - b);
+  let left = 0;
+  let right = nums.length - 1;
+
+  while (left < right) {
+    const mid = Math.floor((nums[left] + nums[right]) / 2)
+    if (nums[mid] < target) {
+      left = mid + 1;
+    } else {
+      right = mid;
+    }
+  }
+  const position = left;
+  console.log(positon + 1);
+}
+```
 
 ## 执行任务赚获取最多积分
 
@@ -395,7 +427,30 @@ rl.on('line', (line) => {
 ```
 
 ```js
-
+function getTimeMaxScore(length, maxTime, tasks) {
+  const timeTasks = new Map();
+  for (let i = 1; i <= maxTime; i++) {
+    for (let j = 0; j < tasks.length; j++) {
+      let tasksSplit = tasks[j].split(' ')
+      if (parseInt(tasksSplit[0]) === i) {
+        if (timeTasks.has(i)) {
+          timeTasks.set(i, [...timeTasks.get(i), tasksSplit[1]])
+        } else {
+          timeTasks.set(i, [tasksSplit[1]])
+        }
+      }
+    }
+  }
+  let scores = 0;
+  for (let i = maxTime; i >= 1; i--) {
+    let currentTimes = timeTasks.get(i);
+    if (currentTimes && currentTimes.length) {
+      currentTimes.sort((a, b) => b - a);
+      scores += parseInt(currentTimes[0])
+    }
+  }
+  console.log(scores);
+}
 ```
 
 ## 最多购买宝石数目
@@ -415,6 +470,14 @@ rl.on('line', (line) => {
 - 之后一行输入v，类型为int，取值范围：`[0,10^9]`表示你拥有的钱。
 
 输出描述：输出int类型的返回值，表示最大可购买的宝石数量。
+
+```yaml
+gems = [8, 4, 6, 3, 1, 6, 7] value = 10;
+
+最多购买的宝石数为 gems[2] 到 gems[4] 或者 gems[3] 到 gems[5]
+
+输出 3
+```
 
 ```js
 const readline = require('readline');

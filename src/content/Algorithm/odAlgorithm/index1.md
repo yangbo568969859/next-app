@@ -6,479 +6,448 @@ date: 2024-06-11
 
 # 算法1
 
-## 字符串序列判定/最后一个有效字符
+## 环中最长子串/字符成环找偶数
 
-输入两个字符串S和L，都只包含英文小写字母。S长度`<=`100，L长度`<=`500,000。判定S是否是L的有效子串。
+给你一个字符串 s，字符串s首尾相连成一个环形 ，请你在环中找出 'o' 字符出现了偶数次最长子字符串的长度。
 
-判定规则：
+输入描述：输入是一串小写字母组成的字符串（备注：`1 <= s.length <= 5 x 10^5s` 只包含小写英文字母）
 
-S中的每个字符在L中都能找到（可以不连续），
-
-且S在L中字符的前后顺序与S中顺序要保持一致。
-
-（例如，S=”ace”是L=”abcde”的一个子序列且有效字符是a、c、e，而”aec”不是有效子序列，且有效字符只有a、e）
+输出描述：输出是一个整数
 
 ```js
-// 思路双指针法来解决
-// 使用两个指针，一个指向字符串S，另一个指向字符串L。然后，我们逐个比较S中的字符是否在L中出现，并且保持它们的相对顺序
-function isSubsequence(s, t) {
-  let i = 0;
-  let j = 0;
-
-  while (i < s.length && j < t.length) {
-    if (s[i] === t[j]) {
-      i++;
-    }
-    j++;
-  }
-
-  return i === s.length;
-}
-```
-
-## 山脉个数/攀登者1
-
-攀登者喜欢寻找各种地图，并且尝试攀登到最高的山峰。
-
-地图表示为一维数组，数组的索引代表水平位置，数组的元素代表相对海拔高度。其中数组元素0代表地面。
-
-例如：[0,1,2,4,3,1,0,0,1,2,3,1,2,1,0]，代表如下图所示的地图，地图中有两个山脉位置分别为 1,2,3,4,5 和 8,9,10,11,12,13，最高峰高度分别为 4,3。最高峰位置分别为3,10。
-
-一个山脉可能有多座山峰(高度大于相邻位置的高度，或在地图边界且高度大于相邻的高度)。登山者想要知道一张地图中有多少座山峰。
-
-```js
-// 
-function countPeaks(map) {
+function longestEvenOddSubstring(str) {
+  const len = str.length;
   let count = 0;
-  let mapSize = map.length;
 
-  for (let i = 0; i < mapSize; i++) {
-    // 当前元素位于开头 且下一个元素大于当前元素
-    if (i === 0 && map[i] > map[i + 1]) {
-      count++
-    }
-    // 当前元素位于末尾 且上一个元素大于当前元素
-    if (i === mapSize - 1 && map[i] > map[i - 1]) {
-      count++
-    }
-    // 如果当前位置的高度大于前一个位置和后一个位置的高度
-    if ((i > 0 && i < mapSize - 1) && map[i] > map[i - 1] && map[i] > map[i + 1]) {
-      count++
+  // 遍历字符串，统计 o 字符出现的次数
+  for (let chr of str) {
+    if (chr === 'o') {
+      count += 1;
     }
   }
-
-
-  return count;
+  // 如果 o 字符出现偶数次，则最长子串的长度为 count
+  if (count % 2 === 0) {
+    console.log(len);
+  } else {
+    // 如果 o 字符出现奇数次，则最长子串的长度为 count - 1
+    console.log(len - 1);
+  }
 }
 ```
 
-## 构成指定长度字符串的个数/字符串拼接
+## 找座位
 
-给定 M`（0 < M ≤ 30）`个字符（a-z），从中取出任意字符（每个字符只能用一次）拼接成长度为 N`（0 < N ≤ 5）`的字符串，
+在一个大型体育场内举办了一场大型活动，由于疫情防控的需要，要求每位观众的必须间隔至少一个空位才允许落座。现在给出一排观众座位分布图，座位中存在已落座的观众，请计算出，在不移动现有观众座位的情况下，最多还能坐下多少名观众。
 
-要求相同的字符不能相邻，计算出给定的字符列表能拼接出多少种满足条件的字符串，
+输入描述：一个数组，用来标识某一排座位中，每个座位是否已经坐人。0表示该座位没有坐人，1表示该座位已经坐人
 
-输入非法或者无法拼接出满足条件的字符串则返回0。
-
-输入描述：给定的字符列表和结果字符串长度，中间使用空格(" ")拼接
-
-输出描述：满足条件的字符串个数
+输出描述：整数，在不移动现有观众座位的情况下，最多还能坐下多少名观众
 
 ```js
-function countString(str, n) {
+// 遍历数组中的每个座位，如果当前座位为0（没有坐人），且其左右两侧的座位也为0或者不存在，那么我们可以在当前座位安排一名观众
+function findMaximumCapable(seats) {
+  const seatArr = seats.split('');
+  let len = seatArr.length;
+  let maxCount = 0;
+  // 处理第一个座位
+  if (seatArr[0] === '0' && seats[1] === '0') {
+    maxCount += 1;
+    seatArr[0] = '1';
+  }
+  // 处理中间的座位
+  for (let i = 1; i < seatArr.length - 1; i++) {
+    if (seatArr[i] === '0' && seatArr[i - 1] === '0' && seatArr[i + 1] === '0') {
+      maxCount += 1;
+      seatArr[i] = '1';
+    }
+  }
+  // 处理最后一个座位
+  if (seatArr[len - 1] === '0' && seats[len - 2] === '0') {
+    maxCount += 1;
+  }
 
+  console.log(maxCount);
 }
 ```
 
-## 用连续自然数之和来表达整数
+## 转盘寿司
 
-一个整数可以由连续的自然数之和来表示。给定一个整数，计算该整数有几种连续自然数之和的表达式，且打印出每种表达式
+寿司店周年庆，正在举办优惠活动回馈新老客户。
 
-输入描述: 一个目标整数T `(1 <= T <= 1000)`
+寿司转盘上总共有 n 盘寿司，prices[i] 是第 i 盘寿司的价格，
+
+如果客户选择了第 i 盘寿司，寿司店免费赠送客户距离第 i 盘寿司最近的下一盘寿司 j，前提是 prices[j] < prices[i]，如果没有满足条件的 j，则不赠送寿司。
+
+每个价格的寿司都可无限供应
+
+输入描述：输入的每一个数字代表每盘寿司的价格，每盘寿司的价格之间使用空格分隔，例如
+
+3 15 6 14 ：第 0 盘寿司价格 `prices[0]` 为 3，第 1 盘寿司价格 `prices[1]` 为 15
+
+每盘寿司的价格 price 范围为：1 ≤ price ≤ 1000
 
 输出描述：
 
-- 该整数的所有表达式和表达式的个数。如果有多种表达式，输出要求为
-  - 自然数个数最少的表达式优先输出
-  - 每个表达式中按自然数递增的顺序输出，具体的格式参见样例。在每个测试数据结束时，输出一行”Result:X”，其中X是最终的表达式个数
+输出享受优惠后的一组数据，每个值表示客户选择第 i 盘寿司时实际得到的寿司的总价格。使用空格进行分隔，例如：
+
+3 21 9 17
+
+```js
+// 通过遍历寿司价格数组并计算每个寿司的最优价格来解决。
+// 我们可以使用一个栈来维护寿司的价格，并根据栈顶元素的价格来确定是否可以免费获得下一盘寿司
+function findShousiPrices(prices) {
+  let length = prices.length;
+  let stack = [];
+  let res = new Array(length).fill(0);
+
+  for (let i = 0; i < 2 * length - 1; i++) {
+    let index = i % length;
+
+    while (stack.length && prices[stack[stack.length - 1]] > prices[index]) {
+      const topIndex = stack.pop();
+      res[topIndex] = prices[topIndex] + prices[index];
+    }
+
+    if (i < length) {
+      stack.push(index);
+    }
+  }
+
+  while (stack.length > 0) {
+    const topIndex = stack.pop();
+    res[topIndex] = prices[topIndex]
+  }
+
+  console.log(res.join(' '))
+}
+```
+
+## 找朋友
+
+在学校中，N个小朋友站成一队，第i个小朋友的身高为height[i] 第i个小朋友可以看到的第一个比自己身高更高的小朋友j，那么是i的好朋友(要求j>i)。
+
+请重新生成一个列表，对应位置的输出是每个小朋友的好朋友位置，如果没有看到好朋友，请在该位置用0代替。 小朋友人数范围是[0,40000]。
+
+输入描述：第一行输入N，N表示有N个小朋友；第二行输入N个小朋友的身高height[i]，都是整数
+
+输出描述：输出N个小朋友的好朋友的位置
+
+题目解析：
+
+- 首先，根据输入的寿司价格列表，创建一个列表prices，用于存储每盘寿司的价格。
+- 然后，遍历prices列表，对于每个元素i，找到满足条件的最近的下一盘寿司j（即prices[j] < prices[i]），并将j的价格加到i上，得到实际得到的寿司的总价格。
+- 最后，将计算得到的实际得到的寿司的总价格列表输出，使用空格进行分隔。
 
 ```yaml
-输入:
-9
+输入：
+2
+100 95
 
-输出:
-9=9
-9=4+5
-9=2+3+4
-Result:3
+输出：
+0 0
 
-说明:
-整数 9 有三种表示方法，第1个表达式只有1个自然数，最先输出，第2个表达式有2个自然数，第2次序输出，第3个表达式有3个自然数，
-最后输出。每个表达式中的自然数都是按递增次序输出的。
-数字与符号之间无空格
+说明：
+第一个小朋友身高100，站在队尾位置，向队首看，没有比他身高高的小朋友，所以输出第一个值为0。
+第二个小朋友站在队首，前面也没有比他身高高的小朋友，所以输出第二个值为0。
 ```
 
 ```js
-// 通过枚举连续自然数的起始值和个数来解决
-// 使用双重循环来枚举所有可能的表达式，并将满足条件的表达式存储起来
 const readline = require('readline');
 const rl = readline.createInterface({
   input: process.stdin,
   output: process.stdout,
 })
 
-let target;
-rl.on('line', function myAnswer (answer) {
-  target = Number(answer);
-  console.log(target + '=' + target);
+let n = 0; // 人数
+let height = []; // 身高数组
 
-  const expressions = [];
-  for (let i = 1; i < target; i++) {
-    let sum = 0;
-    let expression = '';
-    for (let j = i; sum < target; j++) {
-      sum += j;
-      expression += j + '+';
-      if (sum === target) {
-        expressions.push(target + '=' + expression.slice(0, -1));
-        break;
+rl.on('line', (line) => {
+  if (!n) {
+    n = parseInt(line.trim());
+  } else {
+    height = line.trim().split(' ').map(Number);
+
+    let friends = new Array(n).fill(0);
+    let stack = [0];
+    for (let i = 1; i < n; i++) {
+      while (stack.length && height[i] > height[stack[stack.length - 1]]) {
+        friends[stack.pop()] = i;
       }
+      stack.push(i);
     }
+
+    let result = '';
+    for (let i = 0; i < n; i++) {
+      result += friends[i] + ' ';
+    }
+    console.log(result.trim());
   }
-  expressions.sort((a, b) => a.length - b.length);
-  expressions.forEach(item => console.log(item));
-  console.log('Result:' + (expressions.length + 1));
 })
 ```
 
-## 全量和已占用字符集、字符串统计
+## 爱吃蟠桃的孙悟空
 
-给定两个字符集合，一个是全量字符集，一个是已占用字符集，已占用字符集中的字符不能再使用。要求输出剩余可用字符集
+孙悟空爱吃蟠桃，有一天趁着蟠桃园守卫不在来偷吃。已知蟠桃园有 N 棵桃树，每颗树上都有桃子，守卫将在 H 小时后回来。
+
+孙悟空可以决定他吃蟠桃的速度K（个/小时），每个小时选一颗桃树，并从树上吃掉 K 个，如果树上的桃子少于 K 个，则全部吃掉，并且这一小时剩余的时间里不再吃桃。
+
+孙悟空喜欢慢慢吃，但又想在守卫回来前吃完桃子。
+
+请返回孙悟空可以在 H 小时内吃掉所有桃子的最小速度 K（K为整数）。如果以任何速度都吃不完所有桃子，则返回0。
 
 输入描述：
 
-输入一个字符串 一定包含@，@前为全量字符集 @后的为已占用字符集
-已占用字符集中的字符一定是全量字符集中的字符
-字符集中的字符跟字符之间使用英文逗号隔开
-每个字符都表示为字符+数字的形式用英文冒号分隔，比如a:1标识一个a字符
-字符只考虑英文字母，区分大小写
-数字只考虑正整型 不超过100
-如果一个字符都没被占用 @标识仍存在，例如 a:3,b:5,c:2@
+- 第一行输入为 N 个数字，N 表示桃树的数量，这 N 个数字表示每颗桃树上蟠桃的数量。
+- 第二行输入为一个数字，表示守卫离开的时间 H。
+- 其中数字通过空格分割，N、H为正整数，每颗树上都有蟠桃，且 0 < N < 10000，0 < H < 10000。
 
-输出描述：
-
-输出可用字符集
-不同的输出字符集之间用回车换行
-注意 输出的字符顺序要跟输入的一致，如下面用例不能输出b:3,a:2,c:2
-如果某个字符已全部占用 则不需要再输出
-
-```yaml
-a:3,b:5,c:2@a:1,b:2
-
-a:2,b:3,c:2
-```
+输出描述：吃掉所有蟠桃的最小速度 K，无解或输入异常时输出 0
 
 ```js
-function custom (str) {
-  const strArr = str.split('@');
-  const result = [];
-  let all = strArr[0].split(',');
-  let used = strArr[1].split(',');
-  const allCharCount = new Map();
-  const usedCharCount = new Map();
-  for (let i = 0; i < all.length; i++) {
-    const allChar = all[i].split(':');
-    allCharCount.set(allChar[0], allChar[1]);
-  }
-  for (let i = 0; i < used.length; i++) {
-    const usedChar = used[i].split(':');
-    usedCharCount.set(usedChar[0], usedChar[1]);
-  }
-  for (const [ch, totalCount] of allCharCount) {
-    const occupiedCount = usedCharCount.get(ch) || 0;
-    const availableCount = totalCount - occupiedCount;
-    if (availableCount > 0) {
-      result.push(ch + ':' + availableCount);
+// 思路：通过二分查找来解决
+// 我们可以在1到最大桃子数之间进行二分查找，找到最小的速度K，使得在H小时内可以吃完所有的桃子
+function findMinimumSpeed(piles, H) {
+  let maxPile = Math.max(...piles);
+  let left = 1;
+  let right = maxPile;
+  let result = 0;
+
+  while (left <= right) {
+    let mid = Math.floor((left + right) / 2); // 中间值 mid，表示当前尝试的速度K
+    let hours = 0;
+    for (let pile of piles) {
+      hours += Math.ceil(pile / mid);
     }
-  }
-  return result.join(',');
-}
-```
-
-## 密码输入检测
-
-给定用户密码输入流input，输入流中字符 `'<'` 表示退格，可以清除前一个输入的字符，请你编写程序，输出最终得到的密码字符，并判断密码是否满足如下的密码安全要求
-
-密码长度`>=`8;
-密码至少需要包含1个大写字母:
-密码至少需要包含1个小写字母;
-密码至少需要包含1个数字;
-密码至少需要包含1个字母和数字以外的非空白特殊字符;
-注意空串退格后仍然为空串，且用户输入的字符串不包含 `'<'` 字符和空白字符。
-
-输入描述：用一行字符串表示输入的用户数据，输入的字符串中 `<` 字符标识退格，用户输入的字符串不包含空白字符，例如:`ABC<c89%000<`
-
-输出描述：输出经过程序处理后，输出的实际密码字符串，并输出该密码字符串是否满足密码安全要求。两者间由 ',' 分隔，例如:ABc89%00,true
-
-```yaml
-输入：
-ABC<c89%000<
-
-输出：
-ABc89%00,true
-
-解释: 多余的C和0由于退格被去除,最终用户输入的密码为ABc89%00，且满足密码安全要求输出true
-```
-
-```js
-function processPassword(str) {
-  const stack = [];
-  for (let i = 0; i < str.length; i++) {
-    if (str[i] === '<') {
-      stack.pop();
+    if (hours <= H) {
+      result = mid;
+      right = mid - 1;
     } else {
-      stack.push(str[i]);
+      left = mid + 1;
     }
   }
-  const realPass = stack.join('');
-  function checkPassword (pass) {
-    if (pass.length < 8) {
-      return false;
-    }
-    if (!/[A-Z]/.test(pass)) {
-      return false;
-    }
-    if (!/[a-z]/.test(pass)) {
-      return false;
-    }
-    if (!/\d/.test(pass)) {
-      return false;
-    }
-    if (!/[^A-Za-z0-9]/.test(pass)) {
-      return false;
-    }
-    return true;
-  }
-  const isSecure = checkPassword(realPass);
 
-  return `${realPass},${isSecure}`
+  console.log(result);
 }
 ```
 
-## 查找众数及中位数
+## 游戏分组/王者荣耀
 
-众数是指一组数据中出现次数量多的那个数，众数可以是多个。
+2020年题：
 
-中位数只是指把一组数据从小到大排列，最中间的那个数，如果这组数据的个数是奇数，那最中间那个就是中位数，如果这组数据的个数为偶数，那就把中间的两个数之和除以2，所得的结果就是中位数。
+英雄联盟是一款十分火热的对战类游戏。每一场对战有10位玩家参与，分为两组，每组5人。每位玩家都有一个战斗力，代表着这位玩家的厉害程度。为了对战尽可能精彩，我们需要把玩家们分为实力尽量相等的两组。一组的实力可以表示为这一组5位玩家的战斗力和。现在，给你10位玩家的战斗力，请你把他们分为实力尽量相等的两组。请你输出这两组的实力差。
 
-查找整型数组中元素的众数并组成一个新的数组，求新数组的中位数
+2023年题：
 
-输入描述：输入一个一维整型数组，数组大小取值范围 `0<N<1000，数组中每个元素取值范围 0<E<1000`
+部门准备举办一场王者荣耀表演赛，有10名游戏爱好者参与，分5为两队，每队5人。每位参与者都有一个评分，代表着他的游戏水平。为了表演赛尽可能精彩，我们需要把10名参赛者分为实力尽量相近的两队。一队的实力可以表示为这一队5名队员的评分总和。现在给你10名参与者的游戏水平评分，请你根据上述要求分队最后输出这两组的实力差绝对值。例: 10名参赛者的评分分别为5 1 8 3 4 6 710 9 2，分组为 (135 8 10) (24 679)，两组实力差最小，差值为1。有多种分法，但实力差的绝对值最小为1。
 
-输出描述：输出众数组成的新数组的中位数
+输入描述：10个整数，表示10名参与者的游戏水平评分。范围在[1,10000]之间
 
-```yaml
-
-```
+输出描述：1个整数，表示分组后两组实力差绝对值的最小值.
 
 ```js
-// 找出数组中的众数，并组成一个新的数组
-// 计算新数组的中位数
-function findMedianOfMode (arr) {
-  const majMap = new Map();
-  let maxCount = 0;
-  for (let i = 0; i < arr.length; i++) {
-    let count = majMap.get(arr[i]) || 0;
-    majMap.set(arr[i], count + 1);
-    count++;
-    maxCount = Math.max(maxCount, count);
+let res = Number.MAX_SAFE_INTEGER;
+let totalSum = 0;
+let targetSum = 0;
+function dfs (nums, idx, count, currentSum) {
+  if (count === 5) {
+    let ohterTeamSum = totalSum - currentSum;
+    res = Math.min(res, Math.abs(ohterTeamSum - currentSum));
+    return;
   }
-  const mode = [];
-  for (const [key, value] of majMap) {
-    if (value === maxCount) {
-      mode.push(key);
-    }
+
+  if (idx === 10) {
+    return
   }
-  let mid
-  if (mode.length % 2 === 0) {
-    mid = Math.floor((mode[mode.length / 2 - 1] + mode[mode.length / 2]) / 2);
-  } else {
-    mid = mode[Math.floor(mode.length / 2)];
+
+  dfs(nums, idx + 1, count + 1, currentSum + nums[idx]);
+
+  dfs(nums, idx + 1, count, currentSum);
+}
+function main(nums) {
+  for (let num of nums) {
+    totalSum += num;
   }
-  console.log(mid);
+  targetSum = totalSum / 2;
+  dfs(nums, 0, 0, 0);
+  console.log(res);
 }
 ```
 
-## 最长的指定瑕疵度的元音子串
+## 求满足条件的最长子串的长度
 
-开头和结尾都是元音字母（aeiouAEIOU）的字符串为元音字符串，其中混杂的非元音字母数量为其瑕疵度。比如:
+给定一个字符串，只包含字母和数字，按要求找出字符串中的最长(连续)子的长度，字符串本身是其最长的子串，子串要求:
 
-- “a” 、 “aa” 是元音字符串，其瑕疵度都为0
-- “aiur” 不是元音字符串（结尾不是元音字符）
-- “abira” 是元音字符串，其瑕疵度为2
+只包含1个字母(az,AZ)，其余必须是数字;
+字母可以在子串中的任意位置;
+如果找不到满足要求的子串，如全是字母或全是数字，则返回-1。
 
-给定一个字符串，请找出指定瑕疵度的最长元音字符子串，并输出其长度，如果找不到满足条件的元音字符子串，输出0。子串：字符串中任意个连续的字符组成的子序列称为该字符串的子串
+输入描述：字符串(只包含字母和数字)
 
-输入描述：
-
-- 首行输入是一个整数，表示预期的瑕疵度flaw，取值范围`[0, 65535]`
-- 接下来一行是一个仅由字符a-z和A-Z组成的字符串，字符串长度`(0, 65535]`
-
-输出描述：输出为一个整数，代表满足条件的元音字符子串的长度
+输出描述：子串的长度
 
 ```yaml
 输入：
-0
-asdbuiodevauufgh
+abC124ACb
+
 输出：
-3
-说明：满足条件的最长元音字符子串有两个，分别为uio和auu，长度为3。
+4
+
+说明：
+满足条件的最长子串是C124或者124A，长度都是4
 ```
 
-思路：采用双指针方法遍历字符串
-
-- 初始时左右边界指针都指向位置0
-- 边界判断：左元音右缺陷（right++）、左缺陷右元音（left++）、左右都缺陷（left++、right++）、左右都元音（计算缺陷度）
-- 计算元音字串的长度
-  - 先判断当前缺陷度是否满足要求，小于则right++，大于则left++
-  - 缺陷度符合要求后，才计算当前字串长度，并和历史最大值比较，更新最大值。
+```yaml
+遍历字符串，记录当前连续的字母和数字的数量。
+如果遇到一个字母，将字母计数器加1；如果遇到一个数字，将数字计数器加1。
+如果字母计数器大于1，说明当前子串不满足条件，需要重新开始计算子串长度。
+如果数字计数器为0，说明当前子串不满足条件，需要重新开始计算子串长度。
+如果字母计数器为1且数字计数器大于0，说明当前子串满足条件，更新最长子串长度。
+遍历结束后，返回最长子串长度。如果没有找到满足条件的子串，返回-1。
+```
 
 ```js
-function custom(flaw, str) {
-  const vowels = new Set(['a', 'e', 'i', 'o', 'u', 'A', 'E', 'I', 'O', 'U']);
+function findMaxLength(str) {
+  // 初始化最长子传长度
   let maxLength = 0;
-  let left = 0;
-  let right = 0;
-  let currentFlaw = 0;
+  // 初始化一个标志，表示是否找到了包含字母的子串
+  let hasLetter = false;
+  // 初始化双指针L和R，分别表示子串的左右边界
+  let l = 0; let r = 0;
+  // 创建一个双端队列用于存储字母索引
+  let letterIdx = [];
 
-  for (left = 0; left < str.length; left++) {
-    while (right < str.length) {
-      // 如果前后都是元音字符，且瑕疵度等于指定的瑕疵度，那么就更新最大长度
-      if (vowels.has(str[left]) && vowels.has(str[right]) && currentFlaw === flaw) {
-        maxLength = Math.max(maxLength, right - left + 1);
+  while (r < str.length) {
+    let char = str.charAt(r);
+
+    if (char.match(/[a-zA-Z]/)) {
+      hasLetter = true;
+      letterIdx.push(r);
+
+      if (letterIdx.length > 1) {
+        l = letterIdx.shift() + 1;
       }
-      // 如果不是元音字符、那么瑕疵度+1
-      if (!vowels.has(str[right])) {
-        currentFlaw++;
-      }
-      // 如果瑕疵度大于指定的瑕疵度，那么就跳出循环
-      if (currentFlaw > flaw) {
-        break;
+      if (r === l) {
+        r++;
+        continue;
       }
     }
-    // 如果左边的字符不是元音字符，那么瑕疵度-1，因为左边的字符已经不在窗口中了，如：aabaa，当窗口为aba时，左边的a已经不在窗口中了，所以瑕疵度-1
-    if (!isVowel(str[left])) {
-      currentFlaw--;
-    }
+    maxLength = Math.max(maxLength, r - l + 1);
+
+    r++;
   }
-  
-  console.log(maxLength);
+
+  if (hasLetter) {
+    console.log(maxLength);
+  } else {
+    console.log(-1);
+  }
 }
 ```
 
-## 整数对最小和
+## 分割均衡字符串
 
-给定两个整数数组array1、array2，数组元素按升序排列
+均衡串定义:字符串只包含两种字符，且两种字符的个数相同。
 
-假设从array1、array2中分别取出一个元素可构成一对元素，现在需要取出k对元素，并对取出的所有元素求和，计算和的最小值。
+给定一个均衡字符串，请给出可分割成新的均衡子串的最大个数。
 
-注意：两对元素如果对应于array1、array2中的两个下标均相同，则视为同一对元素
+约定字符串中只包含大写的'X"和'Y'两种字符。
 
-输入描述:
+输入描述：均衡串:XXYYXY
 
-- 输入两行数组array1、array2，每行首个数字为数组大小`size(0 < size <= 100)`;
-- `<array1[i] <=1000`
-- `<array2[i] <= 1000`
-- 接下来一行为正整数 k
-- `0 < k <= array1.size() * array2.size()`
+字符串的长度[2,10000]。给定的字符用均为均衡串。
 
-输出描述:
-
-满足要求的最小和
-
-```js
-function minSumFun(array1, array2, k) {
-  const pairsSum = [];
-
-  // 循环嵌套，将array1和array2中的元素两两相加，并将结果存入pairsSum中
-  for (let i = 0; i < array1.length; i++) {
-    for (let j = 0; j < array2.length; j++) {
-      pairsSum.push(array1[i] + array2[j]);
-    }
-  }
-  pairsSum.sort((a, b) => a - b);
-  const minSum = pairsSum.slice(0, k).reduce((sum, cur) => sum + cur, 0);
-  console.log(minSum);
-}
-```
-
-## 找出作弊的人
-
-公司组织了一次考试,现在考试结果出来了，想看一下有没人存在作弊行为,但是员工太多了,需要先对员工进行一次过滤,再进一步确定是否存在作弊行为。
-
-过滤的规则为:找到分差最小的员工ID对(p1,p2)列表,要求`p1<p2`
-
-员工个数取值范国:`O<n<100000`
-
-员工ID为整数,取值范围:`0<=n<=100000`
-
-考试成绩为整数,取值范围:`0<=score<=300`
-
-输入描述：
-
-员工的ID及考试分数
-
-输出描述
-
-分差最小的员工ID对(p1,p2)列表,要求`p1<p2`。每一行代表一个集合,每个集合内的员工ID按顺序排列,多行结果也以员工对中p1值大小升序排列(如果p1相同则p2升序)。
-
-样例1
+输出描述：可分割为两个子串: XXYY, XY
 
 ```yaml
 输入
-5
-1 90
-2 91
-3 95
-4 96
-5 100
+XXYYXY
+
 输出
-1 2
-3 4
+2
+
+备注
+分割后的子串，是原字符串的连续子串。
 ```
 
 ```js
-const readline = require('readline');
-const rl = readline.createInterface({
-  input: process.stdin,
-  output: process.stdout,
-})
-
-let input = []
-rl.on('line', (line) => {
-  input.push(line.trim());
-}).on('close', () => {
-  const n = parseInt(input.shift());// 员工个数
-  // 创建一个数组用于存储员工的ID和分数
-  const employees = input.map(item => {
-    return item.split(' ').map(Number);
-  })
-  // 创建一个数组用于存储分差最小的员工id对
-  let result = [];
-  let minDiff = Number.MAX_SAFE_INTEGER;
-  // 遍历排序后的员工数组，计算相邻员工的分差
-  for (let i = 1; i < n; i++) {
-    const diff = employees[i][1] - employees[i - 1][1];
-    if (diff < minDiff) {
-      minDiff = diff;
-      result = [[employees[i - 1][0], employees[i][0]]];
-    } else if (diff === minDiff) {
-      result.push([employees[i - 1][0], employees[i][0]]);
+function splitString(str) {
+  let ans = 0;
+  let count = 0;
+  for (let i = 0; i < str.length; i++) {
+    if (str.charAt(i) === 'X') {
+      count++;
+    } else {
+      count--;
+    }
+    if (count === 0) {
+      ans++;
     }
   }
-  result.sort((a, b) => a[0] - b[0]);
-  for (let i = 0; i < result.length; i++) {
-    console.log(result[i].join(' '));
+  console.log(ans);
+}
+```
+
+## 机器人仓库搬砖
+
+机器人搬砖，一共有N堆砖存放在N个不同的仓库中，第 i 堆中有 bricks[i] 块砖头，要求在8小时内搬完。
+
+机器人每小时能搬砖的数量取决于有多少能量格，机器人一个小时中只能在一仓库中搬砖，机器人的能量格每小时补充一次且能量格只在这一个小时有效，为使得机器人损耗最小化，应尽量减小每次补充的能量格数。
+
+为了保障在8小时内能完成砖任务，请计算每小时始机器人充能的最小能量格数。
+
+备注:
+
+- 1、无需考虑机器人补充能量的耗时
+- 2、无需考虑机器人搬砖的耗时
+- 3、机器人每小时补充能量格只在这一个小时中有效
+
+输入描述：程序有输入为“30 12 25 8 19”一个整数数组，数组中的每个数字代表第i堆砖的个数，每堆砖的个数不超过100
+
+输出描述：输出在8小时内完成搬砖任务，机器人每小时最少需要充多少个能量格；如果8个小时内无法完成任务，则输出“-1”；
+
+```yaml
+输入：
+30 12 25 8 19
+
+输出：
+15
+```
+
+```js
+
+```
+
+## 出租车计费、靠谱的车
+
+程序员小明打了一辆出租车去上班。出于职业敏感，他注意到这辆出租车的计费表有点问题，总是偏大。
+
+出租车司机解释说他不喜欢数字4，所以改装了计费表，任何数字位置遇到数字4就直接跳过，其余功能都正常。
+
+比如：
+
+23再多一块钱就变为25；
+39再多一块钱变为50；
+399再多一块钱变为500；
+小明识破了司机的伎俩，准备利用自己的学识打败司机的阴谋。
+
+给出计费表的表面读数，返回实际产生的费用。
+
+输入描述：只有一行，数字N，表示里程表的读数。(`1<=N<=888888888`)
+
+输出描述：一个数字，表示实际产生的费用。以回车结束
+
+```js
+// 56 4+
+function realFun(nums) {
+  let realMoney = 0;
+  nums = String(nums);
+  for (let i = 0; i < nums.length; i++) {
+    let digit = parseInt(nums[i]);
+    if (digit > 4) {
+      digit--;
+    }
+    realMoney = realMoney * 9 + digit;
   }
-})
+  console.log(realMoney);
+}
 ```
