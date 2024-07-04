@@ -162,7 +162,10 @@ rl.on('line', (line) => {
 
 反之，如果它含有的大写字母比小写字母多，则将这个子串的所有小写字母转换为大写字母；大小写字母的数量相等时，不做转换。
 
-输入描述：输入为两行，第一行为参数K，第二行为字符串S。
+输入描述：输入为两行，
+
+- 第一行为参数K
+- 第二行为字符串S。
 
 输出描述：输出转换后的字符串。
 
@@ -262,7 +265,7 @@ rl.on('line', (str) => {
     }
     // 设置最后一次的结果
     obj[currChar] = obj[currChar] ? Math.max(time, obj[currChar]) : time;
-    console.log(Object.values(obj)[k - 1] ?? -1)
+    console.log(Object.values(obj).sort((a, b) => b - a)[k - 1] ?? -1)
   })
 })
 ```
@@ -521,29 +524,25 @@ rl.on('line', (line) => {
 }).on('close', () => {
   n = parseInt(lines[0].split(' ')[0]);
   e = parseInt(lines[0].split(' ')[1]);
-  const instructions = []
-  for (let i = 1; i <= n; i++) {
-    const [x, offsetY] = lines[i].split(' ').map(Number);
-    instructions.push([x, offsetY]);
+  let offsets = new Array(e).fill(0);
+
+  let inputs = lines.slice(1);
+  for (let i = 0; i < inputs.length; i++) {
+    let [x, offsetY] = inputs.split(' ').map(Number);
+    offsets[x] = offsetY;
   }
-  const area = calculateArea(n, e, instructions);
-  function calculateArea(n, e, instructions) {
-    let area = 0;
-    let prevX = 0;
-    let prevY = 0;
 
-    for (let i = 0; i < n; i++) {
-      const [x, offsetY] = instructions[i];
-      area += (x - prevX) + Math.abs(prevY);
-      prevX = x;
-      prevY += offsetY;
-    }
-
-    // 我们计算最后一个指令到横坐标终点值E之间的面积
-    area += (e - prevX) + Math.abs(prevY);
-
-    return area;
+  let dp = new Array(e).fill(0);
+  dp[0] = 0;
+  for (let i = 1; i < e; i++) {
+    dp[i] = offsets[i] + dp[i - 1];
   }
+
+  let ans = 0;
+  for (const num of dp) {
+    ans += Math.abs(num);
+  }
+  console.log(ans);
 })
 ```
 
@@ -583,7 +582,7 @@ rl.on('line', (line) => {
         return diff;
       }
     }
-    return s1.slice(2) - s2.slice(2);
+    return s1.slice(2) - s2.slice(2); // 比较后4位
   })
   console.log(inputs.join(','))
 })
@@ -704,7 +703,7 @@ rl.on('line', (line) => {
       }
     }
 
-    return size - (alias.length / 2);
+    return size - (alias.length / 2); // 减去自身坐标数量
   }
 
   console.log(counting(blocks, whites), counting(whites, blocks));
@@ -768,7 +767,7 @@ rl.on('line', (line) => {
 
   function dfs (x, y, m, n, k, visted) {
     // 判断坐标是否越界
-    if (x < 0 || x >= m || y < 0 || y >= n || (sumOfDigits(x) + sumOfDigits(y) > k)) {
+    if (x < 0 || x >= m || y < 0 || y >= n || (sumOfDigits(x) + sumOfDigits(y) > k) || visted[x][y] === 1) {
       return 0;
     }
     visted[x][y] = 1;

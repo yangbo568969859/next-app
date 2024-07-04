@@ -243,30 +243,76 @@ rl.on('line', (line) => {
 
 ## 求字符串中所有整数的最小和
 
-给定一个字符串，只包含字母和数字，按要求找出字符串中的最长(连续)子的长度，字符串本身是其最长的子串，子串要求:
+输入字符串s，输出s中包含所有整数的最小和
 
-只包含1个字母(az,AZ)，其余必须是数字;
-字母可以在子串中的任意位置;
-如果找不到满足要求的子串，如全是字母或全是数字，则返回-1。
+说明
 
-输入描述：字符串(只包含字母和数字)
+- 字符串s，只包含 `a-z A-Z +- `；
+- 合法的整数包括
+	- 1）正整数 一个或者多个0-9组成，如 0 2 3 002 102
+  - 2）负整数 负号 - 开头，数字部分由一个或者多个0-9组成，如 -0 -012 -23 -00023
 
-输出描述：子串的长度
+
+输入描述：包含数字的字符串
+
+输出描述：所有整数的最小和
 
 ```yaml
 输入：
-abC124ACb
+bb1234aa
 
 输出：
-4
+10
 
-说明：
-满足条件的最长子串是C124或者124A，长度都是4
+bb12-34aa
+
+输出 -31
+说明 1 + 2 - 34 = 31;
+```
+
+```js
+function getMinSum (str) {
+	let numArr = str.split(/[^\d-]+/);
+	let res = 0;
+
+	function getNumSum(num) {
+		let sum = 0;
+		for (let c of num) {
+			sum += parseInt(c);
+		}
+		return sum;
+	}
+
+	for (let i = 0; i < numArr.length; i++) {
+		if (numArr[i]) {
+			if (numArr[i].indexOf('-') === -1) {
+				res += getNumSum(numArr[i]);
+			} else {
+				let isNeg = numArr[i].startsWith('-');
+				let subStrs = numArr[i].split('-');
+				for (let i = 0; i < subStrs.length; i++) {
+					if (subStrs[i]) {
+						let ele = parseInt(subStrs[i])
+						if (i === 0) {
+							res += isNeg ? (0 - ele) : getNumSum(subStrs[i])
+						} else {
+							res -= ele;
+						}
+					}
+				}
+				
+			}
+		}
+	}
+	console.log(res);
+}
 ```
 
 ## 求幸存数之和
 
-给一个正整数列nums，一个跳数jump，及幸存数量left。运算过程为:从索引为0的位置开始向后跳，中间跳过 J 个数字，命中索引为 J+1的数字，该数被敲出，并从该点起跳，以此类推，直到幸存left个数为止。然后返回幸存数之和。
+给一个正整数列nums，一个跳数jump，及幸存数量left。运算过程为:
+
+- 从索引为0的位置开始向后跳，中间跳过 J 个数字，命中索引为 J+1的数字，该数被敲出，并从该点起跳，以此类推，直到幸存left个数为止。然后返回幸存数之和。
 
 约束:
 
@@ -330,8 +376,8 @@ function sumOfLeft(nums, jump, left) {
 		}, 0)
 	}
 	let index = 0;
-	let lists = nums.slice();
-	while (lists.length > left) {
+	let list = nums.slice();
+	while (list.length > left) {
 		index = (index + jump + 1) % list.length;
 
 		list.splice(index, 1)
@@ -404,6 +450,12 @@ rl.on('line', (line) => {
 输出描述：明文字符串
 
 备注：翻译后的文本长度在100以内
+
+```yaml
+20*19*20*
+
+输出tst
+```
 
 ```js
 const readline = require('readline')
@@ -528,12 +580,130 @@ rl.on('line', (n) => {
 
 ## 核酸检测
 
+为了达到新冠疫情精准防控的需要，为了避免全员核酸检测带来的浪费，需要精准圈定可能被感染的人群。
+
+现在根据传染病流调以及大数据分析，得到了每个人之间在时间、空间上是否存在轨迹的交叉。
+
+现在给定一组确诊人员编号 (X1,X2,X3,…Xn)在所有人当中，找出哪些人需要进行核酸检测，输出需要进行核酸检测的数。
+
+(注意:确诊病例自身不需要再做核酸检测)需要进行核酸检测的人，是病毒传播链条上的所有人员，即有可能通过确诊病例所能传播到的所有人。
+
+例如:A是确诊病例，A和B有接触、B和C有接触 C和D有接触，D和E有接触。那么B、C、D、E都是需要进行核酸检测的人
+
 输入描述：
 
-输出描述：
+- 第一行为总人数N
+- 第二行为确证病例人员编号`（确证病例人员数量<N），用逗号隔开`
+- 接下来N行，每一行有N个数字，用逗号隔开，其中第i行的第j个数字表名编号i是否与编号j接触过。0表示没有接触，1表示有接触
+
+备注：
+
+- 人员编号从0开始
+- `0 < N < 100 0<N<1000<N<100`
+
+输出描述：输出需要做核酸检测的人数
+
+```yaml
+5
+1,2
+1,1,0,1,0
+1,1,0,0,0
+0,0,1,0,1
+1,0,0,1,0
+0,0,1,0,1
+
+输出 3
+```
+
+```js
+// num 5;
+// confirmedCases 1,2
+// inputs ['1,1,0,1,0', '1,1,0,0,0']
+function getHesuanNum (num, confirmedCases, inputs) {
+	confirmedCases = confirmedCases.split(',').map(Number);
+	let visited = new Array(num).fill(false);
+	let contacts = Array.from({ length: num }, () => {
+		return Array(N).fill(false);
+	})
+	inputs.forEach(value => {
+		let split = value.split(',');
+		contacts[i] = split.map(value => value === 1);
+	})
+
+	function dfs (contacts, visited, start) {
+		visited[start] = true;
+		for (let i = 0; i < contacts.length; i++) {
+			if (contacts[start][i] && !visited[i]) {
+				dfs(contacts, visited, i);
+			}
+		}
+	}
+	// 对确诊病例进行深度优先搜索
+	confirmedCases.forEach((caseIndex) => {
+		dfs(contacts, visited, caseIndex);
+	})
+	let count = 0;
+	visited.forEach((hasVisited, index) => {
+		if (hasVisited && !confirmedCases.includes(i)) {
+			count++;
+		}
+	})
+	console.log(count);
+}
+```
 
 ## 贪吃的猴子
 
+一只贪吃的猴子，来到一个果园，发现许多串香蕉排成一行，每串香蕉上有若干根香蕉。每串香蕉的根数由数组numbers给出。猴子获取香蕉，每次都只能从行的开头或者末尾获取，并且只能获取N次，求猴子最多能获取多少根香蕉。
+
 输入描述：
 
-输出描述：
+- 第一行为数组numbers的长度
+- 第二行为数组numbers的值每个数字通过空格分开
+- 第三行输入为N，表示获取的次数
+
+输出描述：按照题目要求能获取的最大数值
+
+```yaml
+输入
+7
+1 2 2 7 3 6 1
+3
+输出
+10
+
+
+输入
+3
+1 2 3
+3
+输出
+6
+说明
+全部获取所有的香蕉，因此最终根数为1+2+3 = 6
+```
+
+```js
+function getMaxBanner (length, banners, count) {
+	let bannersArr = banners.split(' ');
+	let totalBanner = bannersArr.recuce((acc, cur) => {
+		return acc + cur;
+	}, 0);
+	if (count === bannersArr.length) {
+		return totalBanner;
+	}
+	let minWindowSum = Infinity;
+	let windowSize = length - count;
+	let currentWindowCount = 0;
+	for (let i = 0; i < windowSize; i++) {
+		currentWindowCount += bannersArr[i];
+	}
+	minWindowSum = currentWindowCount;
+	for (let i = windowSize; i < length; i++) {
+		currentWindowCount += (number[i] - number[i - windowSize]);
+		minWindowSum = Math.min(minWindowSum, currentWindowCount);
+	}
+
+	console.log(total - minWindowSum);
+}
+```
