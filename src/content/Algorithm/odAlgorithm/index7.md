@@ -49,6 +49,37 @@ date: 2024-06-11
 ```
 
 ```js
+// line = '10 10 255 34 0 1 255 8 0 3 255 6 0 5 255 4 0 7 255 2 0 9 255 21'
+// cords = '3 4'
+function grayGraph (line, cords) {
+  let lineSplit = line.split(' ').map(Number);
+  let w = lineSplit[0];
+  let h = lineSplit[1];
+  let graph = lineSplit.slice(2);
+  const imageMatrix = [];
+  for (let i = 0; i < w; i++) {
+    imageMatrix[i] = new Array(h).fill(0);
+  }
+  let currentRow = 0;
+  let currentCol = 0;
+  let index = 0;
+  while (index < imageMatrix.length) {
+    let value = graph[index]
+    let count = graph[index + 1];
+    index += 2;
+
+    for (let i = 0; i < count; i++) {
+      imageMatrix[currentRow][currentCol++] = value;
+      if (currentCol === h) { // 换行
+        currentRow++;
+        currentCol = 0;
+      }
+    }
+  }
+  console.log(imageMatrix);
+  let [row, col] = cords.split(' ').map(Number);
+  console.log(imageMatrix[row][col]);
+}
 ```
 
 ## 手机APP防沉迷系统
@@ -132,6 +163,56 @@ ApP1和App2的时段有冲突，App2优先级高,注册App2之后，App1自动�
 时间复杂度：O(N^2)，其中N为应用程序的数量。在每次注册应用程序时，都需要遍历已有的应用程序列表，判断是否有时间重叠。
 
 空间复杂度：O(N)，存储了已注册的应用程序列表
+```
+
+```js
+// appNums = 2
+// appUseDataStr = ['App1 1 09:00 10:00', 'App2 2 11:00 11:30']
+// time = '09:30'
+function convertTime (timeStr) {
+  const [hours, minutes] = timeStr.split(':').map(Number);
+  return hours * 60 + minutes;
+}
+function appUseTime (appNums, appUseDataStr, time) {
+  const apps = appUseDataStr.map(value => {
+    let split = value.split(' ');
+    return {
+      name: split[0],
+      priority: parseInt(split[1]),
+      startTime: convertTime(split[2]),
+      endTime: convertTime(split[3]),
+    }
+  })
+  let queryTime = convertTime(time);
+  const registerApps = [];
+  for (let i = 0; i < apps.length; i++) {
+    let app = apps[i];
+    if (app.startTime > app.endTime) {
+      continue;
+    }
+    for (let j = registerApps.length - 1; j >= 0; j--) {
+      let registerApp = registerApps[j];
+      if (Math.max(app.startTime, registerApp.startTime) < Math.min(app.endTime, registerApp.endTime)) {
+        if (app.priority > registerApp.priority) {
+          // 注销优先级低的应用
+          registerApps.splice(j, 1);
+        } else {
+          // 优先级不高，继续检查下一个已注册app
+          continue;
+        }
+      }
+    }
+    registerApps.push(app);
+  }
+  let result = 'NA'
+  for (let app of registerApps) {
+    if (queryTime >= app.startTime && queryTime < app.endTime) {
+      result = app.name;
+      break;
+    }
+  }
+  console.log(result);
+}
 ```
 
 ## 小朋友来自多少小区
