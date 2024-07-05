@@ -307,7 +307,17 @@ function processPassword(str) {
 输出描述：输出众数组成的新数组的中位数
 
 ```yaml
+输入：
+10 11 21 19 21 17 21 16 21 18 15
 
+输出：
+21
+
+输入：
+2 1 5 4 3 3 9 2 7 4 2 15 4 2 4
+
+输出：
+3
 ```
 
 ```js
@@ -327,6 +337,9 @@ function findMedianOfMode (arr) {
     if (value === maxCount) {
       mode.push(key);
     }
+  }
+  if (mode.length) {
+    mode.sort((a, b) => a - b)
   }
   let mid
   if (mode.length % 2 === 0) {
