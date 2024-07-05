@@ -124,19 +124,13 @@ function findShousiPrices(prices) {
 
 ## 找朋友
 
-在学校中，N个小朋友站成一队，第i个小朋友的身高为height[i] 第i个小朋友可以看到的第一个比自己身高更高的小朋友j，那么是i的好朋友(要求j>i)。
+在学校中，N个小朋友站成一队，第i个小朋友的身高为height[i] 第i个小朋友可以看到的第一个比自己身高更高的小朋友j，那么是i的好朋友(要求`j>i`)。
 
 请重新生成一个列表，对应位置的输出是每个小朋友的好朋友位置，如果没有看到好朋友，请在该位置用0代替。 小朋友人数范围是[0,40000]。
 
 输入描述：第一行输入N，N表示有N个小朋友；第二行输入N个小朋友的身高height[i]，都是整数
 
 输出描述：输出N个小朋友的好朋友的位置
-
-题目解析：
-
-- 首先，根据输入的寿司价格列表，创建一个列表prices，用于存储每盘寿司的价格。
-- 然后，遍历prices列表，对于每个元素i，找到满足条件的最近的下一盘寿司j（即`prices[j] < prices[i]`），并将j的价格加到i上，得到实际得到的寿司的总价格。
-- 最后，将计算得到的实际得到的寿司的总价格列表输出，使用空格进行分隔。
 
 ```yaml
 输入：
@@ -149,6 +143,13 @@ function findShousiPrices(prices) {
 说明：
 第一个小朋友身高100，站在队尾位置，向队首看，没有比他身高高的小朋友，所以输出第一个值为0。
 第二个小朋友站在队首，前面也没有比他身高高的小朋友，所以输出第二个值为0。
+
+输入：
+8
+123 124 125 121 119 122 126 123
+
+输出
+1 2 6 5 5 6 0 0
 ```
 
 ```js
@@ -414,7 +415,35 @@ function splitString(str) {
 ```
 
 ```js
-
+function robatDoWork (blocks, limittime = 8) {
+  if (blocks.length > limittime) {
+    console.log(-1);
+    return;
+  }
+  let left = 1;
+  let right = Math.max(...blocks);
+  while (left < right) {
+    let mid = Math.floor((left + right) / 2);
+    let allhours = 0;
+    for (let i = 0; i < blocks.length; i++) {
+      allhours += Math.ceil(blocks[i] / mid);
+    }
+    if (allhours <= limittime) {
+      right = mid;
+    } else {
+      left = mid + 1;
+    }
+  }
+  let lastTime = 0;;
+  for (let i = 0; i < blocks.length; i++) {
+    lastTime += Math.ceil(blocks[i] / left);
+  }
+  if (lastTime > limittime) {
+    console.log(-1);
+  } elss {
+    console.log(left);
+  }
+}
 ```
 
 ## 出租车计费、靠谱的车

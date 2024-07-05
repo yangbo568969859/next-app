@@ -419,7 +419,7 @@ function custom(flaw, str) {
 
 function findYuan(flaw, str) {
   const vowels = new Set(['a', 'e', 'i', 'o', 'u', 'A', 'E', 'I', 'O', 'U'])
-  const vowelIdx = [];
+  const vowelIdx = []; // 记录字符串中所有元音字母下标
   for (let i = 0; i < str.length; i++) {
     if (vowels.has(str[i])) {
       vowelIdx.push(i)
@@ -457,8 +457,8 @@ function findYuan(flaw, str) {
 输入描述:
 
 - 输入两行数组array1、array2，每行首个数字为数组大小`size(0 < size <= 100)`;
-- `<array1[i] <=1000`
-- `<array2[i] <= 1000`
+- `0 < array1[i] <= 1000`
+- `0 < array2[i] <= 1000`
 - 接下来一行为正整数 k
 - `0 < k <= array1.size() * array2.size()`
 
