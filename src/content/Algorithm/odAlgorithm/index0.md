@@ -84,9 +84,38 @@ function countPeaks(map) {
 
 输出描述：满足条件的字符串个数
 
-```js
-function countString(str, n) {
+```yaml
+输入：aab 2
+输出：2
+说明：只能构成ab,ba
 
+输入：abc 2
+输出：6
+说明：ab,bc,ac,ba,ca,cb
+```
+
+```js
+// str = 'abc'
+// n = 2
+function countString(str, n) {
+  let set = new Set();
+  const used = new Array(str.length).fill(false);
+  function generateDistincaStrings(str, length, current, set, used) {
+    if (current.length === length) {
+      set.add(current);
+      return;
+    }
+    for (let i = 0; i < str.length; i++) {
+      if (used[i] || (current.length > 0 && current.charAt(current.length - 1)) === str.charAt(i)) {
+        continue;
+      }
+      used[i] = true;
+      generateDistincaStrings(str, length, current + str.charAt(i), set, used);
+      used[i] = false;
+    }
+  }
+  generateDistincaStrings(str, n, '', set, used);
+  console.log(set.size);
 }
 ```
 
