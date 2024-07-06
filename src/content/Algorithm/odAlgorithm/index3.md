@@ -321,13 +321,11 @@ rl.on('line', (line) => {
     let M = parseInt(inputs[0]);
     let arrM = input[1].split(' ').map(Number);
     let N = parseInt(inputs[2]);
-    let numSet = new Set();
+    let numSet = new Set(arrM);
     for (let i = 0; i< arrM.length; i++) {
-      if (numSet.has(arrM[i]) || arrM[i] < 0 || arrM[i] > 1000) {
+      if (arrM[i] < 0 || arrM[i] > 1000) {
         console.log(-1);
         return;
-      } else {
-        numSet.add(arrM[i]);
       }
     }
     if (numSet.size < N * 2) {
@@ -424,6 +422,19 @@ function findPosition(nums, target) {
 1 5
 输出
 5
+
+输入
+4
+3
+1 2
+1 3
+1 4
+3 5
+输出 9
+第1个时间单位内，处理任务3，获得4个积分
+第2个时间单位内，处理任务4，获得5个积分
+第3个时间单位内，无任务可处理
+共获得9个积分
 ```
 
 ```js

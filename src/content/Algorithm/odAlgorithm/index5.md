@@ -116,6 +116,7 @@ function aaaa (line, abilities, totalPeople) {
 3 4 7
 
 4
+说明: 3+4, 3+4+7, 4+7, 7 都满足大于等于7的条件
 ```
 
 ```js

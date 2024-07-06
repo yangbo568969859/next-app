@@ -57,6 +57,8 @@ class Tree {
 		} else {
 			root.mid = this.insert(root.mid, val)
 		}
+
+		return root; // 返回根节点
 	}
 	getHeight (root) {
 		if (root === null) {

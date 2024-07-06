@@ -314,6 +314,26 @@ function aaa ([2, 2, 3]) {
 
 输出描述：按照执行顺序（优先级从大到小）输出测试用例的ID，每行一个ID。
 
+```yaml
+输入：5 4
+1
+1
+2
+3
+5
+1 2 3
+1 4
+3 4 5
+2 3 4
+输出：3 4 1 2
+说明：测试用例的优先级计算如下：
+T1=Pf1+Pf2+Pf3=1+1+2=4
+T2=Pf1+Pf4=1+3=4
+T3=Pf3+Pf4+Pf5=2+3+5=10
+T4=Pf2+Pf3+Pf4=1+2+3=6
+按照优先级从小到大，以及相同优先级，ID小的先执行的规则，执行顺序为T3,T4,T1,T2
+```
+
 ```js
 const readline = require('readline');
 const rl = readline.createInterface({
@@ -376,6 +396,17 @@ rl.on('line', (line) => {
 
 说明：
 9个数字写成4行，最少需要3列
+
+输入：
+3 5
+输出
+1
+2
+3
+*
+*
+说明
+3个数字写5行，只有一列，数字不够用*号填充
 ```
 
 ```yaml
@@ -395,6 +426,46 @@ rl.on('line', (line) => {
 循环直到所有数字都填充完毕。
 最后，输出填充好的矩阵。
 这样，通过模拟顺时针螺旋填充的过程，就能得到符合要求的矩阵。
+```
+
+```js
+// m 行数
+// n 数字个数
+function getRoundArr (m, n) {
+  let cols = Math.ceil(n / m);
+  let matrix = Array.from({ length: m }, () => {
+    return Array(cols).fill('*')
+  })
+  let start = 1;
+  let top = 0;
+  let bottom = m - 1;
+  let left = 0;
+  let right = cols - 1;
+
+  while (start <= n) {
+    // 从左到右
+    for (let i = left; i <= right && start <= n; i++) {
+      matrix[top][i] = start++;
+    }
+    top++; // 上边界下移动
+    // 从上到下
+    for (let i = top; i <= bottom && start <= n; i++) {
+      matrix[i][right] = start++;
+    }
+    right--;
+    // 从右到左
+    for (let i = right; i >= left && start <= n; i--) {
+      matrix[bottom][i] = start++;
+    }
+    bottom--;
+    // 从下到上
+    for (let i = bottom; i >= top && start <= n; i--) {
+      matrix[i][left] = start++;
+    }
+    left++;
+  }
+  console.log(matrix);
+}
 ```
 
 ## 堆内存申请

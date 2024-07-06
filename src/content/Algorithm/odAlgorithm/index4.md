@@ -246,12 +246,14 @@ rl.on('line', (line) => {
     }
     if (step === luckyNum) {
       if (step > 0) {
-        step = 1
+        currentCord += step + 1;
       } else {
-        step = -1
+        currentCord += step - 1;
       }
+      currentCord += step;
+    } else {
+      currentCord += step;
     }
-    currentCord += step;
     maxCord = Math.max(currentCord, maxCord)
   }
   console.log(maxCord)
