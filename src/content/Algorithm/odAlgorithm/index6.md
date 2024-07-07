@@ -622,35 +622,36 @@ rl.on('line', (n) => {
 // confirmedCases 1,2
 // inputs ['1,1,0,1,0', '1,1,0,0,0']
 function getHesuanNum (num, confirmedCases, inputs) {
-	confirmedCases = confirmedCases.split(',').map(Number);
-	let visited = new Array(num).fill(false);
-	let contacts = Array.from({ length: num }, () => {
-		return Array(N).fill(false);
-	})
-	inputs.forEach(value => {
-		let split = value.split(',');
-		contacts[i] = split.map(value => value === 1);
-	})
+	let confirm = confirmedCases.split(',').map(Number);
+  let visited = new Array(num).fill(false);
+  let contacts = Array.from({ length: num }, () => {
+    return Array(num).fill(false);
+  })
+  inputs.forEach((value, index) => {
+    let split = value.split(',')
+    contacts[index] = split.map(value => value == 1);
+  })
+  console.log('contacts', contacts);
 
-	function dfs (contacts, visited, start) {
-		visited[start] = true;
-		for (let i = 0; i < contacts.length; i++) {
-			if (contacts[start][i] && !visited[i]) {
-				dfs(contacts, visited, i);
-			}
-		}
-	}
-	// 对确诊病例进行深度优先搜索
-	confirmedCases.forEach((caseIndex) => {
-		dfs(contacts, visited, caseIndex);
-	})
-	let count = 0;
-	visited.forEach((hasVisited, index) => {
-		if (hasVisited && !confirmedCases.includes(i)) {
-			count++;
-		}
-	})
-	console.log(count);
+  function dfs (contacts, visited, start) {
+    visited[start] = true;
+    for (let i = 0; i < contacts.length; i++) {
+      if (contacts[start][i] && !visited[i]) {
+        dfs(contacts, visited, i);
+      }
+    }
+  }
+  confirm.forEach((value) => {
+    dfs(contacts, visited, value);
+  })
+  console.log('visited', visited);
+  let count = 0;
+  visited.forEach((hasVisited, index) => {
+    if (hasVisited && !confirm.includes(index)) {
+      count++;
+    }
+  })
+  console.log(count);
 }
 ```
 
