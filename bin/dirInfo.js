@@ -25,7 +25,7 @@ module.exports = dirInfo = {
   },
   "designpatterns": {
     title: '编程设计模式、软件工程与技术',
-    description: '编程设计模式',
+    description: '编程设计模式、设计模式概念、软件工程与技术',
   },
   "english": {
     title: '英文单词',
@@ -81,6 +81,10 @@ module.exports = dirInfo = {
   },
   "odalgorithm": {
     title: 'od算法专题',
-    description: '算法训练营、算法题、算法知识',
+    description: '华为od简单题、复杂题',
+  },
+  "jsalgorithm": {
+    title: '前端算法专题',
+    description: '数据结构分类、算法分类',
   }
 }

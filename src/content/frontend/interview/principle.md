@@ -868,3 +868,15 @@ function flattenObj (obj) {
   return res;
 }
 ```
+
+## 数组乱序-洗牌算法
+
+## 图片懒加载
+
+## 手动实现JSONP
+
+## 基于Promise的ajax封装
+
+## 单例模式
+
+## 异步循环打印

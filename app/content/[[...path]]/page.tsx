@@ -42,8 +42,11 @@ const processImages = (node: any, pagePath: string) => {
     if (node.properties.href && (node.properties.href.indexOf('./') > -1 || node.properties.href.indexOf('../') )) {
       // console.log('processImages', 'a链接1111');
       // node.properties.href = '/content/';
-      node.properties.href = '/content/';
+      let href = ''
+      node.properties.href = href;
     }
+    node.properties.target = '_blank';
+    node.properties.ref = 'nofollow noopener noreferrer';
   } else if (node.children) {
     node.children.forEach((item: any) => {
       processImages(item, pagePath)
