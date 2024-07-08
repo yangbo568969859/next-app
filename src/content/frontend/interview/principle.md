@@ -799,9 +799,10 @@ function myNew (fn, ...args) {
 }
 ```
 
-## 数组/对象扁平化
+## 数组/对象扁平化、去重
 
 ```js
+// 扁平化
 function flattenArray (arr) {
   let res = []
   for (let i = 0; i < arr.length; i++) {
@@ -867,6 +868,17 @@ function flattenObj (obj) {
 
   return res;
 }
+```
+
+```js
+// 数组去重
+const unique = (array) => {
+  let obj = {};
+  return array.filter(value => {
+    return obj.hasOwnProperty(value) ? false : obj[value] = true;
+  })
+}
+const unique1 = (array) => Array.from(new Set(arr));
 ```
 
 ## 数组乱序-洗牌算法
@@ -1054,3 +1066,4 @@ var b = Singleton.getInstance('ConardLi2');
 
 console.log(a===b);
 ```
+

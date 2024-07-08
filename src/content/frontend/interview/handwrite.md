@@ -252,7 +252,22 @@ function MyAssign(target, ...args) {
 
 ### Promise.resolve()
 
+```js
+Promise.resolve = function (value) {
+  if (value instanceof Promise) {
+    return value;
+  }
+  return new Promise((resolve) => resolve(value));
+}
+```
+
 ### Promise.reject()
+
+```js
+Promise.reject = function (reason) {
+  return new Promise((resolve, reject) => reject(reason));
+}
+```
 
 ### Promise.all()
 
@@ -292,28 +307,35 @@ Promise.race = function (promiseArr) {
 }
 ```
 
-## 实现Ajax
-
-```js
-```
-
-## 数组扁平
-
 ## 使用闭包实现每隔一秒打印 1,2,3,4
-
-## 手写一个观察者
 
 ## 实现一个通用的事件侦听器函数
 
 ## 解析URL Params
 
-## 模板引擎实现
-
-## 图片懒加载
-
 ```js
-let imageList = document.querySelectorAll('img');
+function parseParam (url) {
+  let questionIndex = url.indexOf('?');
+  let paramStr = url.substring(questionIndex + 1);
+  let paramSplit = [];
+  let paramObj = {};
+  if (paramStr) {
+    paramSplit = paramStr.split('&');
+    for (let i = 0; i < paramSplit.length; i++) {
+      let data = paramSplit[i].split('=');
+      if (data.length > 1) {
+        paramObj[data[0]] = data[1];
+      } else {
+        paramObj[data[0]] = true;
+      }
+    }
+  }
+  console.log(paramObj);
+  return paramObj;
+}
 ```
+
+## 模板引擎实现
 
 ## 查找字符串中出现最多的字符和个数
 
@@ -390,14 +412,14 @@ function render(template, data) {
 ## 数组转树形
 
 ```js
-function listToTree(list) {
-  let temp = {};
-  let treeData = [];
+// function listToTree(list) {
+//   let temp = {};
+//   let treeData = [];
 
-  for (let i = 0; i < list.length; i++) {
-    temp[list[i].id]
-  }
-}
+//   for (let i = 0; i < list.length; i++) {
+//     temp[list[i].id]
+//   }
+// }
 ```
 
 ## 大数相加
