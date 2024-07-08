@@ -871,12 +871,186 @@ function flattenObj (obj) {
 
 ## 数组乱序-洗牌算法
 
+```js
+// 从数组最后一个元素开始，随机选一个位置与其交换，直到第一个元素(洗牌算法)
+function disorder (arr) {
+  let length = arr.length;
+  let current = length - 1;
+  let random;
+
+  while (current > -1) {
+    random = Math.floor(Math.random() * length);
+    [arr[current], arr[random]] = [arr[random], arr[current]]
+    current--;
+  }
+
+  return arr;
+}
+// 利用js的sort方法实现(sort方法会基于浏览器内核实现有所不同)
+function discord1 (arr) {
+  return arr.sort((a, b) => {
+    return Math.random() - 0.5;
+  })
+}
+```
+
 ## 图片懒加载
+
+```js
+function thorttle (fn, delay = 200) {
+  let last = 0;
+  return function (...args) {
+    let context = this;
+    let now = new Date().getTime();
+    if (now - last < delay) {
+      return;
+    }
+    f.apply(context, args)
+    last = now;
+  }
+}
+let images = document.getElementsByTagName('img');
+let n = 0; //存储图片加载到的位置，避免每次都从第一张图片开始遍历
+function lazyload() {
+  // 视口高度 || 可见区域高度
+  let windowHeight = document.documentElement.clientHeight || window.innerHeight;
+  // 滚动条高度
+  let scorllTop = document.documentElement.scrollTop || document.body.scrollTop;
+  for (let i = n; i < images.length; i++) {
+    let offsetHeight = images[i].offsetTop;
+    if (offsetHeight < windowHeight + scrollTop) {
+      let src = images[i].dataset.src;
+      images[i].src = src;
+    }
+  }
+}
+
+window.addEventListener('scroll', throttle(lazyload));
+```
 
 ## 手动实现JSONP
 
+- 将传入的data数据转化为url字符串形式
+- 处理url中的回调函数
+- 创建一个script标签并插入到页面中
+- 挂载回调函数
+
+```js
+(function (window, document) {
+  'use strict';
+
+  let jsonp = function (url, data, callback) {
+    // 1
+    let dataString = url.indexOf('?') == -1 ? '?' : '&';
+    for (let key in data) {
+      dataString += `${key}=${data[key]}&`;
+    }
+    // 2处理url回调
+    let cbFuncName = 'my_json_cb_' + Math.random().toString().replace('.', '');
+    datString += `callback=${cbFuncName}`;
+    // 3
+    let scriptEle = document.createElement('script');
+    scriptEle.src = `${url}${dataString}`;
+    // 4
+    window[cbFuncName] = function (data) {
+      callback(data);
+      document.body.removeChild(scriptEle);
+    }
+    document.body.appendChild(scriptEle)
+  }
+  
+  window.$jsonp = jsonp;
+})()
+```
+
 ## 基于Promise的ajax封装
+
+```js
+function fajax (url, method = 'get', param = {}) {
+  return new Promise((resolve, reject) => {
+    let xhr = new XMLHttpRequest();
+    let paramString = getStringParam(param);
+    if (method === 'get' && paramString) {
+      url.indexOf('?') : url += paramString : url += '?'+paramString;
+    }
+    xhr.open(method, url);
+    xhr.onload = function () {
+      let result = {
+        status: xhr.status,
+        statusText: xhr.statusText,
+        headers: xhr.getAllResponseHeaders(),
+        data: xhr.response || xhr.responseText,
+      }
+      if (xhr.status >= 200 && xhr.status < 300 || xhr.status === 304) {
+        resolve(result);
+      } else {
+        reject(result);
+      }
+    }
+    xhr.setRequestHeader('content-type', 'application/x-www-form-urlencoded')
+    xhr.withCredentials = true; // 跨域携带cookie
+    xhr.onerror = function () {
+      reject(new TypeError('请求出错'));
+    }
+    xh.timeout = function () {
+      reject(new TypeError('请求超时'));
+    }
+    xhr.onabort = function () {
+      reject(new TypeError('请求被终止'));
+    }
+    
+    if (method === 'post') {
+      xhr.send(paramString)
+    } else {
+      xhr.send()
+    }
+  })
+}
+function getStringParam(param) {
+  let str = '';
+  for (let key in param) {
+    str += `${key}=${param[key]}&`
+  }
+  return str;
+}
+```
+
+```js
+function getJSON (url) {
+  return new Promise((resolve, reject) => {
+    let xhr = new XMLHttpRequest();
+    xhr.open('GET', url);
+    xhr.setRequesteader('content-type', 'application/json');
+    xhr.onreadystatechange = function () {
+      if (xhr.readyState !== 4) return;
+      if (xhr.status === 200 || xhr.status === 304) {
+        resolve(xhr.response || xhr.responseText);
+      } else {
+        reject(new Error(xhr.responseText))
+      }
+    }
+    xhr.send();
+  })
+}
+```
 
 ## 单例模式
 
-## 异步循环打印
+```js
+let Singleton = function (name) {
+  this.name = name;
+}
+Singleton.getInstance = (function () {
+  let instance;
+  return function () {
+    if (!instance) {
+      instance = new Singleton();
+    }
+    return instance;
+  }
+})()
+var a = Singleton.getInstance('ConardLi');
+var b = Singleton.getInstance('ConardLi2');
+
+console.log(a===b);
+```
