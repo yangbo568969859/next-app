@@ -39,14 +39,14 @@ const processImages = (node: any, pagePath: string) => {
     const title = node.properties.title || '';
     node.properties.src = imageHandler(src, alt, title, pagePath);
   } else if (node.type === 'element' && node.tagName === 'a') {
-    if (node.properties.href && (node.properties.href.indexOf('./') > -1 || node.properties.href.indexOf('../') )) {
-      // console.log('processImages', 'a链接1111');
-      // node.properties.href = '/content/';
-      let href = ''
-      node.properties.href = href;
+    if (node.properties.href && (node.properties.href.indexOf('./') > -1 || node.properties.href.indexOf('../') > -1)) {
+      console.log('processImages', node.properties.href);
+      node.properties.href = '';
+      // let href = ''
+      // node.properties.href = href;
     }
     node.properties.target = '_blank';
-    node.properties.ref = 'nofollow noopener noreferrer';
+    // node.properties.ref = 'nofollow noopener noreferrer';
   } else if (node.children) {
     node.children.forEach((item: any) => {
       processImages(item, pagePath)
