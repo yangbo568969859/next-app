@@ -86,5 +86,13 @@ module.exports = dirInfo = {
   "jsalgorithm": {
     title: '前端算法专题',
     description: '数据结构分类、算法分类',
+  },
+  "jsdatastructure": {
+    title: '前端数据结构分类',
+    description: '二叉树、链表、数组、堆、栈、队列、哈希、字符串',
+  },
+  "jsalgorithmcategory": {
+    title: '前端算法分类',
+    description: '回溯、BFS&DFS、分治、动态规划、枚举、贪心、搜索、排序算法',
   }
 }
