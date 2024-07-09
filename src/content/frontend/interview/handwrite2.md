@@ -74,6 +74,22 @@ function jsonStringify (obj) {
 function jsonParse(opt) {
   return eval('(' + opt + ')')
 }
+
+var rx_one = /^[\],:{}\s]*$/;
+var rx_two = /\\(?:["\\\/bfnrt]|u[0-9a-fA-F]{4})/g;
+var rx_three = /"[^"\\\n\r]*"|true|false|null|-?\d+(?:\.\d*)?(?:[eE][+\-]?\d+)?/g;
+var rx_four = /(?:^|:|,)(?:\s*\[)+/g;
+
+if (
+  rx_one.test(
+    json.replace(rx_two, "@")
+      .replace(rx_three, "]")
+      .replace(rx_four, "")
+  )
+) {
+  var obj = eval("(" +json + ")");
+}
+
 ```
 
 ```js
@@ -250,6 +266,14 @@ function MyAssign(target, ...args) {
 
 ## Promise相关
 
+### Promise.catch()
+
+```js
+Promise.catch = function (onRejected) {
+  return this.then(null, onRejected);
+}
+```
+
 ### Promise.resolve()
 
 ```js
@@ -276,7 +300,7 @@ Promise.all = function (promiseArr) {
   let index = 0;
   let result = [];
   return new Promise((resolve, reject) => {
-    promiseArr.forEach((promise, i) => {
+    promiseArr.forEach((p, i) => {
       Promise.resolve(p).then(val => {
         index++;
         result[i] = val;
@@ -296,7 +320,7 @@ Promise.all = function (promiseArr) {
 ```js
 Promise.race = function (promiseArr) {
   return new Promise((resolve, reject) => {
-    promiseArr.forEach((promise, i) => {
+    promiseArr.forEach((p, i) => {
       Promise.resolve(p).then(val => {
         resolve(val);
       }, err => {

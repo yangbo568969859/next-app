@@ -347,6 +347,28 @@ function myForeach (obj, fn) {
   }
   return obj;
 }
+
+function cloneFunction(func) {
+  const bodyReg = /(?<={)(.|\n)+(?=})/m;
+  const paramReg = /(?<=\().+(?=\)\s+{)/;
+  const funcString = func.toString();
+  if (func.prototype) {
+    const param = paramReg.exec(funcString);
+    const body = bodyReg.exec(funcString);
+    if (body) {
+      if (param) {
+        const paramArr = param[0].split(',');
+        return new Function(...paramArr, body[0]);
+      } else {
+        return new Function(body[0]);
+      }
+    } else {
+      return null;
+    }
+  } else {
+    return eval(funcString);
+  }
+}
 ```
 
 ## bind、call、apply
@@ -442,7 +464,7 @@ EventEmitter.prototype.emit = function (type, ...args) {
 EventEmitter.prototype.once = function (type, listener) {
   const wrapper = (...args) => {
     listener.call(this, ...args);
-    this.off(type, wrapper);
+    this.off(type, listener);
   }
 
   wrapper.origin = listener;
@@ -802,6 +824,8 @@ function myNew (fn, ...args) {
 ## 数组/对象扁平化、去重
 
 ```js
+let arr = [1, 2, [3, [4, 5]], 6]
+let res = arr.flat(Infinity);
 // 扁平化
 function flattenArray (arr) {
   let res = []
@@ -959,7 +983,7 @@ window.addEventListener('scroll', throttle(lazyload));
     }
     // 2处理url回调
     let cbFuncName = 'my_json_cb_' + Math.random().toString().replace('.', '');
-    datString += `callback=${cbFuncName}`;
+    dataString += `callback=${cbFuncName}`;
     // 3
     let scriptEle = document.createElement('script');
     scriptEle.src = `${url}${dataString}`;
