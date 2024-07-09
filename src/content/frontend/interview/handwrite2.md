@@ -1,6 +1,6 @@
 ---
-title: js高频手写题
-description: js高频手写题
+title: js高频手写题2
+description: compose、JSON.stringify parse、继承等等
 date: 2022-05-14
 ---
 
