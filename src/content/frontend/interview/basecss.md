@@ -58,6 +58,43 @@ date: 2020-08-11
 }
 ```
 
+## 实现三栏布局
+
+圣杯布局（三列自适应，左右定宽，中间自适应）
+
+```html
+<body>
+  <div class="box">
+    <div class="center"></div>
+    <div class="left"></div>
+    <div class="right"></div>
+  </div>
+</body>
+<style>
+  .box {
+    padding: 0 200px 0 200px;
+  }
+  .center, .left, .right {
+    height: 500px;
+    float: left;
+    position: relative;
+  }
+  .center {
+    width: 100%;
+  }
+  .left {
+    width: 200px;
+    left: -200px;
+    margin-left: -100%;
+  }
+  .right {
+    width: 200px;
+    right: -200px;
+    margin-right: -200px;
+  }
+</style>
+```
+
 ## 层叠上下文
 
 元素提升为一个比较特殊的图层，在三维空间中(Z轴)高出普通元素一等
@@ -161,6 +198,44 @@ date: 2020-08-11
     - backwards 停止时，回到第一帧
     - both 同时运用 forwards / backwards
 
+## 单行文本省略和多行文本省略
+
+```css
+.line {
+  display: -webkit-box;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 1;
+}
+
+.line1 {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+```
+
+## flex 实现九宫格
+
+```css
+.flex-container {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-around;
+  align-items: stretch;
+  width: 300px; /* 或者你想要的任何宽度 */
+}
+
+.flex-item {
+  flex: 0 0 33.333%; /* 每个子项占据1/3的宽度 */
+  box-sizing: border-box;
+  padding: 10px; /* 根据需要添加内边距 */
+  box-shadow: 0 0 5px rgba(0, 0, 0, 0.2); /* 添加阴影以便更好的视觉效果 */
+  text-align: center;
+}
+```
+
 ## 自适应布局
 
 ### rem
@@ -260,3 +335,5 @@ window.addEventListener('resize', setFontSize);
   </div>
 </div>
 ```
+
+
