@@ -436,14 +436,44 @@ function render(template, data) {
 ## 数组转树形
 
 ```js
-// function listToTree(list) {
-//   let temp = {};
-//   let treeData = [];
+let list = [
+	{
+		id: 1,
+		text: '节点1',
+		parentId: 0 //这里用0表示为顶级节点
+	},
+	{
+		id: 2,
+		text: '节点1_1',
+		parentId: 1 //通过这个字段来确定子父级
+	},
+	{
+		id: 3,
+		text: '节点2_1',
+		parentId: 2 //通过这个字段来确定子父级
+	}
+]
+function listToTree(list) {
+  let temp = {};
+  let treeData = [];
 
-//   for (let i = 0; i < list.length; i++) {
-//     temp[list[i].id]
-//   }
-// }
+  for (let i = 0; i < list.length; i++) {
+    temp[list[i].id] = list[i];
+  }
+
+  for (let key in temp) {
+    if (parseInt(temp[key].parentId === 0)) {
+      treeData.push(temp[key])
+    } else {
+      if (!temp[temp[key].parentId].children) {
+        temp[temp[key].parentId].children = [];
+      }
+      temp[temp[key].parentId].children.push(temp[key])
+    }
+  }
+
+  return treeData;
+}
 ```
 
 ## 大数相加
