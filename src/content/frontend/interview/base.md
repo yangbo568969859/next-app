@@ -677,4 +677,5 @@ app.post('/set-cookie', function(req, res) {
   res.cookie('username', username, { domain: '.example.com', path: '/' });
   res.sendStatus(200);
 });
+
 ```
