@@ -368,27 +368,29 @@ location / {
 
 ## 内置变量
 
-$args请求行中的参数，同$query_string
-$content_length 请求头中的Content-length字段
-$content_type 请求头中的Content-Type字段
-$document_root 当前请求在root指令中指定的值
-$host 请求行的主机名，或请求头字段 Host 中的主机名
-$http_user_agent 客户端agent信息
-$http_cookie 客户端cookie信息
-$limit_rate 可以限制连接速率的变量
-$request_method 客户端请求的动作，如GET或POST
-$remote_addr 客户端的IP地址
-$remote_port 客户端的端口
-$remote_user 已经经过Auth Basic Module验证的用户名
-$request_filename 当前请求的文件路径
-$schemeHTTP方法（如http，https）
-$server_protocol 请求使用的协议，如HTTP/1.0或HTTP/1.1
-$server_addr 服务器地址
-$server_name 服务器名称
-$server_port 请求到达服务器的端口号
-$request_uri 包含请求参数的原始URI
-$uri 不带请求参数的当前URI
-$document_uri 与$uri相同
+| params      | Description |
+| ----------- | ----------- |
+| $args请求行中的参数 | 同$query_string |
+| $content_length | 请求头中的Content-length字段 |
+| $content_type | 请求头中的Content-Type字段 |
+| $document_root | 当前请求在root指令中指定的值 |
+| $host | 请求行的主机名，或请求头字段 Host 中的主机名 |
+| $http_user_agent | 客户端agent信息 |
+| $http_cookie | 客户端cookie信息 |
+| $limit_rate | 可以限制连接速率的变量 |
+| $request_method | 客户端请求的动作，如GET或POST |
+| $remote_addr  | 客户端的IP地址 |
+| $remote_port | 客户端的端口 |
+| $remote_user | 已经经过Auth Basic Module验证的用户名 |
+| $request_filename | 当前请求的文件路径 |
+| $schemeHTTP方法 | 如http，https |
+| $server_protocol | 请求使用的协议，如HTTP/1.0或HTTP/1.1 |
+| $server_addr | 服务器地址 |
+| $server_name | 服务器名称 |
+| $server_port | 请求到达服务器的端口号 |
+| $request_uri | 包含请求参数的原始URI |
+| $uri | 不带请求参数的当前URI |
+| $document_uri | 与$uri相同 |
 
 ## 常用命令
 
