@@ -1,13 +1,18 @@
 "use client"
 
 import * as React from 'react'
+import { useEffect } from 'react'
 import { useTheme } from 'next-themes'
 
 import { Button } from '@/src/components/UIBase/Button'
 import { Icons } from '@/src/components/UIBase/Icons'
 
 export function ThemeToggle() {
-  const { theme, setTheme } = useTheme()
+  const { theme, setTheme } = useTheme();
+
+  useEffect(() => {
+    setTheme(theme || 'light');
+  }, [])
 
   return (
     <Button
